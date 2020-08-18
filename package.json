@@ -1,0 +1,29 @@
+{
+  "name": "@nti/web-assessment",
+  "version": "0.0.0",
+  "description": "NextThought assessment components",
+  "main": "index.js",
+  "scripts": {
+    "test": "cmp-scripts test",
+    "start": "cmp-scripts start",
+    "build": "cmp-scripts build",
+    "clean": "cmp-scripts clean",
+    "check": "cmp-scripts check",
+    "release": "cmp-scripts release",
+    "fix": "cmp-scripts fix"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NextThought/nti.web.assessment.git"
+  },
+  "author": "NextThought",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/NextThought/nti.web.assessment/issues"
+  },
+  "homepage": "https://github.com/NextThought/nti.web.assessment#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "@nti/cmp-scripts": "^2.25.8"
+  }
+}
