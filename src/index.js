@@ -1,1 +1,1 @@
-export Placeholder from './Placeholder';
+export * as Question from './question';

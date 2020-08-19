@@ -11,7 +11,9 @@
     "clean": "cmp-scripts clean",
     "check": "cmp-scripts check",
     "release": "cmp-scripts release",
-    "fix": "cmp-scripts fix"
+    "fix": "cmp-scripts fix",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
   },
   "repository": {
     "type": "git",
@@ -23,12 +25,20 @@
     "url": "https://github.com/NextThought/nti.web.assessment/issues"
   },
   "homepage": "https://github.com/NextThought/nti.web.assessment#readme",
-  "dependencies": {},
+  "dependencies": {
+    "@nti/web-commons": "^0.98.2",
+    "classnames": "^2.2.6"
+  },
   "devDependencies": {
     "@nti/cmp-scripts": "^2.25.8",
     "@nti/style-common": "^1.10.0",
+    "@storybook/addon-actions": "^6.0.13",
+    "@storybook/addon-essentials": "^6.0.13",
+    "@storybook/addon-links": "^6.0.13",
+    "@storybook/react": "^6.0.13",
     "prop-types": "^15.7.2",
     "react": "^16.13.1",
-    "react-dom": "^16.13.1"
+    "react-dom": "^16.13.1",
+    "react-is": "^16.13.1"
   }
 }
