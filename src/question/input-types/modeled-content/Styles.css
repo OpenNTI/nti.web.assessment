@@ -1,0 +1,14 @@
+.modeled-content-editor {
+	border: 1px solid var(--border-grey-light);
+	background: white;
+	padding: 0.625rem 0.875rem;
+	margin: 16px 16px 0;
+	font-size: 0.875rem;
+	font-weight: 400;
+	min-height: 10rem;
+
+	& .placeholder {
+		font-style: italic;
+		color: var(--tertiary-grey);
+	}
+}
