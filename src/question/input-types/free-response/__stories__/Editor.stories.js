@@ -7,4 +7,5 @@ export default {
 	component: Editor
 };
 
-export const Basic = () => (<Editor />);
+export const Solution = () => (<Editor />);
+export const NoSolutions = () => (<Editor noSolutions />);

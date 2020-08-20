@@ -1,0 +1,12 @@
+.free-response-editor {
+	&.no-solutions {
+		display: flex;
+		flex-direction: column;
+		align-items: stretch;
+
+		& .input {
+			display: block;
+			background: white;
+		}
+	}
+}
