@@ -26,8 +26,10 @@
   },
   "homepage": "https://github.com/NextThought/nti.web.assessment#readme",
   "dependencies": {
+    "@nti/lib-commons": "NextThought/nti.lib.commons",
     "@nti/lib-locale": "NextThought/nti.lib.ntiids",
     "@nti/web-commons": "NextThought/nti.web.commons",
+    "@nti/web-editor": "NextThought/nti.web.component.editor",
     "classnames": "^2.2.6"
   },
   "devDependencies": {
