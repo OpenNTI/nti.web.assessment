@@ -1,5 +1,6 @@
 .choice-drag-item {
 	cursor: initial;
+	margin-bottom: 0.625rem;
 }
 
 .choice-editor {

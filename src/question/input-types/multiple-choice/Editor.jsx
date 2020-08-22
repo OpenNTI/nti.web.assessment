@@ -1,7 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import {scoped} from '@nti/lib-locale';
 
 import ChoicesEditor from '../common/choices-editor';
+
+const t = scoped('nti-assessment.question.input-types.multiple-choice.Editor', {
+	addLabel: 'Add a choice'
+});
 
 const SolutionMimeType = 'application/vnd.nextthought.assessment.multiplechoicesolution';
 const SolutionClass = 'MultipleChoiceSolution';
@@ -94,6 +99,8 @@ export default function MultipleChoiceEditor ({noSolutions, onChange: onChangePr
 			onChange={onChange}
 
 			noSolutions={noSolutions}
+
+			addLabel={t('addLabel')}
 
 			canReorder
 			canRemove

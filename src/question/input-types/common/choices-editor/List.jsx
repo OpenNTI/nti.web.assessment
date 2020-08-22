@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames/bind';
-import {DnD} from '@nti/web-commons';
+import {DnD, Icons, Text} from '@nti/web-commons';
 import {Array as arr} from '@nti/lib-commons';
 
 import Styles from './Styles.css';
@@ -126,6 +126,12 @@ export default function ChoiceList ({
 				renderer={renderChoice}
 				readOnly={!canReorder}
 			/>
+			{canAdd && (
+				<button className={cx('add-choice')} onClick={() => addChoiceAfter(choices.length - 1)}>
+					<Icons.Plus className={cx('icon')} />
+					<Text.Base>{addLabel}</Text.Base>
+				</button>
+			)}
 		</div>
 	);
 }
