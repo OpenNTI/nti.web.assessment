@@ -129,7 +129,7 @@ export default function ChoiceList ({
 			{canAdd && (
 				<button className={cx('add-choice')} onClick={() => addChoiceAfter(choices.length - 1)}>
 					<Icons.Plus className={cx('icon')} />
-					<Text.Base>{addLabel}</Text.Base>
+					<Text.Base className={cx('label')}>{addLabel}</Text.Base>
 				</button>
 			)}
 		</div>
