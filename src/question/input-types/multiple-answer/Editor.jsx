@@ -20,7 +20,6 @@ const getChoices = (part, error) => {
 };
 
 const updatePart = (newChoices, part) => {
-	console.log('Updating Part: ', newChoices);//eslint-disable-line
 	const {choices, solutions} = newChoices.reduce((acc, choice, index) => {
 		acc.choices.push(choice.label);
 

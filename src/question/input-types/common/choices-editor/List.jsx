@@ -87,6 +87,8 @@ export default function ChoiceList ({
 	const renderChoice = (index, itemProps) => {
 		const choice = choices[index];
 
+		if (!choice) { return null; }
+
 		return (
 			<DnD.Item
 				customHandle

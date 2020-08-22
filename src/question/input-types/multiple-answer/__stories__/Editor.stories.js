@@ -14,10 +14,15 @@ export default {
 	argTypes: {onChange: {action: 'changed'}}
 };
 
-export const Solutions = () => {
+export const Solutions = ({onChange}) => {
 	const [part, setPart] = React.useState(getInitialPart);
 
-	return (<Editor part={part} onChange={setPart} />);
+	return (
+		<Editor
+			part={part}
+			onChange={p => (setPart(p), onChange?.(p))}
+		/>
+	);
 };
 
 export const NoSolutions = ({onChange}) => {
@@ -32,6 +37,7 @@ export const NoSolutions = ({onChange}) => {
 	);
 };
 
-NoSolutions.propTypes = {
+
+Solutions.propTypes = NoSolutions.propTypes = {
 	onChange: PropTypes.func
 };
