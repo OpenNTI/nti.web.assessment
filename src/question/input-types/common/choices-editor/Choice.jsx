@@ -24,6 +24,7 @@ const getPlugins = (keyBindings) => ([
 ]);
 
 Choice.propTypes = {
+	className: PropTypes.string,
 	index: PropTypes.number,
 	group: PropTypes.string,
 	choice: PropTypes.shape({
@@ -33,10 +34,12 @@ Choice.propTypes = {
 	}),
 
 	autoFocus: PropTypes.bool,
+
 	noSolutions: PropTypes.bool,
 	multipleSolutions: PropTypes.bool,
-	draggable: PropTypes.bool,
+	hideSolutions: PropTypes.bool,
 
+	draggable: PropTypes.bool,
 	connectDragSource: PropTypes.func,
 
 	onChange: PropTypes.func,
@@ -44,15 +47,18 @@ Choice.propTypes = {
 	addChoiceAfter: PropTypes.func
 };
 export default function Choice ({
+	className,
 	index,
 	group,
 	choice,
 
 	autoFocus,
+
 	noSolutions,
 	multipleSolutions,
-	draggable,
+	hideSolutions,
 
+	draggable,
 	connectDragSource,
 
 	onChange,
@@ -109,12 +115,14 @@ export default function Choice ({
 	};
 
 	return (
-		<div className={cx('choice-editor', {error: Boolean(error), solution: isSolution})}>
+		<div className={cx('choice-editor', className, {error: Boolean(error), solution: isSolution})}>
 			{draggable && (<DnD.DragHandle className={cx('drag-handle')} connect={connectDragSource} />)}
-			{multipleSolutions ?
-				(<Checkbox className={cx('checkbox')} green checked={isSolution} onChange={onSolutionChange} disabled={noSolutions}/>) :
-				(<Radio className={cx('radio')} green name={group} checked={isSolution} onChange={onSolutionChange} disabled={noSolutions} />)
-			}
+			{!hideSolutions && multipleSolutions && (
+				<Checkbox className={cx('checkbox')} green checked={isSolution} onChange={onSolutionChange} disabled={noSolutions}/>
+			)}
+			{!hideSolutions && !multipleSolutions && (
+				<Radio className={cx('radio')} green name={group} checked={isSolution} onChange={onSolutionChange} disabled={noSolutions} />
+			)}
 			<div className={cx('editor-container')}>
 				{!settingUp && (
 					<Editor

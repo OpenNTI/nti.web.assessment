@@ -24,6 +24,7 @@ ChoiceList.propTypes = {
 
 	multipleSolutions: PropTypes.bool,
 	noSolutions: PropTypes.bool,
+	hideSolutions: PropTypes.bool,
 
 	canAdd: PropTypes.bool,
 	addLabel: PropTypes.string,
@@ -40,6 +41,7 @@ export default function ChoiceList ({
 
 	multipleSolutions,
 	noSolutions,
+	hideSolutions,
 
 	addLabel,
 	canAdd,
@@ -102,9 +104,10 @@ export default function ChoiceList ({
 					index={index}
 
 					autoFocus={focused.current === index}
+					draggable={canReorder}
+
 					noSolutions={noSolutions}
 					multipleSolutions={multipleSolutions}
-					draggable={canReorder}
 
 					onChange={(...args) => onChoiceChange(index, ...args)}
 					onRemove={canRemove && (() => onChoiceRemove(index))}
