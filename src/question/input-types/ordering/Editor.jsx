@@ -1,13 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames/bind';
-import {Array as arr} from '@nti/lib-commons';
+import {Array as arr, Events} from '@nti/lib-commons';
 import {scoped} from '@nti/lib-locale';
-import {DnD, Icons, Text} from '@nti/web-commons';
+import {DnD, Icons, Text, Hooks} from '@nti/web-commons';
 
 import Choice from '../common/choices-editor/Choice';
 
 import Styles from './Editor.css';
+
+const {getKeyCode} = Events;
 
 const cx = classnames.bind(Styles);
 const t = scoped('nti-assessment.question.input-types.ordering.Editor', {
@@ -75,11 +77,16 @@ OrderingEditor.propTypes = {
 	error: PropTypes.any
 };
 export default function OrderingEditor ({noSolutions, onChange: onChangeProp, part, error}) {
+	const forceUpdate = Hooks.useForceUpdate();
+
 	const {labels, values} = getChoices(part);
 	const [labelOrder, setLabelOrder] = React.useState();
 	const [valueOrder, setValueOrder] = React.useState();
 
-	const canRemove = labels.length > 2 || values.length > 2;
+	const focusRef = React.useRef();
+
+	const totalRows = labels.length;
+	const canRemove = totalRows > 2;
 	const canReorder = true;
 
 	React.useEffect(() => (
@@ -120,14 +127,20 @@ export default function OrderingEditor ({noSolutions, onChange: onChangeProp, pa
 		[...values.slice(0, index), value, ...labels.slice(index + 1)]
 	);
 
-	const removeRow = (index) => onChange(
-		[...labels.slice(0, index), ...labels.slice(index + 1)],
-		[...values.slice(0, index), ...values.slice(index + 1)]
+	const removeRow = (index) => (
+		onChange(
+			[...labels.slice(0, index), ...labels.slice(index + 1)],
+			[...values.slice(0, index), ...values.slice(index + 1)]
+		),
+		focusRef.current = {column: 'label', index: Math.max(index - 1, 0)}
 	);
 
-	const addRowAfter = (index) => onChange(
-		[...labels.slice(0, index + 1), {label: ''}, ...labels.slice(index + 1)],
-		[...values.slice(0, index + 1), {label: ''}, ...values.slice(index + 1)]
+	const addRowAfter = (index) => (
+		onChange(
+			[...labels.slice(0, index + 1), {label: ''}, ...labels.slice(index + 1)],
+			[...values.slice(0, index + 1), {label: ''}, ...values.slice(index + 1)]
+		),
+		focusRef.current = {column: 'label', index: index + 1}
 	);
 
 	const renderLabel = (index, itemProps) => {
@@ -147,12 +160,35 @@ export default function OrderingEditor ({noSolutions, onChange: onChangeProp, pa
 					choice={label}
 					index={index}
 
+					autoFocus={focusRef.current?.column === 'label' && focusRef.current?.index === index}
+
 					draggable={canReorder}
 
 					hideSolutions
 
 					onChange={(...args) => onLabelChange(index, ...args)}
 					addChoiceAfter={(...args) => addRowAfter(index, ...args)}
+
+					customKeyBindings={{
+						[getKeyCode.ENTER]: () => {
+							addRowAfter(index);
+							return true;
+						},
+						[getKeyCode.TAB]: () => {
+							focusRef.current = {column: 'value', index};
+							forceUpdate();
+							return true;
+						},
+						[getKeyCode.SHIFT_TAB]: () => {
+							if (index > 0) {
+								focusRef.current = {column: 'value', index: index - 1};
+								forceUpdate();
+								return true;
+							}
+
+							return false;
+						}
+					}}
 				/>
 			</DnD.Item>
 		);
@@ -175,6 +211,8 @@ export default function OrderingEditor ({noSolutions, onChange: onChangeProp, pa
 					choice={{label: value.label, isSolution: true, error: value.error}}
 					index={index}
 
+					autoFocus={focusRef.current?.column === 'value' && focusRef.current?.index === index}
+
 					draggable={canReorder}
 
 					hideSolutions
@@ -182,6 +220,27 @@ export default function OrderingEditor ({noSolutions, onChange: onChangeProp, pa
 					onChange={(...args) => onValueChange(index, ...args)}
 					onRemove={canRemove && ((...args) => removeRow(index, ...args))}
 					addChoiceAfter={(...args) => addRowAfter(index, ...args)}
+
+					customKeyBindings={{
+						[getKeyCode.ENTER]: () => {
+							addRowAfter(index);
+							return true;
+						},
+						[getKeyCode.TAB]: () => {
+							if (index < totalRows - 1) {
+								focusRef.current = {column: 'label', index: index + 1};
+								forceUpdate();
+								return true;
+							}
+
+							return false;
+						},
+						[getKeyCode.SHIFT_TAB]: () => {
+							focusRef.current = {column: 'label', index};
+							forceUpdate();
+							return true;
+						}
+					}}
 				/>
 			</DnD.Item>
 		);
@@ -211,7 +270,7 @@ export default function OrderingEditor ({noSolutions, onChange: onChangeProp, pa
 					readOnly={!canReorder}
 				/>
 			)}
-			<button className={cx('add-row')} onClick={() => addRowAfter(labels.length - 1)}>
+			<button className={cx('add-row')} onClick={() => addRowAfter(totalRows - 1)}>
 				<Icons.Plus className={cx('icon')} />
 				<Text.Base className={cx('label')}>{t('addLabel')}</Text.Base>
 			</button>

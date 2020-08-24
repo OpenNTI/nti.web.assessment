@@ -44,7 +44,9 @@ Choice.propTypes = {
 
 	onChange: PropTypes.func,
 	onRemove: PropTypes.func,
-	addChoiceAfter: PropTypes.func
+	addChoiceAfter: PropTypes.func,
+
+	customKeyBindings: PropTypes.object
 };
 export default function Choice ({
 	className,
@@ -64,6 +66,8 @@ export default function Choice ({
 	onChange,
 	onRemove,
 	addChoiceAfter,
+
+	customKeyBindings
 }) {
 	const {label, isSolution, error} = choice;
 
@@ -82,7 +86,7 @@ export default function Choice ({
 	}, [autoFocus, settingUp]);
 
 	React.useEffect(() => (
-		setPlugins(getPlugins({
+		setPlugins(getPlugins(customKeyBindings || {
 			[getKeyCode.ENTER]: () => {
 				addChoiceAfter?.();
 				return true;

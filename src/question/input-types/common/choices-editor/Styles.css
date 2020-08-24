@@ -98,4 +98,8 @@
 		line-height: 40px;
 		color: var(--secondary-grey);
 	}
+
+	&:focus-within {
+		border-color: var(--border-grey);
+	}
 }
