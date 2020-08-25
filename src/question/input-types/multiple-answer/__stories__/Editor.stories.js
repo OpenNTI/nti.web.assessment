@@ -2,10 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Editor from '../Editor';
+import {Data} from '../utils';
 
 const getInitialPart = () => ({
-	NTIID: 'test-ntiid',
-	choices: ['Choice 1']
+	...Data.generateBlankPart(),
+	NTIID: 'test-ntiid'
 });
 
 export default {

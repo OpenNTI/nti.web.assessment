@@ -38,7 +38,7 @@ export function updatePart (part, labels, values, solutions) {
 
 export function generateBlankPart () {
 	return updatePart(
-		{MimeType: isOrderingPart.handles[0]},
+		{MimeType: isOrderingPart.preferredMimeType},
 		[t('blankPart.labelOne'), t('blankPart.labelTwo')],
 		[t('blankPart.valueOne'), t('blankPart.valueTwo')]
 	);

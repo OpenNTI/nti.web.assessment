@@ -3,7 +3,7 @@ const handles = [
 	'application/vnd.nextthought.assessment.randomizedorderingpart'
 ];
 
-isOrderingPart.handles = handles;
+isOrderingPart.preferredMimeType = handles[0];
 export default function isOrderingPart (part) {
 	return handles.indexOf(part?.MimeType) > -1;
 }

@@ -31,7 +31,7 @@ export function updatePart (part, choices, solution) {
 
 export function generateBlankPart () {
 	return updatePart(
-		{MimeType: isMultipleChoicePart.handles[0]},
+		{MimeType: isMultipleChoicePart.preferredMimeType},
 		[t('blankPart.choice')],
 		0
 	);
