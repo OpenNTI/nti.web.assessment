@@ -8,6 +8,7 @@ import {DnD, Icons, Text, Hooks} from '@nti/web-commons';
 import Choice from '../common/choices-editor/Choice';
 
 import Styles from './Editor.css';
+import {Data} from './utils';
 
 const {getKeyCode} = Events;
 
@@ -15,9 +16,6 @@ const cx = classnames.bind(Styles);
 const t = scoped('nti-assessment.question.input-types.ordering.Editor', {
 	addLabel: 'Add a Row'
 });
-
-const solutionMimeType = 'application/vnd.nextthought.assessment.orderingsolution';
-const solutionClass = 'OrderingSolution';
 
 const getChoices = (part, error) => {
 	const {labels, values, solution} = part;
@@ -48,17 +46,11 @@ const getChoices = (part, error) => {
 };
 
 const updatePart = ({labels, values}, part) => {
-	return {
-		MimeType: part.MimeType,
-		content: part.content ?? '',
-		labels: labels.map(l => l.label),
-		values: values.map(l => l.label),
-		solutions: [{
-			Class: solutionClass,
-			MimeType: solutionMimeType,
-			value: labels.reduce((acc, l, index) => ({...acc, [index]: index}), {})
-		}]
-	};
+	return Data.updatePart(
+		part,
+		labels.map(l => l.label),
+		values.map(l => l.label)
+	);
 };
 
 OrderingEditor.propTypes = {
@@ -208,7 +200,7 @@ export default function OrderingEditor ({noSolutions, onChange: onChangeProp, pa
 			>
 				<Choice
 					className={cx('ordering-choice-editor')}
-					choice={{label: value.label, isSolution: true, error: value.error}}
+					choice={{label: value.label, isSolution: !noSolutions, error: value.error}}
 					index={index}
 
 					autoFocus={focusRef.current?.column === 'value' && focusRef.current?.index === index}
@@ -247,7 +239,7 @@ export default function OrderingEditor ({noSolutions, onChange: onChangeProp, pa
 	};
 
 	return (
-		<div className={cx('ordering-editor')}>
+		<div className={cx('ordering-editor', {'no-solutions': noSolutions})}>
 			{labelOrder && (
 				<DnD.Sortable
 					customHandle

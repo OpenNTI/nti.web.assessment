@@ -25,6 +25,10 @@
 	}
 }
 
+.ordering-editor.no-solutions .ordering-values li + li .ordering-choice-editor:focus-within {
+	box-shadow: 0 -1px 0 0 var(--border-grey);
+}
+
 .ordering-values {
 	grid-row: 1;
 	grid-column: 2;

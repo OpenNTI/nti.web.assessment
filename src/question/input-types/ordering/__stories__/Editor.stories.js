@@ -2,14 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Editor from '../Editor';
+import {Data} from '../utils';
 
 const getInitialPart = () => ({
-	NTIID: 'test-ntiid',
-	labels: ['Label 1', 'Label 2'],
-	values: ['Values 1', 'Values 2'],
-	solution: {
-		value: {0: 0, 1: 1}
-	}
+	...Data.generateBlankPart(),
+	NTIID: 'test-ntiid'
 });
 
 
