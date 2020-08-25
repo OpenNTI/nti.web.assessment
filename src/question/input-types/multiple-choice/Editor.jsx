@@ -4,14 +4,13 @@ import {scoped} from '@nti/lib-locale';
 
 import ChoicesEditor from '../common/choices-editor';
 
+import {Data} from './utils';
+
 const t = scoped('nti-assessment.question.input-types.multiple-choice.Editor', {
 	addLabel: 'Add a choice'
 });
 
-const SolutionMimeType = 'application/vnd.nextthought.assessment.multiplechoicesolution';
-const SolutionClass = 'MultipleChoiceSolution';
-
-const getChoices = (part, error) => {
+const getChoices = (part, error, noSolutions) => {
 	const {choices, solutions} = part;
 	const solutionIndex = new Set(
 		(solutions ?? []).map(s => s.value)
@@ -19,7 +18,7 @@ const getChoices = (part, error) => {
 
 	return choices.map((label, index) => ({
 		label,
-		isSolution: solutionIndex.has(index),
+		isSolution: !noSolutions && solutionIndex.has(index),
 		error: error?.field === 'choices' && (error?.index ?? []).indexOf(index) >= 0 ? error : null
 	}));
 };
@@ -35,17 +34,7 @@ const updatePart = (newChoices, part) => {
 		return acc;
 	}, {choices: [], solutions: []});
 
-	return {
-		MimeType: part.MimeType,
-		content: part.content ?? '',
-		hints: part.hints ?? [],
-		choices,
-		solutions: [{
-			Class: SolutionClass,
-			MimeType: SolutionMimeType,
-			value: solutions[0]
-		}]
-	};
+	return Data.updatePart(part, choices, solutions[0]);
 };
 
 const getSolutionIndices = (arr) => arr.reduce((acc, item, index) => {
@@ -85,7 +74,7 @@ MultipleChoiceEditor.propTypes = {
 	error: PropTypes.any
 };
 export default function MultipleChoiceEditor ({noSolutions, onChange: onChangeProp, part, error}) {
-	const choices = getChoices(part);
+	const choices = getChoices(part, error, noSolutions);
 	const onChange = newChoices => (
 		onChangeProp?.(
 			updatePart(mergeChoices(choices, newChoices), part)
