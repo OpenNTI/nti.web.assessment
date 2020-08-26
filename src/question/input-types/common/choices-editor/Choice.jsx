@@ -119,13 +119,15 @@ export default function Choice ({
 	};
 
 	return (
-		<div className={cx('choice-editor', className, {error: Boolean(error), solution: isSolution})}>
+		<div className={cx('choice-editor', className, {error: Boolean(error), solution: isSolution, draggable})}>
 			{draggable && (<DnD.DragHandle className={cx('drag-handle')} connect={connectDragSource} />)}
-			{!hideSolutions && multipleSolutions && (
-				<Checkbox className={cx('checkbox')} green checked={isSolution} onChange={onSolutionChange} disabled={noSolutions}/>
-			)}
-			{!hideSolutions && !multipleSolutions && (
-				<Radio className={cx('radio')} green name={group} checked={isSolution} onChange={onSolutionChange} disabled={noSolutions} />
+			{!hideSolutions && (
+				<div className={cx('solution-control')}>
+					{multipleSolutions ?
+						(<Checkbox className={cx('checkbox')} green checked={isSolution} onChange={onSolutionChange} disabled={noSolutions}/>) :
+						(<Radio className={cx('radio')} green name={group} checked={isSolution} onChange={onSolutionChange} disabled={noSolutions} />)
+					}
+				</div>
 			)}
 			<div className={cx('editor-container')}>
 				{!settingUp && (

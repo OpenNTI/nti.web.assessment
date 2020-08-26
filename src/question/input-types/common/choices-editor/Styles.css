@@ -6,13 +6,17 @@
 .choice-editor {
 	display: flex;
 	flex-direction: row;
-	align-items: center;
+	align-items: flex-start;
 	background-color: white;
 	padding: 0 0.625rem;
 	border: 1px solid var(--border-grey-light);
 
 	&:focus-within {
 		border-color: var(--border-grey);
+	}
+
+	&.draggable {
+		padding-left: 0;
 	}
 
 	&.solution {
@@ -24,20 +28,27 @@
 		}
 	}
 
+	& .drag-handle,
+	& .solution-control,
+	& .delete {
+		display: flex;
+		height: 40px;
+		justify-content: center;
+		align-items: center;
+	}
+
 	& .drag-handle {
 		flex: 0 0 auto;
+		padding-left: 0.625rem;
 
 		& i {
 			display: block;
 		}
 	}
 
-	& :global(.radio-component),
-	& :global(.checkbox-component) {
+	& .solution-control {
 		flex: 0 0 auto;
-		margin-top: 2px;
-		margin-left: 0.5rem;
-		line-height: 1.15;
+		margin-left: 0.625rem;
 	}
 
 	& .delete {
