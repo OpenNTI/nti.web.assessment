@@ -20,13 +20,9 @@ QuestionEditor.propTypes = {
 export default function QuestionEditor ({question, onChange, noSolutions}) {
 	const {content, parts} = question;
 
-	const onContentChange = () => {
-		debugger;
-	};
+	const onContentChange = () => {};
 
-	const onPartChange = (part, index) => {
-		debugger;
-	};
+	const onPartChange = (part, index) => {};
 
 	return (
 		<div className={cx('question-editor')}>
