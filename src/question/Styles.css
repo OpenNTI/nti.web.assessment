@@ -7,6 +7,25 @@
 
 .content {
 	padding: 1.25rem var(--side-padding, 1rem);
+	display: flex;
+	flex-direction: row;
+	align-items: flex-start;
+
+	& .index,
+	& .drag-handle {
+		flex: 0 0 auto;
+	}
+
+	& .index {
+		font-size: 0.875rem;
+		line-height: 1.5;
+		color: var(--tertiary-grey);
+		margin: 0 1rem 0 0.625rem;
+	}
+
+	& > *:last-child {
+		flex: 1 1 auto;
+	}
 }
 
 .parts {
