@@ -32,13 +32,10 @@ export default function QuestionEditor ({index, question, onChange, noSolutions}
 		parts
 	});
 
-	const onPartChange = (part, partIndex) => {
-		debugger;
-		onChange?.({
-			content,
-			parts: parts.map((p, i) => i === partIndex ? part : p)
-		});
-	};
+	const onPartChange = (part, partIndex) => onChange?.({
+		content,
+		parts: parts.map((p, i) => i === partIndex ? part : p)
+	});
 
 	return (
 		<div className={cx('question-editor')}>
