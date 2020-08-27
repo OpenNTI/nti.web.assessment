@@ -1,0 +1,11 @@
+.content-editor {
+	padding: 0 0.2rem;
+
+	& :global(.nti-draft-core .DraftEditor-root) {
+		padding: 0;
+		padding-bottom: 0;
+		font-size: 0.875rem;
+		line-height: 1.5;
+		min-height: 1rem;
+	}
+}

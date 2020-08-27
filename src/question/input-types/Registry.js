@@ -22,5 +22,9 @@ const Types = [
 ];
 
 
-export const getEditorFor = (part) => Types.find((t) => t.canHandlePart(part))?.Editor;
-export const getViewFor = (part) => Types.find((t) => t.canHandlePart(part))?.View;
+const findType = part => Types.find((t) => t.canHandlePart(part));
+
+export const getEditorFor = (part) => findType(part)?.Editor;
+export const getViewFor = (part) => findType(part)?.View;
+
+export const getContentPurposeFor = (part) => findType(part)?.ContentPurpose;

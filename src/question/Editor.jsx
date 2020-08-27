@@ -6,7 +6,7 @@ import {Text} from '@nti/web-commons';
 
 import Styles from './Styles.css';
 import {Editor as ContentEditor} from './content';
-import {Editor as PartEditor} from './input-types';
+import {Editor as PartEditor, getContentPurposeFor} from './input-types';
 
 const cx = classnames.bind(Styles);
 const t = scoped('nti-assessments.question.Editor', {
@@ -35,14 +35,19 @@ export default function QuestionEditor ({index, question, onChange, noSolutions}
 			<div className={cx('question')}>
 				<div className={cx('content')}>
 					{(index != null) && (<Text.Base className={cx('index')}>{t('index', {index})}</Text.Base>)}
-					<ContentEditor content={content} onChange={onContentChange} error={null} />
+					<ContentEditor
+						content={content}
+						purpose={parts?.[0] && getContentPurposeFor(parts[0])}
+						onChange={onContentChange}
+						error={null}
+					/>
 				</div>
 				<div className={cx('parts')}>
-					{(parts ?? []).map((part, index) => (
+					{(parts ?? []).map((part, partIndex) => (
 						<PartEditor
-							key={index}
+							key={partIndex}
 							part={part}
-							onChange={(newPart) => onPartChange(newPart, index)}
+							onChange={(newPart) => onPartChange(newPart, partIndex)}
 							noSolutions={noSolutions}
 						/>
 					))}
