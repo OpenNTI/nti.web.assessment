@@ -13,6 +13,7 @@ const t = scoped('nti-assessments.question.Editor', {
 	index: '%(index)s.'
 });
 
+
 QuestionEditor.propTypes = {
 	index: PropTypes.number,
 	question: PropTypes.shape({
@@ -26,9 +27,18 @@ QuestionEditor.propTypes = {
 export default function QuestionEditor ({index, question, onChange, noSolutions}) {
 	const {content, parts} = question;
 
-	const onContentChange = () => {};
+	const onContentChange = (newContent) => onChange?.({
+		content:newContent,
+		parts
+	});
 
-	const onPartChange = (part, partIndex) => {};
+	const onPartChange = (part, partIndex) => {
+		debugger;
+		onChange?.({
+			content,
+			parts: parts.map((p, i) => i === partIndex ? part : p)
+		});
+	};
 
 	return (
 		<div className={cx('question-editor')}>

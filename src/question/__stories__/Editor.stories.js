@@ -54,7 +54,7 @@ function SolutionsCmp ({onChange, type, index}) {
 
 	if (!question) { return null; }
 
-	return (<Editor question={question} index={index} onChange={onChange} />);
+	return (<Editor question={question} index={index}  />);
 }
 
 function NoSolutionsCmp ({onChange, type, index}) {
@@ -64,7 +64,7 @@ function NoSolutionsCmp ({onChange, type, index}) {
 
 	if (!question) { return null; }
 
-	return (<Editor question={question} index={index} onChange={onChange} noSolutions />);
+	return (<Editor question={question} index={index} onChange={q => (onChange(q), setQuestion(q))} noSolutions />);
 }
 
 export const Solutions = (props) => (<SolutionsCmp {...props} />) ;
