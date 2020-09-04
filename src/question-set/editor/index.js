@@ -1,2 +1,1 @@
-export QuestionBlocks from './question-blocks';
-export Context from './Context';
+export default from './Editor';

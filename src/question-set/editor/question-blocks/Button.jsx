@@ -29,7 +29,7 @@ export default function QuestionButton ({type}) {
 				arguments: '',
 				body: [],
 				options: {
-					part: type.generateBlankPart()
+					parts: [type.generateBlankPart()]
 				}
 			}
 		})

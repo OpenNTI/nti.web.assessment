@@ -10,12 +10,14 @@ export default [
 	{
 		handlesBlock: NewQuestionBlock.handlesBlock,
 		component: NewQuestionBlock,
-		editable: false
+		editable: false,
+		className: NewQuestionBlock.className
 	},
 	{
 		handlesBlock: QuestionRefBlock.handlesBlock,
 		component: QuestionRefBlock,
-		editable: false
+		editable: false,
+		className: QuestionRefBlock.className
 	},
 	...Types
 		.filter(type => Boolean(type.Label))

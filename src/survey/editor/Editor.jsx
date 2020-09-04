@@ -5,7 +5,6 @@ import {Editor} from '@nti/web-reading';
 
 import {Editor as QuestionSetEditor} from '../../question-set';
 
-
 const CustomBlocks = [
 	Editor.CustomBlocks.BuiltInBlock.Build(BLOCKS.BLOCKQUOTE),
 	Editor.CustomBlocks.BuiltInBlock.Build(BLOCKS.ORDERED_LIST_ITEM),
@@ -16,12 +15,28 @@ const CustomBlocks = [
 SurveyEditor.propTypes = {
 	survey: PropTypes.shape({
 		content: PropTypes.string,
-		polls: PropTypes.array
+		polls: PropTypes.array,
+		createPoll: PropTypes.func
 	})
 };
-export default function SurveyEditor () {
+export default function SurveyEditor ({survey}) {
+	const [polls, setPolls] = React.useState(null);
+
+	React.useEffect(() => setPolls(survey.polls ?? []), [survey]);
+
+	const createQuestion = async (data) => {
+		const poll = await survey.createPoll(data);
+
+		setPolls([...polls, poll]);
+
+		return poll;
+	};
+
 	return (
-		<QuestionSetEditor.Context>
+		<QuestionSetEditor
+			createQuestion={createQuestion}
+			questions={polls}
+		>
 			<Editor>
 				<Editor.Header />
 				<Editor.Content>
@@ -32,6 +47,6 @@ export default function SurveyEditor () {
 				<Editor.ControlBar />
 				<Editor.Sidebar customBlocks={CustomBlocks} />
 			</Editor>
-		</QuestionSetEditor.Context>
+		</QuestionSetEditor>
 	);
 }
