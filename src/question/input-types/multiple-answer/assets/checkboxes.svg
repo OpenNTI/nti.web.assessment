@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="70px" height="70px" viewBox="0 0 70 70" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 3.8.3 (29802) - http://www.bohemiancoding.com/sketch -->
+    <title>question-checkboxes</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <rect id="path-1" x="5" y="10" width="60" height="13" rx="2"></rect>
+        <mask id="mask-2" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="60" height="13" fill="white">
+            <use xlink:href="#path-1"></use>
+        </mask>
+        <rect id="path-3" x="5" y="28" width="60" height="13" rx="2"></rect>
+        <mask id="mask-4" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="60" height="13" fill="white">
+            <use xlink:href="#path-3"></use>
+        </mask>
+        <rect id="path-5" x="8" y="13" width="7" height="7"></rect>
+        <mask id="mask-6" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="7" height="7" fill="white">
+            <use xlink:href="#path-5"></use>
+        </mask>
+        <rect id="path-7" x="8" y="31" width="7" height="7"></rect>
+        <mask id="mask-8" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="7" height="7" fill="white">
+            <use xlink:href="#path-7"></use>
+        </mask>
+        <rect id="path-9" x="10" y="46" width="50" height="13" rx="2"></rect>
+        <mask id="mask-10" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="50" height="13" fill="white">
+            <use xlink:href="#path-9"></use>
+        </mask>
+        <rect id="path-11" x="13" y="49" width="7" height="7"></rect>
+        <mask id="mask-12" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="7" height="7" fill="white">
+            <use xlink:href="#path-11"></use>
+        </mask>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="question-checkboxes">
+            <g id="Rectangle-2">
+                <use fill="#FFFFFF" xlink:href="#path-1"></use>
+                <use stroke="#3FB34F" mask="url(#mask-2)" stroke-width="2" fill-opacity="0.15" fill="#3FB34F" xlink:href="#path-1"></use>
+            </g>
+            <g id="Rectangle-2-Copy">
+                <use fill="#FFFFFF" xlink:href="#path-3"></use>
+                <use stroke="#3FB34F" mask="url(#mask-4)" stroke-width="2" fill-opacity="0.15" fill="#3FB34F" xlink:href="#path-3"></use>
+            </g>
+            <use id="Rectangle-9" stroke="#46B34E" mask="url(#mask-6)" stroke-width="2" xlink:href="#path-5"></use>
+            <use id="Rectangle-9" stroke="#46B34E" mask="url(#mask-8)" stroke-width="2" xlink:href="#path-7"></use>
+            <use id="Rectangle-2-Copy-2" stroke="#E2E2E2" mask="url(#mask-10)" stroke-width="2" fill="#FFFFFF" xlink:href="#path-9"></use>
+            <use id="Rectangle-9" stroke="#C5C5C5" mask="url(#mask-12)" stroke-width="2" fill="#F3F3F3" xlink:href="#path-11"></use>
+            <path d="M10.5677671,34.767767 L12.5677671,34.767767 L12.5677671,35.767767 L10.5677671,35.767767 L10.5677671,34.767767 Z M10.5677671,32.767767 L11.5677671,32.767767 L11.5677671,34.767767 L10.5677671,34.767767 L10.5677671,32.767767 Z" id="Combined-Shape" fill="#4CB34D" transform="translate(11.567767, 34.267767) rotate(-45.000000) translate(-11.567767, -34.267767) "></path>
+            <path d="M10.5677671,16.767767 L12.5677671,16.767767 L12.5677671,17.767767 L10.5677671,17.767767 L10.5677671,16.767767 Z M10.5677671,14.767767 L11.5677671,14.767767 L11.5677671,16.767767 L10.5677671,16.767767 L10.5677671,14.767767 Z" id="Combined-Shape" fill="#4CB34D" transform="translate(11.567767, 16.267767) rotate(-45.000000) translate(-11.567767, -16.267767) "></path>
+        </g>
+    </g>
+</svg>

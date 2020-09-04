@@ -12,7 +12,7 @@ export const MultipleAnswer = MultipleAnswerType;
 export const MultipleChoice = MultipleChoiceType;
 export const Ordering = OrderingType;
 
-const Types = [
+export const Types = [
 	FileUpload,
 	FreeResponse,
 	ModeledContent,

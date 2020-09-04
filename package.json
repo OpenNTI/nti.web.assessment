@@ -2,7 +2,8 @@
   "name": "@nti/web-assessment",
   "version": "0.0.0",
   "description": "NextThought assessment components",
-  "main": "index.js",
+  "main": "lib/index.js",
+  "module": "src/index.js",
   "private": true,
   "scripts": {
     "test": "cmp-scripts test",
@@ -30,6 +31,7 @@
     "@nti/lib-locale": "NextThought/nti.lib.ntiids",
     "@nti/web-commons": "NextThought/nti.web.commons",
     "@nti/web-editor": "NextThought/nti.web.component.editor",
+    "@nti/web-reading": "NextThought/nti.web.reading",
     "classnames": "^2.2.6"
   },
   "devDependencies": {
