@@ -3,6 +3,10 @@
 
 	border: 1px solid var(--border-grey-light);
 	box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.15);
+
+	&.error {
+		box-shadow: 0 0 1px 1px var(--border-red);
+	}
 }
 
 .content {
@@ -32,4 +36,27 @@
 	padding: var(--side-padding, 1rem) var(--side-padding, 1rem) 2rem;
 	background: var(--panel-background);
 	border-top: 1px solid var(--border-grey-light);
+}
+
+.placeholder {
+	& .content-placeholder {
+		height: 14px;
+		background-color: var(--border-grey-light);
+	}
+
+	& .choice-placeholder {
+		margin-bottom: 0.625rem;
+		background-color: white;
+		border: 1px solid var(--border-grey-light);
+		padding: 0.75rem 0.625rem;
+
+		&:last-of-type {
+			margin-bottom: 0;
+		}
+
+		& .text-placeholder {
+			height: 14px;
+			background-color: var(--border-grey-light);
+		}
+	}
 }
