@@ -39,9 +39,7 @@ function QuestionSetEditor ({noSolutions, createQuestion, questions, children, e
 	};
 
 	React.useImperativeHandle(editorRef, () => ({
-		getUpdates: () => {
-			debugger;
-		}
+		getUpdates: () => {}
 	}));
 
 	return (
