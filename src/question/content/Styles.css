@@ -1,7 +1,7 @@
 .content-editor {
 	padding: 0 0.2rem;
 
-	& :global(.nti-draft-core .DraftEditor-root) {
+	& :global(.nti-draft-core-container .nti-draft-core .DraftEditor-root) {
 		padding: 0;
 		padding-bottom: 0;
 		font-size: 0.875rem;

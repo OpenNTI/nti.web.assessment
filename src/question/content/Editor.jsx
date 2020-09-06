@@ -74,6 +74,7 @@ export default function ContentEditor ({content, onChange: onChangeProp, purpose
 					plugins={plugins}
 					onContentChange={onContentChange}
 					contentChangeBuffer={100}
+					autoNest
 				/>
 			)}
 			{error && (<Errors.Message className={cx('error')} error={error} />)}

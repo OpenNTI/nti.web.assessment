@@ -138,6 +138,7 @@ export default function Choice ({
 						plugins={plugins}
 						onContentChange={onContentChange}
 						contentChangeBuffer={100}
+						autoNest
 					/>
 				)}
 				{error && (<Errors.Message className={cx('editor')} error={error} />)}
