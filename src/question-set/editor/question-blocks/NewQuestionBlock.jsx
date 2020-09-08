@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames/bind';
 import {wait} from '@nti/lib-commons';
-import {BLOCKS, getAtomicBlockData} from '@nti/web-editor';
+import {BLOCKS, getAtomicBlockData, Plugins} from '@nti/web-editor';
 import {Loading} from '@nti/web-commons';
 
 import {Placeholder} from '../../../question';
@@ -13,6 +13,8 @@ import Styles from './Styles.css';
 import Controls from './Controls';
 
 const cx = classnames.bind(Styles);
+
+const {CustomBlock} = Plugins.CustomBlocks;
 
 const MinLoad = 600;
 
@@ -60,7 +62,7 @@ export default function NewQuestionBlock ({block, blockProps}) {
 	}, []);
 
 	return (
-		<>
+		<CustomBlock className={cx('block')} block={block} blockProps={blockProps}>
 			<div className={cx('new-question-block')}>
 				<Loading.Placeholder
 					loading
@@ -71,6 +73,6 @@ export default function NewQuestionBlock ({block, blockProps}) {
 				</Loading.Placeholder>
 			</div>
 			<Loading.Placeholder loading fallback={(<Controls />)} delay={300} />
-		</>
+		</CustomBlock>
 	);
 }

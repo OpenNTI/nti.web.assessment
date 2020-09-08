@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames/bind';
-import {BLOCKS, getAtomicBlockData} from '@nti/web-editor';
+import {BLOCKS, getAtomicBlockData, Plugins} from '@nti/web-editor';
 
 import {Editor} from '../../../question';
 import Context from '../Context';
@@ -10,6 +10,8 @@ import Styles from './Styles.css';
 import Controls from './Controls';
 
 const cx = classnames.bind(Styles);
+
+const {CustomBlock} = Plugins.CustomBlocks;
 
 const Handles = {
 	'question-ref': true,
@@ -39,14 +41,15 @@ export default function QuestionRefBlock ({block, blockProps}) {
 	const onChange = (changes) => setUpdates(changes);
 
 	return (
-		<>
+		<CustomBlock className={cx('block')} draggable block={block} blockProps={blockProps}>
 			<Editor
 				index={index != null ? (index + 1) : null}
 				question={updates ?? question}
 				onChange={onChange}
 				noSolutions={questionSet?.noSolutions}
+				draggable
 			/>
 			<Controls block={block} blockProps={blockProps} />
-		</>
+		</CustomBlock>
 	);
 }

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames/bind';
 import {scoped} from '@nti/lib-locale';
-import {Text} from '@nti/web-commons';
+import {Text, DnD} from '@nti/web-commons';
 
 import Styles from './Styles.css';
 import {Editor as ContentEditor} from './content';
@@ -22,9 +22,10 @@ QuestionEditor.propTypes = {
 	}),
 	onChange: PropTypes.func,
 
-	noSolutions: PropTypes.bool
+	noSolutions: PropTypes.bool,
+	draggable: PropTypes.bool
 };
-export default function QuestionEditor ({index, question, onChange, noSolutions}) {
+export default function QuestionEditor ({index, question, onChange, noSolutions, draggable}) {
 	const {content, parts} = question;
 
 	const onContentChange = (newContent) => onChange?.({
@@ -41,6 +42,7 @@ export default function QuestionEditor ({index, question, onChange, noSolutions}
 		<div className={cx('question-editor')}>
 			<div className={cx('question')}>
 				<div className={cx('content')}>
+					{draggable && (<DnD.DragHandle className={cx('drag')} />)}
 					{(index != null) && (<Text.Base className={cx('index')}>{t('index', {index})}</Text.Base>)}
 					<ContentEditor
 						content={content}
