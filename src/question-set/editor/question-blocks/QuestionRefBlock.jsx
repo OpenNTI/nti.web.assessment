@@ -21,25 +21,27 @@ QuestionRefBlock.handlesBlock = (block, editorState) => block.getType() === BLOC
 QuestionRefBlock.propTypes = {
 	block: PropTypes.object,
 	blockProps: PropTypes.shape({
+		indexOfType: PropTypes.number,
 		editorState: PropTypes.object,
 		setBlockProps: PropTypes.func
 	})
 };
 export default function QuestionRefBlock ({block, blockProps}) {
+	const {indexOfType:index, editorState} = blockProps;
+
 	const questionSet = React.useContext(Context);
 	const [updates, setUpdates] = React.useState(null);
 
-	const id = getAtomicBlockData(block, blockProps.editorState)?.arguments;
+	const id = getAtomicBlockData(block, editorState)?.arguments;
 
 	const question = questionSet.getQuestion(id);
-	const index = questionSet.getQuestionIndex(id);
 
 	const onChange = (changes) => setUpdates(changes);
 
 	return (
 		<>
 			<Editor
-				index={index != null ? index + 1 : null}
+				index={index != null ? (index + 1) : null}
 				question={updates ?? question}
 				onChange={onChange}
 				noSolutions={questionSet?.noSolutions}
