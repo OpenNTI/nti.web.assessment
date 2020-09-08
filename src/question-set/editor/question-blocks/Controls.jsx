@@ -21,8 +21,16 @@ export default function QuestionBlockControls ({blockProps}) {
 
 	return (
 		<StandardUI.Card className={cx('controls')}>
-			<Icons.Arrow.Up fill className={cx('icon', 'move-up', {disabled: isFirst})} onClick={moveBlockUp} />
-			<Icons.Arrow.Down fill className={cx('icon', 'move-down', {disabled: isLast})} onClick={moveBlockDown} />
+			<Icons.Arrow.Up
+				fill
+				className={cx('icon', 'move-up', {disabled: isFirst || !moveBlockUp})}
+				onClick={moveBlockUp}
+			/>
+			<Icons.Arrow.Down
+				fill
+				className={cx('icon', 'move-down', {disabled: isLast || !moveBlockDown})}
+				onClick={moveBlockDown}
+			/>
 		</StandardUI.Card>
 	);
 }

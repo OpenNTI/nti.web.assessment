@@ -10,6 +10,7 @@ import {NewQuestion} from '../Constants';
 import Context from '../Context';
 
 import Styles from './Styles.css';
+import Controls from './Controls';
 
 const cx = classnames.bind(Styles);
 
@@ -59,14 +60,17 @@ export default function NewQuestionBlock ({block, blockProps}) {
 	}, []);
 
 	return (
-		<div className={cx('new-question-block')}>
-			<Loading.Placeholder
-				loading
-				fallback={(<Placeholder error={error} />)}
-				delay={300}
-			>
-				{null}
-			</Loading.Placeholder>
-		</div>
+		<>
+			<div className={cx('new-question-block')}>
+				<Loading.Placeholder
+					loading
+					fallback={(<Placeholder error={error} />)}
+					delay={300}
+				>
+					{null}
+				</Loading.Placeholder>
+			</div>
+			<Loading.Placeholder loading fallback={(<Controls />)} delay={300} />
+		</>
 	);
 }
