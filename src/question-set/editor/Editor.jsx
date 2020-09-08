@@ -35,7 +35,8 @@ function QuestionSetEditor ({noSolutions, createQuestion, questions, children, e
 		getQuestion: (id) => questionMap[id],
 		getQuestionIndex: (id) => questions.findIndex((question) => question.getID() === id),
 
-		createQuestion
+		createQuestion,
+		noSolutions
 	};
 
 	React.useImperativeHandle(editorRef, () => ({

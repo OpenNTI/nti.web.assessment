@@ -36,6 +36,7 @@ export default function SurveyEditor ({survey}) {
 		<QuestionSetEditor
 			createQuestion={createQuestion}
 			questions={polls}
+			noSolutions
 		>
 			<Editor>
 				<Editor.Header />

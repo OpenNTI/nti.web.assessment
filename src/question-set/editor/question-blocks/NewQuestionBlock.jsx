@@ -9,13 +9,13 @@ import {Placeholder} from '../../../question';
 import {NewQuestion} from '../Constants';
 import Context from '../Context';
 
-import Styles from './NewQuestionBlock.css';
+import Styles from './Styles.css';
 
 const cx = classnames.bind(Styles);
 
 const MinLoad = 600;
 
-NewQuestionBlock.className = cx('new-question-wrapper');
+NewQuestionBlock.className = cx('block-wrapper');
 NewQuestionBlock.handlesBlock = (block, editorState) => block.getType() === BLOCKS.ATOMIC && getAtomicBlockData(block, editorState)?.name === NewQuestion;
 NewQuestionBlock.propTypes = {
 	block: PropTypes.object,
