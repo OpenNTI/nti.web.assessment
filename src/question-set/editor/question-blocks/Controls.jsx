@@ -13,11 +13,12 @@ QuestionBlockControls.propTypes = {
 		isFirst: PropTypes.bool,
 		isLast: PropTypes.bool,
 		moveBlockUp: PropTypes.func,
-		moveBlockDown: PropTypes.func
+		moveBlockDown: PropTypes.func,
+		removeBlock: PropTypes.func
 	})
 };
 export default function QuestionBlockControls ({blockProps}) {
-	const {isFirst, isLast, moveBlockUp, moveBlockDown} = blockProps ?? {};
+	const {isFirst, isLast, moveBlockUp, moveBlockDown, removeBlock} = blockProps ?? {};
 
 	return (
 		<StandardUI.Card className={cx('controls')}>
@@ -31,6 +32,7 @@ export default function QuestionBlockControls ({blockProps}) {
 				className={cx('icon', 'move-down', {disabled: isLast || !moveBlockDown})}
 				onClick={moveBlockDown}
 			/>
+			<Icons.TrashCan fill className={cx('icon', 'delete', {disabled: !removeBlock})} onClick={removeBlock} />
 		</StandardUI.Card>
 	);
 }
