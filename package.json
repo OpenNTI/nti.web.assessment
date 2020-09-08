@@ -29,6 +29,7 @@
   "dependencies": {
     "@nti/lib-commons": "NextThought/nti.lib.commons",
     "@nti/lib-locale": "NextThought/nti.lib.ntiids",
+    "@nti/lib-store": "NextThought/nti.lib.store",
     "@nti/web-commons": "NextThought/nti.web.commons",
     "@nti/web-editor": "NextThought/nti.web.editor",
     "@nti/web-reading": "NextThought/nti.web.reading",

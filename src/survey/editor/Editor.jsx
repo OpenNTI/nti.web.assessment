@@ -32,10 +32,16 @@ export default function SurveyEditor ({survey}) {
 		return poll;
 	};
 
+	const onQuestionSetChange = ({errors, updates}) => {
+	};
+
 	return (
 		<QuestionSetEditor
 			createQuestion={createQuestion}
 			questions={polls}
+
+			onChange={onQuestionSetChange}
+
 			noSolutions
 		>
 			<Editor>

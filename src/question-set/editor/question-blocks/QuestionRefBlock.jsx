@@ -4,7 +4,7 @@ import classnames from 'classnames/bind';
 import {BLOCKS, getAtomicBlockData, Plugins} from '@nti/web-editor';
 
 import {Editor} from '../../../question';
-import Context from '../Context';
+import Store from '../Store';
 
 import Styles from './Styles.css';
 import Controls from './Controls';
@@ -31,14 +31,14 @@ QuestionRefBlock.propTypes = {
 export default function QuestionRefBlock ({block, blockProps}) {
 	const {indexOfType:index, editorState} = blockProps;
 
-	const questionSet = React.useContext(Context);
-	const [updates, setUpdates] = React.useState(null);
-
 	const id = getAtomicBlockData(block, editorState)?.arguments;
-
-	const question = questionSet.getQuestion(id);
-
-	const onChange = (changes) => setUpdates(changes);
+	const {
+		question,
+		noSolutions,
+		updates,
+		error,
+		onChange
+	} = Store.useQuestionStore(id);
 
 	return (
 		<CustomBlock className={cx('block')} draggable block={block} blockProps={blockProps}>
@@ -46,7 +46,8 @@ export default function QuestionRefBlock ({block, blockProps}) {
 				index={index != null ? (index + 1) : null}
 				question={updates ?? question}
 				onChange={onChange}
-				noSolutions={questionSet?.noSolutions}
+				noSolutions={noSolutions}
+				error={error}
 				draggable
 			/>
 			<Controls block={block} blockProps={blockProps} />

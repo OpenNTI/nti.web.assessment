@@ -7,7 +7,7 @@ import {Loading} from '@nti/web-commons';
 
 import {Placeholder} from '../../../question';
 import {NewQuestion} from '../Constants';
-import Context from '../Context';
+import Store from '../Store';
 
 import Styles from './Styles.css';
 import Controls from './Controls';
@@ -28,18 +28,18 @@ NewQuestionBlock.propTypes = {
 	})
 };
 export default function NewQuestionBlock ({block, blockProps}) {
-	const questionSet = React.useContext(Context);
+	const {[Store.CreateQuestion]: createQuestion} = Store.useMonitor([Store.CreateQuestion]);
 	const [error, setError] = React.useState(null);
 
 	React.useEffect(() => {
 		const minWait = wait(MinLoad);
 		let unmounted = false;
 
-		const createQuestion = async () => {
+		const create = async () => {
 			const data = getAtomicBlockData(block, blockProps.editorState);
 
 			try {
-				const question = await questionSet?.createQuestion(data.options);
+				const question = await createQuestion?.(data.options);
 
 				if (unmounted) { return; }
 				await minWait;
@@ -57,7 +57,7 @@ export default function NewQuestionBlock ({block, blockProps}) {
 			}
 		};
 
-		createQuestion();
+		create();
 		return () => unmounted = true;
 	}, []);
 
