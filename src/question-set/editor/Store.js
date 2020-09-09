@@ -1,5 +1,8 @@
 import React from 'react';
 import {Stores} from '@nti/lib-store';
+import {Hooks} from '@nti/web-commons';
+
+const {useForceUpdate} = Hooks;
 
 function isPreflightStructural (resp) {
 	return false;
@@ -21,6 +24,57 @@ export default class QuestionSetEditorState extends Stores.BoundStore {
 	static OnQuestionChange = OnQuestionChange;
 	static OnQuestionError = OnQuestionError;
 
+	static useNewQuestionStore (id) {
+		if (!id) { throw new Error('useNewQuestionStore must be given an id'); }
+
+		const questionSet = this.useMonitor([
+			CreateQuestion,
+			RegisterQuestionStore,
+			OnQuestionError
+		]);
+
+		const forceUpdate = useForceUpdate();
+
+		const isPending = React.useRef();
+		const error = React.useRef();
+
+		const createQuestion = async (data) => {
+			try {
+				isPending.current = true;
+				error.current = null;
+
+				const question = await questionSet[CreateQuestion](data);
+
+				return question;
+			} catch (e) {
+				error.current = e;
+				forceUpdate();
+
+				questionSet[OnQuestionError](id, e);
+
+				return null;
+			} finally {
+				isPending.current = false;
+			}
+		};
+
+		const newQuestionStore = {
+			id,
+
+			get error () { return error.current; },
+			get isPending () { return isPending.current; },
+
+			createQuestion
+		};
+
+		React.useEffect(
+			() => questionSet[RegisterQuestionStore](id, newQuestionStore),
+			[id]
+		);
+
+		return newQuestionStore;
+	}
+
 	static useQuestionStore (id) {
 		if (!id) { throw new Error('useQuestionStore must be given an id'); }
 
@@ -35,12 +89,16 @@ export default class QuestionSetEditorState extends Stores.BoundStore {
 
 		const question = questionSet[GetQuestion](id);
 
+		const forceUpdate = useForceUpdate();
 		const isPending = React.useRef();
-		const [updates, setUpdates] = React.useState(null);
-		const [error, setError] = React.useState(null);
+		const updates = React.useRef();
+		const error = React.useRef();
+
+		const setUpdates = (u) => (updates.current = u, forceUpdate());
+		const setError = (e) => (error.current = e, forceUpdate());
 
 		const clearError = () => {
-			if (error) {
+			if (error.current) {
 				setError(null);
 				questionSet[OnQuestionError](id);
 			}
@@ -73,9 +131,9 @@ export default class QuestionSetEditorState extends Stores.BoundStore {
 
 			noSolutions: questionSet.NoSolutions,
 
-			updates,
-			error,
-			isPending: isPending.current,
+			get updates () { return updates.current; },
+			get error () { return error.current; },
+			get isPending () { return isPending.current; },
 
 			onChange
 		};
@@ -119,7 +177,7 @@ export default class QuestionSetEditorState extends Stores.BoundStore {
 		return map[id] || this.#newQuestions[id];
 	}
 
-	#internalChange () {
+	#internalQuestionChange () {
 		const stores = Object.entries(this.#questionStores ?? {});
 		const change = stores.reduce((acc, store) => {
 			const [id, state] = store;
@@ -136,11 +194,11 @@ export default class QuestionSetEditorState extends Stores.BoundStore {
 			return acc;
 		}, {errors: [], updates: []});
 
-		this.binding.onChange?.(change);
+		this.binding.onQuestionsChange?.(change);
 	}
 
-	[OnQuestionChange] () { this.#internalChange(); }
-	[OnQuestionError] () { this.#internalChange(); }
+	[OnQuestionChange] () { this.#internalQuestionChange(); }
+	[OnQuestionError] () { this.#internalQuestionChange(); }
 
 	[RegisterQuestionStore] (id, store) {
 		const isNew = !this.#questionStores[id];
@@ -148,9 +206,14 @@ export default class QuestionSetEditorState extends Stores.BoundStore {
 		this.#questionStores[id] = store;
 
 		if (isNew) {
-			this.#internalChange();
+			this.#internalQuestionChange();
 		}
 
-		return () => delete this.#questionStores[id];
+		return () => {
+			if (this.#questionStores[id] === store) {
+				delete this.#questionStores[id];
+				this.#internalQuestionChange();
+			}
+		};
 	}
 }

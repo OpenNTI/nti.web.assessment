@@ -3,6 +3,8 @@ import {Page} from '@nti/web-commons';
 
 import Editor from '../editor';
 
+const DefaultDelay = 1000;
+
 let IdCounter = 0;
 
 function getId (prefix) {
@@ -11,7 +13,9 @@ function getId (prefix) {
 	return `${prefix ?? 'id'}-${IdCounter}`;
 }
 
-function buildFakePoll (data, {preflightPoll}) {
+function buildFakePoll (data, config) {
+	const {preflightPoll, errorOnPollPreflight} = config;
+
 	const id = getId('poll');
 
 	return {
@@ -22,16 +26,22 @@ function buildFakePoll (data, {preflightPoll}) {
 		preflight: (newData) => {
 			preflightPoll?.(newData);
 
-			return new Promise((fulfill) => {
+			return new Promise((fulfill, reject) => {
 				setTimeout(() => {
-					fulfill();
-				}, 3000);
+					if (errorOnPollPreflight) {
+						reject(new Error('Poll Preflight Failed'));
+					} else {
+						fulfill();
+					}
+				}, config.artificialDelay ?? DefaultDelay);
 			});
 		}
 	};
 }
 
-function buildFakeSurvey ({createPoll, preflightPoll, errorOnPollCreation}) {
+function buildFakeSurvey (config) {
+	const {createPoll, errorOnPollCreation} = config;
+
 	return {
 		title: 'Test Survey',
 		description: 'This is a the story of a survey, who cried a river and drowned the whole world.',
@@ -41,11 +51,11 @@ function buildFakeSurvey ({createPoll, preflightPoll, errorOnPollCreation}) {
 			return new Promise((fulfill, reject) => {
 				setTimeout(() => {
 					if (errorOnPollCreation) {
-						reject('No Poll Creation');
+						reject(new Error('No Poll Creation'));
 					} else {
-						fulfill(buildFakePoll(data, {preflightPoll}));
+						fulfill(buildFakePoll(data, config));
 					}
-				}, 3000);
+				}, config.artificialDelay ?? DefaultDelay);
 			});
 		}
 	};
@@ -58,7 +68,19 @@ export default {
 		createPoll: {action: 'Poll Created'},
 		preflightPoll: {action: 'Poll Preflight'},
 
+		artificalDelay: {
+			control: {
+				type: 'number',
+			}
+		},
+
 		errorOnPollCreation: {
+			control: {
+				type: 'boolean'
+			}
+		},
+
+		errorOnPollPreflight: {
 			control: {
 				type: 'boolean'
 			}

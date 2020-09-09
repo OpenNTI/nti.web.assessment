@@ -28,8 +28,7 @@ NewQuestionBlock.propTypes = {
 	})
 };
 export default function NewQuestionBlock ({block, blockProps}) {
-	const {[Store.CreateQuestion]: createQuestion} = Store.useMonitor([Store.CreateQuestion]);
-	const [error, setError] = React.useState(null);
+	const newQuestionStore = Store.useNewQuestionStore(block.getKey());
 
 	React.useEffect(() => {
 		const minWait = wait(MinLoad);
@@ -38,23 +37,16 @@ export default function NewQuestionBlock ({block, blockProps}) {
 		const create = async () => {
 			const data = getAtomicBlockData(block, blockProps.editorState);
 
-			try {
-				const question = await createQuestion?.(data.options);
+			const question = await newQuestionStore.createQuestion(data.options);
 
-				if (unmounted) { return; }
-				await minWait;
+			if (!question || unmounted) { return; }
+			await minWait;
 
-				blockProps.setBlockData({
-					name: question.isPoll ? 'poll-ref' : 'question-ref',
-					arguments: question.getID(),
-					options: {}
-				});
-			} catch (e) {
-				if (unmounted) { return; }
-				await minWait;
-
-				setError(e);
-			}
+			blockProps.setBlockData({
+				name: question.isPoll ? 'poll-ref' : 'question-ref',
+				arguments: question.getID(),
+				options: {}
+			});
 		};
 
 		create();
@@ -66,7 +58,7 @@ export default function NewQuestionBlock ({block, blockProps}) {
 			<div className={cx('new-question-block')}>
 				<Loading.Placeholder
 					loading
-					fallback={(<Placeholder error={error} />)}
+					fallback={(<Placeholder error={newQuestionStore.error} />)}
 					delay={300}
 				>
 					{null}

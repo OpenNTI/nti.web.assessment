@@ -25,6 +25,7 @@ function useProperty (name, src) {
 	};
 }
 
+
 SurveyEditor.propTypes = {
 	survey: PropTypes.shape({
 		title: PropTypes.string,
@@ -38,16 +39,26 @@ export default function SurveyEditor ({survey}) {
 	const contentsProp = useProperty('contents', survey);
 	const questionsProp = useProperty('questions', survey);
 
+	const allErrors = ([
+		titleProp.error,
+		contentsProp.error,
+		questionsProp.error
+	]).flat().filter(Boolean);
+
+	React.useEffect(() => {
+		//TODO: if the survey has no submissions, go ahead and auto save
+	}, [titleProp.value, contentsProp.value, questionsProp.value]);
+
 	const createQuestion = async (data) => {
 		const poll = await survey.createPoll(data);
 
 		return poll;
 	};
 
-	const onQuestionsChange = ({errors, updates}) => (
-		questionsProp.onChange(updates),
-		questionsProp.setError(errors)
-	);
+	const onQuestionsChange = ({errors, updates}) => {
+		questionsProp.onChange(updates);
+		questionsProp.setError(errors);
+	};
 
 	return (
 		<QuestionSetEditor
@@ -65,7 +76,7 @@ export default function SurveyEditor ({survey}) {
 					<Editor.Content.Description />
 					<Editor.Content.Body customBlocks={CustomBlocks} {...contentsProp} />
 				</Editor.Content>
-				<Editor.ControlBar />
+				<Editor.ControlBar errors={allErrors} />
 				<Editor.Sidebar customBlocks={CustomBlocks} />
 			</Editor>
 		</QuestionSetEditor>
