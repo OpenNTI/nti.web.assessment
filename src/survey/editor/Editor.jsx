@@ -12,44 +12,58 @@ const CustomBlocks = [
 	...QuestionSetEditor.QuestionBlocks
 ];
 
+function useProperty (name, src) {
+	const [value, setValue] = React.useState(src[name]);
+	const [error, setError] = React.useState(null);
+
+	return {
+		value,
+		onChange: (newValue) => setValue(newValue),
+
+		error,
+		setError: (err) => setError(err)
+	};
+}
+
 SurveyEditor.propTypes = {
 	survey: PropTypes.shape({
-		content: PropTypes.string,
-		polls: PropTypes.array,
+		title: PropTypes.string,
+		contents: PropTypes.string,
+		questions: PropTypes.array,
 		createPoll: PropTypes.func
 	})
 };
 export default function SurveyEditor ({survey}) {
-	const [polls, setPolls] = React.useState(null);
-
-	React.useEffect(() => setPolls(survey.polls ?? []), [survey]);
+	const titleProp = useProperty('title', survey);
+	const contentsProp = useProperty('contents', survey);
+	const questionsProp = useProperty('questions', survey);
 
 	const createQuestion = async (data) => {
 		const poll = await survey.createPoll(data);
 
-		setPolls([...polls, poll]);
-
 		return poll;
 	};
 
-	const onQuestionSetChange = ({errors, updates}) => {
-	};
+	const onQuestionsChange = ({errors, updates}) => (
+		questionsProp.onChange(updates),
+		questionsProp.setError(errors)
+	);
 
 	return (
 		<QuestionSetEditor
 			createQuestion={createQuestion}
-			questions={polls}
+			questionSet={survey}
 
-			onChange={onQuestionSetChange}
+			onQuestionsChange={onQuestionsChange}
 
 			noSolutions
 		>
 			<Editor>
 				<Editor.Header />
 				<Editor.Content>
-					<Editor.Content.Title />
+					<Editor.Content.Title {...titleProp} />
 					<Editor.Content.Description />
-					<Editor.Content.Body customBlocks={CustomBlocks} />
+					<Editor.Content.Body customBlocks={CustomBlocks} {...contentsProp} />
 				</Editor.Content>
 				<Editor.ControlBar />
 				<Editor.Sidebar customBlocks={CustomBlocks} />

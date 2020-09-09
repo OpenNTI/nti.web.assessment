@@ -89,28 +89,34 @@ export default class QuestionSetEditorState extends Stores.BoundStore {
 	}
 
 	#questionStores = {};
+	#newQuestions = {};
 
 
 	load () {
-		const questions = this.get('questions');
+		const questionSet = this.get('questionsSet');
 
-		if (this.binding.questions === questions) { return; }
+		if (this.binding.questionsSet === questionSet) { return; }
+
+		const {questions} = questionSet;
 
 		this.set({
-			questions: this.binding.questions ?? [],
-			questionMap: (this.binding.questions ?? []).reduce((acc, question) => ({...acc, [question.getID()]: question}), {})
+			questionSet: this.binding.questionSet ?? [],
+			questionMap: (questions ?? []).reduce((acc, question) => ({...acc, [question.getID()]: question}), {})
 		});
-
 	}
 
-	[CreateQuestion] (data) {
-		return this.binding.createQuestion(data);
+	async [CreateQuestion] (data) {
+		const question = await this.binding.createQuestion(data);
+
+		this.#newQuestions[question.getID()] = question;
+
+		return question;
 	}
 
 	[GetQuestion] (id) {
-		const map = this.get('questionMap');
+		const map = this.get('questionMap') ?? {};
 
-		return map[id];
+		return map[id] || this.#newQuestions[id];
 	}
 
 	#internalChange () {

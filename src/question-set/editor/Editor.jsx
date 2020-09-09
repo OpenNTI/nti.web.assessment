@@ -1,22 +1,18 @@
-import React from 'react';
+// import React from 'react';
 import PropTypes from 'prop-types';
 
-import Context from './Context';
 import Store from './Store';
 import QuestionBlocks from './question-blocks';
 
 QuestionSetEditor.QuestionBlocks = QuestionBlocks;
-QuestionSetEditor.useContext = () => React.useContext(Context);
 QuestionSetEditor.propTypes = {
 	createQuestion: PropTypes.func,
-	onChange: PropTypes.func,
+	onQuestionsChange: PropTypes.func,
 	onError: PropTypes.func,
 
-	questions: PropTypes.arrayOf(
-		PropTypes.shape({
-			getID: PropTypes.func
-		})
-	),
+	questionSet: PropTypes.shape({
+		questions: PropTypes.array
+	}),
 
 	noSolutions: PropTypes.bool,
 
@@ -31,10 +27,10 @@ function QuestionSetEditor ({
 export default Store.WrapCmp(QuestionSetEditor, {
 	deriveBindingFromProps: (props) => ({
 		createQuestion: props.createQuestion,
-		onChange: props.onChange,
+		onQuestionsChange: props.onQuestionsChange,
 		onError: props.onError,
 
-		questions: props.questions,
+		questionSet: props.questionSet,
 
 		noSolutions: props.noSolutions
 	})
