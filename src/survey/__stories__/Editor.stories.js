@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {Page} from '@nti/web-commons';
 
 import Editor from '../editor';
@@ -14,7 +15,7 @@ function getId (prefix) {
 }
 
 function buildFakePoll (data, config) {
-	const {preflightPoll, errorOnPollPreflight} = config;
+	const {preflightPoll} = config;
 
 	const id = getId('poll');
 
@@ -28,7 +29,9 @@ function buildFakePoll (data, config) {
 
 			return new Promise((fulfill, reject) => {
 				setTimeout(() => {
-					if (errorOnPollPreflight) {
+					debugger;
+					if (config.errorOnPollPreflight) {
+						console.log('PREFLIGHT ERROR');
 						reject(new Error('Poll Preflight Failed'));
 					} else {
 						fulfill();
@@ -88,10 +91,38 @@ export default {
 	}
 };
 
-export const Base = (props) => (
-	<Page>
-		<Page.Content card={false}>
-			<Editor survey={buildFakeSurvey(props)} />
-		</Page.Content>
-	</Page>
-);
+
+export const Base = (props) => {
+	const delayRef = React.useRef();
+	const creationRef = React.useRef();
+	const preflightRef = React.useRef();
+
+	delayRef.current = props.artificalDelay;
+	creationRef.current = props.errorOnPollCreation;
+	preflightRef.current = props.errorOnPollPreflight;
+
+	const config = {
+		createPoll: props.createPoll,
+		preflightPoll: props.preflightPoll,
+
+		get artificalDelay () { return delayRef.current; },
+		get errorOnPollCreation () { return creationRef.current; },
+		get errorOnPollPreflight () { return preflightRef.current; }
+	};
+
+	return (
+		<Page>
+			<Page.Content card={false}>
+				<Editor survey={buildFakeSurvey(config)} />
+			</Page.Content>
+		</Page>
+	);
+};
+
+Base.propTypes = {
+	createPoll: PropTypes.func,
+	preflightPoll: PropTypes.func,
+	artificalDelay: PropTypes.number,
+	errorOnPollCreation: PropTypes.bool,
+	errorOnPollPreflight: PropTypes.bool
+};

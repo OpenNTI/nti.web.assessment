@@ -18,6 +18,8 @@ const Handles = {
 	'poll-ref': true
 };
 
+const StoreChangeDelay = 300;
+
 QuestionRefBlock.className = cx('block-wrapper');
 QuestionRefBlock.handlesBlock = (block, editorState) => block.getType() === BLOCKS.ATOMIC && Handles[getAtomicBlockData(block, editorState)?.name];
 QuestionRefBlock.propTypes = {
@@ -38,15 +40,26 @@ export default function QuestionRefBlock ({block, blockProps}) {
 		question,
 		noSolutions,
 		error,
+		clearError,
 		onChange: questionStoreChange
 	} = Store.useQuestionStore(id);
 
 	const onChange = (newQuestion) => {
+		clearError();
 		setBlockDataImmediately({updates: newQuestion});
 	};
 
 	React.useEffect(() => {
-		questionStoreChange(updates);
+		if (!updates) { return; }
+
+		const timeout = setTimeout(
+			() => questionStoreChange(updates),
+			StoreChangeDelay
+		);
+
+		return () => {
+			clearTimeout(timeout);
+		};
 	}, [updates]);
 
 	return (

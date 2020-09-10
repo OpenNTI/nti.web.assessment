@@ -15,8 +15,21 @@ const t = scoped('nti-assessments.question.Editor', {
 });
 
 
+const KnownPartFields = {
+	choices: true,
+	values: true,
+	labels: true
+};
+
+function isKnownPartError (error) {
+	if (!error) { return false; }
+
+	return KnownPartFields[error.field] && error.index;
+}
+
 QuestionEditor.propTypes = {
 	index: PropTypes.number,
+	error: PropTypes.any,
 	question: PropTypes.shape({
 		content: PropTypes.string,
 		parts: PropTypes.array
@@ -26,9 +39,12 @@ QuestionEditor.propTypes = {
 	noSolutions: PropTypes.bool,
 	draggable: PropTypes.bool
 };
-export default function QuestionEditor ({index, question, onChange, noSolutions, draggable}) {
+export default function QuestionEditor ({index, error, question, onChange, noSolutions, draggable}) {
 	const {content, parts} = question;
+
 	const errorLabel = t('errorLabel', {index});
+	const partError = isKnownPartError(error) ? error : null;
+	const contentError = !partError && error;
 
 	const onContentChange = (newContent) => onChange?.({
 		content:newContent,
@@ -40,6 +56,7 @@ export default function QuestionEditor ({index, question, onChange, noSolutions,
 		parts: parts.map((p, i) => i === partIndex ? part : p)
 	});
 
+
 	return (
 		<div className={cx('question-editor')}>
 			<div className={cx('question')}>
@@ -50,7 +67,7 @@ export default function QuestionEditor ({index, question, onChange, noSolutions,
 						content={content}
 						purpose={parts?.[0] && getContentPurposeFor(parts[0])}
 						onChange={onContentChange}
-						error={null}
+						error={contentError}
 						errorLabel={errorLabel}
 					/>
 				</div>
@@ -62,6 +79,7 @@ export default function QuestionEditor ({index, question, onChange, noSolutions,
 							onChange={(newPart) => onPartChange(newPart, partIndex)}
 							noSolutions={noSolutions}
 							errorLabel={errorLabel}
+							error={partError}
 						/>
 					))}
 				</div>

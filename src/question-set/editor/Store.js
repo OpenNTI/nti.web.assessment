@@ -90,6 +90,8 @@ export default class QuestionSetEditorState extends Stores.BoundStore {
 		const question = questionSet[GetQuestion](id);
 
 		const forceUpdate = useForceUpdate();
+
+		const validation = React.useRef();
 		const isPending = React.useRef();
 		const updates = React.useRef();
 		const error = React.useRef();
@@ -106,9 +108,12 @@ export default class QuestionSetEditorState extends Stores.BoundStore {
 
 		const validate = async (changes) => {
 			try {
+				await validation.current?.catch(() => {});
+				validation.current = question.preflight(changes);
+
 				isPending.current = true;
 
-				const resp = await question.preflight(changes);
+				const resp = await validation.current;
 
 				questionSet[OnQuestionChange](id, changes, isPreflightStructural(resp));
 			} catch (e) {
@@ -120,7 +125,6 @@ export default class QuestionSetEditorState extends Stores.BoundStore {
 		};
 
 		const onChange = (changes) => (
-			clearError(),
 			setUpdates(changes),
 			validate(changes)
 		);
@@ -135,6 +139,7 @@ export default class QuestionSetEditorState extends Stores.BoundStore {
 			get error () { return error.current; },
 			get isPending () { return isPending.current; },
 
+			clearError,
 			onChange
 		};
 
