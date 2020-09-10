@@ -25,20 +25,29 @@ QuestionRefBlock.propTypes = {
 	blockProps: PropTypes.shape({
 		indexOfType: PropTypes.number,
 		editorState: PropTypes.object,
-		setBlockProps: PropTypes.func
+		setBlockProps: PropTypes.func,
+		setBlockDataImmediately: PropTypes.func
 	})
 };
 export default function QuestionRefBlock ({block, blockProps}) {
-	const {indexOfType:index, editorState} = blockProps;
+	const {indexOfType:index, editorState, setBlockDataImmediately} = blockProps;
+	const data = getAtomicBlockData(block, editorState) ?? {};
+	const {arguments:id, updates} = data;
 
-	const id = getAtomicBlockData(block, editorState)?.arguments;
 	const {
 		question,
 		noSolutions,
-		updates,
 		error,
-		onChange
+		onChange: questionStoreChange
 	} = Store.useQuestionStore(id);
+
+	const onChange = (newQuestion) => {
+		setBlockDataImmediately({updates: newQuestion});
+	};
+
+	React.useEffect(() => {
+		questionStoreChange(updates);
+	}, [updates]);
 
 	return (
 		<CustomBlock className={cx('block')} draggable block={block} blockProps={blockProps}>

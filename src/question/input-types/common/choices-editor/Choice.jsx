@@ -137,7 +137,7 @@ export default function Choice ({
 						editorState={editorState}
 						plugins={plugins}
 						onContentChange={onContentChange}
-						contentChangeBuffer={100}
+						contentChangeBuffer={0}
 						autoNest
 					/>
 				)}

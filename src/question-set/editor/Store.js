@@ -94,7 +94,7 @@ export default class QuestionSetEditorState extends Stores.BoundStore {
 		const updates = React.useRef();
 		const error = React.useRef();
 
-		const setUpdates = (u) => (updates.current = u, forceUpdate());
+		const setUpdates = (u) => (updates.current = u);
 		const setError = (e) => (error.current = e, forceUpdate());
 
 		const clearError = () => {
@@ -140,7 +140,7 @@ export default class QuestionSetEditorState extends Stores.BoundStore {
 
 		React.useEffect(
 			() => questionSet[RegisterQuestionStore](id, questionStore),
-			[id, updates, error]
+			[id]
 		);
 
 		return questionStore;

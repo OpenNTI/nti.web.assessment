@@ -16,7 +16,7 @@ export default [
 	{
 		handlesBlock: QuestionRefBlock.handlesBlock,
 		component: QuestionRefBlock,
-		editable: false,
+		editable: true,
 		className: QuestionRefBlock.className
 	},
 	...Types
