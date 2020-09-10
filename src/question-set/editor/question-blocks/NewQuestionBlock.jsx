@@ -29,6 +29,7 @@ NewQuestionBlock.propTypes = {
 };
 export default function NewQuestionBlock ({block, blockProps}) {
 	const newQuestionStore = Store.useNewQuestionStore(block.getKey());
+	const {indexOfType: index} = blockProps;
 
 	React.useEffect(() => {
 		const minWait = wait(MinLoad);
@@ -58,7 +59,12 @@ export default function NewQuestionBlock ({block, blockProps}) {
 			<div className={cx('new-question-block')}>
 				<Loading.Placeholder
 					loading
-					fallback={(<Placeholder error={newQuestionStore.error} />)}
+					fallback={(
+						<Placeholder
+							error={newQuestionStore.error}
+							index={index != null ? (index + 1) : null}
+						/>
+					)}
 					delay={300}
 				>
 					{null}

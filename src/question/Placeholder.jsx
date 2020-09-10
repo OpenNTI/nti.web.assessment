@@ -8,7 +8,8 @@ import Styles from './Styles.css';
 
 const cx = classnames.bind(Styles);
 const t = scoped('nti-assignments.question.Placeholder', {
-	index: '%(index)s.'
+	index: '%(index)s.',
+	errorLabel: 'Question %(index)s'
 });
 
 function Choice () {
@@ -32,7 +33,7 @@ export default function QuestionPlaceholder ({className, index, error}) {
 					<Text.Base className={cx('index')}>{t('index', {index})}</Text.Base>
 				)}
 				<div className={cx('content-placeholder')} />
-				{error && (<Errors.Message error={error} />)}
+				{error && (<Errors.Target error={error} label={t('errorLabel', {index})} />)}
 			</div>
 			<div className={cx('parts')}>
 				<Choice />

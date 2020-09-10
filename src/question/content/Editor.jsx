@@ -77,7 +77,7 @@ export default function ContentEditor ({content, onChange: onChangeProp, purpose
 					autoNest
 				/>
 			)}
-			{error && (<Errors.Message className={cx('error')} error={error} />)}
+			{error && (<Errors.Target className={cx('error')} error={error} />)}
 		</div>
 	);
 }

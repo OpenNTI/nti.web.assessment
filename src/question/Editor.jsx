@@ -10,7 +10,8 @@ import {Editor as PartEditor, getContentPurposeFor} from './input-types';
 
 const cx = classnames.bind(Styles);
 const t = scoped('nti-assessments.question.Editor', {
-	index: '%(index)s.'
+	index: '%(index)s.',
+	errorLabel: 'Question %(index)s'
 });
 
 
@@ -27,6 +28,7 @@ QuestionEditor.propTypes = {
 };
 export default function QuestionEditor ({index, question, onChange, noSolutions, draggable}) {
 	const {content, parts} = question;
+	const errorLabel = t('errorLabel', {index});
 
 	const onContentChange = (newContent) => onChange?.({
 		content:newContent,
@@ -49,6 +51,7 @@ export default function QuestionEditor ({index, question, onChange, noSolutions,
 						purpose={parts?.[0] && getContentPurposeFor(parts[0])}
 						onChange={onContentChange}
 						error={null}
+						errorLabel={errorLabel}
 					/>
 				</div>
 				<div className={cx('parts')}>
@@ -58,6 +61,7 @@ export default function QuestionEditor ({index, question, onChange, noSolutions,
 							part={part}
 							onChange={(newPart) => onPartChange(newPart, partIndex)}
 							noSolutions={noSolutions}
+							errorLabel={errorLabel}
 						/>
 					))}
 				</div>
