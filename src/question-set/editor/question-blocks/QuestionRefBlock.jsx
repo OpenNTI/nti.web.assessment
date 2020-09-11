@@ -41,7 +41,8 @@ export default function QuestionRefBlock ({block, blockProps}) {
 		noSolutions,
 		error,
 		clearError,
-		onChange: questionStoreChange
+		onChange: questionStoreChange,
+		setIndex: questionStoreSetIndex
 	} = Store.useQuestionStore(id);
 
 	const onChange = (newQuestion) => {
@@ -61,6 +62,10 @@ export default function QuestionRefBlock ({block, blockProps}) {
 			clearTimeout(timeout);
 		};
 	}, [updates]);
+
+	React.useEffect(() => {
+		questionStoreSetIndex(index);
+	}, [index]);
 
 	return (
 		<CustomBlock className={cx('block')} draggable block={block} blockProps={blockProps}>

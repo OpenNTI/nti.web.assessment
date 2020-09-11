@@ -95,6 +95,7 @@ export default class QuestionSetEditorState extends Stores.BoundStore {
 		const isPending = React.useRef();
 		const updates = React.useRef();
 		const error = React.useRef();
+		const index = React.useRef();
 
 		const setUpdates = (u) => (updates.current = u);
 		const setError = (e) => (error.current = e, forceUpdate());
@@ -124,10 +125,12 @@ export default class QuestionSetEditorState extends Stores.BoundStore {
 			}
 		};
 
+		const setIndex = (newIndex) => index.current = newIndex;
 		const onChange = (changes) => (
 			setUpdates(changes),
 			validate(changes)
 		);
+
 
 		const questionStore = {
 			id,
@@ -138,6 +141,9 @@ export default class QuestionSetEditorState extends Stores.BoundStore {
 			get updates () { return updates.current; },
 			get error () { return error.current; },
 			get isPending () { return isPending.current; },
+			get index () { return index.current; },
+
+			setIndex,
 
 			clearError,
 			onChange
@@ -183,7 +189,10 @@ export default class QuestionSetEditorState extends Stores.BoundStore {
 	}
 
 	#internalQuestionChange () {
-		const stores = Object.entries(this.#questionStores ?? {});
+		const stores = Object
+			.entries(this.#questionStores ?? {})
+			.sort(([,a], [,b]) => b.index - a.index);
+
 		const change = stores.reduce((acc, store) => {
 			const [id, state] = store;
 
