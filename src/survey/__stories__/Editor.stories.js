@@ -29,9 +29,7 @@ function buildFakePoll (data, config) {
 
 			return new Promise((fulfill, reject) => {
 				setTimeout(() => {
-					debugger;
 					if (config.errorOnPollPreflight) {
-						console.log('PREFLIGHT ERROR');
 						reject(new Error('Poll Preflight Failed'));
 					} else {
 						fulfill();
@@ -43,17 +41,30 @@ function buildFakePoll (data, config) {
 }
 
 function buildFakeSurvey (config) {
-	const {createPoll, errorOnPollCreation} = config;
+	const {createPoll, save} = config;
 
 	return {
 		title: 'Test Survey',
 		description: 'This is a the story of a survey, who cried a river and drowned the whole world.',
+		save: (data) => {
+			save?.(data);
+
+			return new Promise((fulfill, reject) => {
+				setTimeout(() => {
+					if (config.errorOnSurveySave) {
+						reject(new Error('No Survey Save'));
+					} else {
+						fulfill();
+					}
+				}, config.artificialDelay ?? DefaultDelay);
+			});
+		},
 		createPoll: (data) => {
 			createPoll?.(data);
 
 			return new Promise((fulfill, reject) => {
 				setTimeout(() => {
-					if (errorOnPollCreation) {
+					if (config.errorOnPollCreation) {
 						reject(new Error('No Poll Creation'));
 					} else {
 						fulfill(buildFakePoll(data, config));
@@ -70,6 +81,7 @@ export default {
 	argTypes: {
 		createPoll: {action: 'Poll Created'},
 		preflightPoll: {action: 'Poll Preflight'},
+		save: {action: 'Survey Saved'},
 
 		artificalDelay: {
 			control: {
@@ -87,6 +99,12 @@ export default {
 			control: {
 				type: 'boolean'
 			}
+		},
+
+		errorOnSurveySave: {
+			control: {
+				type: 'boolean'
+			}
 		}
 	}
 };
@@ -96,18 +114,22 @@ export const Base = (props) => {
 	const delayRef = React.useRef();
 	const creationRef = React.useRef();
 	const preflightRef = React.useRef();
+	const saveRef = React.useRef();
 
 	delayRef.current = props.artificalDelay;
 	creationRef.current = props.errorOnPollCreation;
 	preflightRef.current = props.errorOnPollPreflight;
+	saveRef.current = props.errorOnSurveySave;
 
 	const config = {
 		createPoll: props.createPoll,
 		preflightPoll: props.preflightPoll,
+		save: props.save,
 
 		get artificalDelay () { return delayRef.current; },
 		get errorOnPollCreation () { return creationRef.current; },
-		get errorOnPollPreflight () { return preflightRef.current; }
+		get errorOnPollPreflight () { return preflightRef.current; },
+		get errorOnSurveySave () { return saveRef.current; }
 	};
 
 	return (
@@ -122,7 +144,10 @@ export const Base = (props) => {
 Base.propTypes = {
 	createPoll: PropTypes.func,
 	preflightPoll: PropTypes.func,
+	save: PropTypes.func,
+
 	artificalDelay: PropTypes.number,
 	errorOnPollCreation: PropTypes.bool,
-	errorOnPollPreflight: PropTypes.bool
+	errorOnPollPreflight: PropTypes.bool,
+	errorOnSurveySave: PropTypes.bool
 };

@@ -42,9 +42,10 @@ ContentEditor.propTypes = {
 	content: PropTypes.string,
 	onChange: PropTypes.func,
 	purpose: PropTypes.string,
-	error: PropTypes.any
+	error: PropTypes.any,
+	errorLabel: PropTypes.string
 };
-export default function ContentEditor ({content, onChange: onChangeProp, purpose, error}) {
+export default function ContentEditor ({content, onChange: onChangeProp, purpose, error, errorLabel}) {
 	const [editorState, setEditorState] = React.useState(null);
 	const settingUp = !editorState;
 
@@ -77,7 +78,7 @@ export default function ContentEditor ({content, onChange: onChangeProp, purpose
 					autoNest
 				/>
 			)}
-			{error && (<Errors.Target className={cx('error')} error={error} />)}
+			{error && (<Errors.Target className={cx('error')} error={error} label={errorLabel} />)}
 		</div>
 	);
 }

@@ -31,10 +31,16 @@ SurveyEditor.propTypes = {
 		title: PropTypes.string,
 		contents: PropTypes.string,
 		questions: PropTypes.array,
-		createPoll: PropTypes.func
-	})
+		createPoll: PropTypes.func,
+		save: PropTypes.func
+	}),
+
+	afterSave: PropTypes.func
 };
-export default function SurveyEditor ({survey}) {
+export default function SurveyEditor ({survey, afterSave}) {
+	const [saving, setSaving] = React.useState(false);
+	const [error, setError] = React.useState(null);
+
 	const titleProp = useProperty('title', survey);
 	const contentsProp = useProperty('contents', survey);
 	const questionsProp = useProperty('questions', survey);
@@ -45,9 +51,6 @@ export default function SurveyEditor ({survey}) {
 		questionsProp.error
 	]).flat().filter(Boolean);
 
-	React.useEffect(() => {
-		//TODO: if the survey has no submissions, go ahead and auto save
-	}, [titleProp.value, contentsProp.value, questionsProp.value]);
 
 	const createQuestion = async (data) => {
 		const poll = await survey.createPoll(data);
@@ -59,6 +62,28 @@ export default function SurveyEditor ({survey}) {
 		questionsProp.onChange(updates);
 		questionsProp.setError(errors);
 	};
+
+	const save = async () => {
+		setSaving(true);
+
+		try {
+			await survey.save({
+				title: titleProp.value,
+				contents: contentsProp.value,
+				questions: questionsProp.value
+			});
+
+			afterSave?.(survey);
+		} catch (e) {
+			setError(e);
+		} finally {
+			setSaving(false);
+		}
+	};
+
+	React.useEffect(() => {
+		//TODO: if the survey has no submissions, go ahead and auto save
+	}, [titleProp.value, contentsProp.value, questionsProp.value]);
 
 	return (
 		<QuestionSetEditor
@@ -76,8 +101,12 @@ export default function SurveyEditor ({survey}) {
 					<Editor.Content.Description />
 					<Editor.Content.Body customBlocks={CustomBlocks} {...contentsProp} />
 				</Editor.Content>
-				<Editor.ControlBar errors={allErrors} />
 				<Editor.Sidebar customBlocks={CustomBlocks} />
+				<Editor.ControlBar
+					errors={allErrors}
+					saveButton={<button onClick={save}>Save</button>}
+					saving={saving}
+				/>
 			</Editor>
 		</QuestionSetEditor>
 	);
