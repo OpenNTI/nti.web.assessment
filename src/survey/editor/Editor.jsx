@@ -5,6 +5,8 @@ import {Editor} from '@nti/web-reading';
 
 import {Editor as QuestionSetEditor} from '../../question-set';
 
+import {getPollGenerator} from './API';
+
 const CustomBlocks = [
 	Editor.CustomBlocks.BuiltInBlock.Build(BLOCKS.BLOCKQUOTE),
 	Editor.CustomBlocks.BuiltInBlock.Build(BLOCKS.ORDERED_LIST_ITEM),
@@ -27,6 +29,10 @@ function useProperty (name, src) {
 
 
 SurveyEditor.propTypes = {
+	container: PropTypes.oneOfType([
+		PropTypes.array,
+		PropTypes.object
+	]),
 	survey: PropTypes.shape({
 		title: PropTypes.string,
 		contents: PropTypes.string,
@@ -37,7 +43,7 @@ SurveyEditor.propTypes = {
 
 	afterSave: PropTypes.func
 };
-export default function SurveyEditor ({survey, afterSave}) {
+export default function SurveyEditor ({survey, container, afterSave}) {
 	const [saving, setSaving] = React.useState(false);
 	const [error, setError] = React.useState(null);
 
@@ -52,11 +58,7 @@ export default function SurveyEditor ({survey, afterSave}) {
 	]).flat().filter(Boolean);
 
 
-	const createQuestion = async (data) => {
-		const poll = await survey.createPoll(data);
-
-		return poll;
-	};
+	const createQuestion = getPollGenerator(survey, container);
 
 	const onQuestionsChange = ({errors, updates}) => {
 		questionsProp.onChange(updates);
