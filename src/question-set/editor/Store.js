@@ -208,7 +208,7 @@ export default class QuestionSetEditorState extends Stores.BoundStore {
 			return acc;
 		}, {errors: [], updates: []});
 
-		this.binding.onQuestionsChange?.(change);
+		this.binding?.onQuestionsChange?.(change);
 	}
 
 	[OnQuestionChange] () { this.#internalQuestionChange(); }
