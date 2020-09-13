@@ -24,7 +24,8 @@ NewQuestionBlock.propTypes = {
 	block: PropTypes.object,
 	blockProps: PropTypes.shape({
 		editorState: PropTypes.object,
-		setBlockData: PropTypes.func
+		setBlockData: PropTypes.func,
+		indexOfType: PropTypes.number
 	})
 };
 export default function NewQuestionBlock ({block, blockProps}) {
@@ -44,7 +45,7 @@ export default function NewQuestionBlock ({block, blockProps}) {
 			await minWait;
 
 			blockProps.setBlockData({
-				name: question.isPoll ? 'poll-ref' : 'question-ref',
+				name: question.isPoll ? 'napollref' : 'naquestionref',
 				arguments: question.getID(),
 				options: {}
 			});

@@ -14,8 +14,8 @@ const cx = classnames.bind(Styles);
 const {CustomBlock} = Plugins.CustomBlocks;
 
 const Handles = {
-	'question-ref': true,
-	'poll-ref': true
+	'naquestionref': true,
+	'napollref': true
 };
 
 const StoreChangeDelay = 300;
