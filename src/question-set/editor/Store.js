@@ -198,12 +198,12 @@ export default class QuestionSetEditorState extends Stores.BoundStore {
 
 			if (state.error) {
 				acc.errors.push(state.error);
-			} else {
-				acc.updates.push({
-					NTIID: id,
-					...(state.updates ?? {})
-				});
 			}
+
+			acc.updates.push({
+				NTIID: id,
+				...(state.updates ?? {})
+			});
 
 			return acc;
 		}, {errors: [], updates: []});
