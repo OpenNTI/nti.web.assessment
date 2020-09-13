@@ -164,9 +164,9 @@ export default class QuestionSetEditorState extends Stores.BoundStore {
 	load () {
 		const questionSet = this.get('questionsSet');
 
-		if (this.binding.questionsSet === questionSet) { return; }
+		if (this.binding.questionSet === questionSet) { return; }
 
-		const {questions} = questionSet;
+		const {questions} = this.binding.questionSet;
 
 		this.set({
 			questionSet: this.binding.questionSet ?? [],

@@ -69,15 +69,17 @@ export default function QuestionRefBlock ({block, blockProps}) {
 
 	return (
 		<CustomBlock className={cx('block')} draggable block={block} blockProps={blockProps}>
-			<Editor
-				index={index != null ? (index + 1) : null}
-				question={updates ?? question}
-				onChange={onChange}
-				noSolutions={noSolutions}
-				error={error}
-				draggable
-			/>
-			<Controls block={block} blockProps={blockProps} />
+			{question && (
+				<Editor
+					index={index != null ? (index + 1) : null}
+					question={updates ?? question}
+					onChange={onChange}
+					noSolutions={noSolutions}
+					error={error}
+					draggable
+				/>
+			)}
+			{question && (<Controls block={block} blockProps={blockProps} />)}
 		</CustomBlock>
 	);
 }

@@ -101,7 +101,11 @@ export default function SurveyEditor ({survey, container, afterSave}) {
 				<Editor.Content>
 					<Editor.Content.Title {...titleProp} />
 					<Editor.Content.Description />
-					<Editor.Content.Body customBlocks={CustomBlocks} {...contentsProp} />
+					<Editor.Content.Body
+						customBlocks={CustomBlocks}
+						content={contentsProp.value}
+						onChange={contentsProp.onChange}
+					/>
 				</Editor.Content>
 				<Editor.Sidebar customBlocks={CustomBlocks} />
 				<Editor.ControlBar
