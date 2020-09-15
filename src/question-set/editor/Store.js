@@ -166,9 +166,9 @@ export default class QuestionSetEditorState extends Stores.BoundStore {
 
 		if (this.binding.questionSet === questionSet) { return; }
 
-		const {questions} = this.binding.questionSet;
+		const {questions} = this.binding.questionSet ?? {};
 
-		this.set({
+		this.setImmediate({
 			questionSet: this.binding.questionSet ?? [],
 			questionMap: (questions ?? []).reduce((acc, question) => ({...acc, [question.getID()]: question}), {})
 		});

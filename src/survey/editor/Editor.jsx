@@ -5,7 +5,8 @@ import {Editor} from '@nti/web-reading';
 
 import {Editor as QuestionSetEditor} from '../../question-set';
 
-import {getPollGenerator} from './API';
+import Store from './Store';
+import SaveButton from './parts/SaveButton';
 
 const CustomBlocks = [
 	Editor.CustomBlocks.BuiltInBlock.Build(BLOCKS.BLOCKQUOTE),
@@ -14,18 +15,13 @@ const CustomBlocks = [
 	...QuestionSetEditor.QuestionBlocks
 ];
 
-function useProperty (name, src) {
-	const [value, setValue] = React.useState(src[name]);
-	const [error, setError] = React.useState(null);
-
-	return {
-		value,
-		onChange: (newValue) => setValue(newValue),
-
-		error,
-		setError: (err) => setError(err)
-	};
-}
+const MonitorFields = [
+	Store.Survey,
+	Store.Saving,
+	Store.Deleting,
+	Store.Errors,
+	Store.CreateQuestion
+];
 
 
 SurveyEditor.propTypes = {
@@ -41,15 +37,21 @@ SurveyEditor.propTypes = {
 		save: PropTypes.func
 	}),
 
-	afterSave: PropTypes.func
+	afterSave: PropTypes.func,
+	onDelete: PropTypes.func,
 };
-export default function SurveyEditor ({survey, container, afterSave}) {
-	const [saving, setSaving] = React.useState(false);
-	const [error, setError] = React.useState(null);
+function SurveyEditor ({survey: surveyProp, container, afterSave}) {
+	const {
+		[Store.Survey]: survey,
+		[Store.Error]: error,
+		[Store.Saving]: saving,
+		[Store.Deleting]: deleting,
+		[Store.CreateQuestion]: createQuestion
+	} = Store.useMonitor(MonitorFields);
 
-	const titleProp = useProperty('title', survey);
-	const contentsProp = useProperty('contents', survey);
-	const questionsProp = useProperty('questions', survey);
+	const titleProp = Store.useProperty('title');
+	const contentsProp = Store.useProperty('contents');
+	const questionsProp = Store.useProperty('questions');
 
 	const allErrors = ([
 		titleProp.error,
@@ -57,41 +59,18 @@ export default function SurveyEditor ({survey, container, afterSave}) {
 		questionsProp.error
 	]).flat().filter(Boolean);
 
-
-	const createQuestion = getPollGenerator(survey, container);
-
 	const onQuestionsChange = ({errors, updates}) => {
 		questionsProp.onChange(updates);
-		questionsProp.setError(errors);
-	};
-
-	const save = async () => {
-		setSaving(true);
-
-		try {
-			await survey.save({
-				title: titleProp.value,
-				contents: contentsProp.value,
-				questions: questionsProp.value
-			});
-
-			afterSave?.(survey);
-		} catch (e) {
-			setError(e);
-		} finally {
-			setSaving(false);
+		if (errors?.length) {
+			questionsProp.setError(errors);
 		}
 	};
 
-	React.useEffect(() => {
-		//TODO: if the survey has no submissions, go ahead and auto save
-	}, [titleProp.value, contentsProp.value, questionsProp.value]);
-
 	return (
 		<QuestionSetEditor
-			createQuestion={createQuestion}
 			questionSet={survey}
 
+			createQuestion={createQuestion}
 			onQuestionsChange={onQuestionsChange}
 
 			noSolutions
@@ -110,10 +89,21 @@ export default function SurveyEditor ({survey, container, afterSave}) {
 				<Editor.Sidebar customBlocks={CustomBlocks} />
 				<Editor.ControlBar
 					errors={allErrors}
-					saveButton={<button onClick={save}>Save</button>}
+					saveButton={<SaveButton />}
 					saving={saving}
 				/>
 			</Editor>
 		</QuestionSetEditor>
 	);
 }
+
+export default Store.WrapCmp(SurveyEditor, {
+	deriveBindingFromProps: (props) => ({
+		survey: props.survey,
+		container: props.container,
+
+		navigateToPublished: props.navigateToPublished,
+		onDelete: props.onDelete
+	}),
+	deriveStoreKeyFromProps: (props) => props.survey?.getID()
+});
