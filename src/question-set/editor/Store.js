@@ -1,5 +1,6 @@
 import React from 'react';
 import {Stores} from '@nti/lib-store';
+import {wait} from '@nti/lib-commons';
 import {Hooks} from '@nti/web-commons';
 
 const {useForceUpdate} = Hooks;
@@ -109,28 +110,33 @@ export default class QuestionSetEditorState extends Stores.BoundStore {
 			}
 		};
 
-		const validate = async (changes) => {
-			try {
-				await validation.current?.catch(() => {});
-				validation.current = question.preflight(changes);
+		const validate = () => {
+			if (validation.current) { return; }
 
+			const doValidate = async () => {
 				isPending.current = true;
 
-				const resp = await validation.current;
+				try {
+					await wait(300);
+					const resp = await question.preflight(updates.current);
 
-				questionSet[OnQuestionChange](id, changes, isPreflightStructural(resp));
-			} catch (e) {
-				setError(e);
-				questionSet[OnQuestionError](id);
-			} finally {
-				isPending.current = false;
-			}
+					questionSet[OnQuestionChange](id, updates.current, isPreflightStructural(resp));
+				} catch (e) {
+					setError(e);
+					questionSet[OnQuestionError](id);
+				} finally {
+					isPending.current = false;
+					validation.current = null;
+				}
+			};
+
+			validation.current = doValidate();
 		};
 
 		const setIndex = (newIndex) => index.current = newIndex;
 		const onChange = (changes) => (
 			setUpdates(changes),
-			validate(changes)
+			validate()
 		);
 
 
