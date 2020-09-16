@@ -16,11 +16,13 @@ const Delete = 'Delete';
 const Deleted = 'Deleted';
 const CanReset = 'CanReset';
 
-const CreateQuestion = 'CreateQuestion';
+const CreatePoll = 'CreatePoll';
 
 const RegisterProperty = 'RegisterProperty';
 const OnPropertyChange = 'OnPropertyChange';
 const OnPropertyError = 'OnPropertyError';
+
+const AutoSaveDelay = 1000;
 
 const EqualityChecks = {
 	default: (updated, original) => updated === original,
@@ -35,6 +37,11 @@ const EqualityChecks = {
 			return poll.NTIID === original[index].NTIID;
 		});
 	}
+};
+
+const AutoSaveChecks = {
+	default: () => true,
+	questions: (questions) => (questions ?? []).every(q => !q.isNew)
 };
 
 const MinWaitsBefore = {
@@ -52,7 +59,7 @@ export default class SurveyEditorStore extends Stores.BoundStore {
 	static Delete = Delete;
 	static CanReset = CanReset;
 
-	static CreateQuestion = CreateQuestion;
+	static CreatePoll = CreatePoll;
 
 	static useProperty (name) {
 		const store = this.useMonitor([
@@ -63,12 +70,16 @@ export default class SurveyEditorStore extends Stores.BoundStore {
 		]);
 
 		const forceUpdate = useForceUpdate();
+		const pendingChanges = React.useRef([]);
+
 		const valueRef = React.useRef(store[Survey]?.[name]);
 		const errorRef = React.useRef(null);
 
 		const property = {
 			get value () { return valueRef.current; },
 			onChange (newValue) {
+				pendingChanges.current.push(newValue);
+
 				valueRef.current = newValue;
 				errorRef.current = null;
 				forceUpdate();
@@ -84,9 +95,16 @@ export default class SurveyEditorStore extends Stores.BoundStore {
 		};
 
 		React.useEffect(() => {
-			valueRef.current = store[Survey]?.[name];
-			errorRef.current = null;
-			forceUpdate();
+			const updatedValue = store[Survey]?.[name];
+
+			if (pendingChanges.current.includes(updatedValue)) {
+				pendingChanges.current = pendingChanges.current.filter(v => v !== updatedValue);
+			} else {
+				valueRef.current = store[Survey]?.[name];
+				errorRef.current = null;
+				forceUpdate();
+			}
+
 		}, [store[Survey]]);
 
 		React.useEffect(
@@ -116,10 +134,10 @@ export default class SurveyEditorStore extends Stores.BoundStore {
 		this.cleanupListener = this[Survey]?.subscribeToChange(() => this.emitChange([Survey, CanReset]));
 	}
 
-	[CreateQuestion] (data) {
-		if (this.survey.createPoll) { return this.survey.createPoll(data); }
+	[CreatePoll] (data) {
+		if (this[Survey]?.createPoll) { return this[Survey].createPoll(data); }
 
-		for (let c of this.containers) {
+		for (let c of this[Containers]) {
 			if (c.createPoll) {
 				return c.createPoll(data);
 			}
@@ -132,6 +150,22 @@ export default class SurveyEditorStore extends Stores.BoundStore {
 		const properties = Object.entries(this.#properties);
 
 		return properties.some(([name, prop]) => Boolean(prop.error));
+	}
+
+	#setError (error) {
+		const property = this.#properties[error?.field];
+
+		if (property?.setError) {
+			property.setError(error);
+		} else {
+			this.set({[ErrorField]: error});
+		}
+	}
+
+	#clearGlobalError () {
+		if (this.get(ErrorField)) {
+			this.set({[ErrorField]: null});
+		}
 	}
 
 	#getPayload () {
@@ -155,20 +189,28 @@ export default class SurveyEditorStore extends Stores.BoundStore {
 		return hasData ? payload : null;
 	}
 
-	#setError (error) {
-		const property = this.#properties[error?.field];
+	#shouldAutoSave () {
+		if (this[CanReset] || this.#hasErrors()) { return false; }
 
-		if (property?.setError) {
-			property.setError(error);
-		} else {
-			this.set({[ErrorField]: error});
-		}
+		return Object.entries(this.#properties)
+			.every(([name, prop]) => {
+				const check = AutoSaveChecks[name] ?? AutoSaveChecks.default;
+
+				return check(prop.value);
+			});
 	}
 
-	#clearGlobalError () {
-		if (this.get(ErrorField)) {
-			this.set({[ErrorField]: null});
-		}
+	#autoSaveTimeout = null;
+
+	#autoSave () {
+		if (this.#autoSaveTimeout) { return; }
+
+		this.#autoSaveTimeout = setTimeout(() => {
+			this.#autoSaveTimeout = null;
+			if (this.#shouldAutoSave()) {
+				this[SaveChanges]();
+			}
+		}, AutoSaveDelay);
 	}
 
 	async [SaveChanges] () {
@@ -214,10 +256,7 @@ export default class SurveyEditorStore extends Stores.BoundStore {
 	}
 
 	[OnPropertyChange] () {
-		if (!this.canReset) {
-			this[SaveChanges]();
-		}
-
+		this.#autoSave();
 		this.#clearGlobalError();
 	}
 

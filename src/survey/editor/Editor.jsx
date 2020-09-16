@@ -21,7 +21,7 @@ const MonitorFields = [
 	Store.Saving,
 	Store.Deleting,
 	Store.Error,
-	Store.CreateQuestion
+	Store.CreatePoll
 ];
 
 
@@ -47,7 +47,7 @@ function SurveyEditor ({survey: surveyProp, container, afterSave}) {
 		[Store.Error]: error,
 		[Store.Saving]: saving,
 		[Store.Deleting]: deleting,
-		[Store.CreateQuestion]: createQuestion
+		[Store.CreatePoll]: createPoll
 	} = Store.useMonitor(MonitorFields);
 
 	const titleProp = Store.useProperty('title');
@@ -74,7 +74,7 @@ function SurveyEditor ({survey: surveyProp, container, afterSave}) {
 		<QuestionSetEditor
 			questionSet={survey}
 
-			createQuestion={createQuestion}
+			createQuestion={createPoll}
 			onQuestionsChange={onQuestionsChange}
 
 			noSolutions

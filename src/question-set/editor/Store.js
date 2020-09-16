@@ -61,6 +61,8 @@ export default class QuestionSetEditorState extends Stores.BoundStore {
 		const newQuestionStore = {
 			id,
 
+			isNewQuestion: true,
+
 			get error () { return error.current; },
 			get isPending () { return isPending.current; },
 
