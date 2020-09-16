@@ -13,12 +13,12 @@ const t = scoped('nti-assessment.survey.editing.parts.Delete', {
 	label: 'Delete'
 });
 
-SurveyDelete.canDelete = (survey) => survey.canEdit();
+SurveyDelete.canDelete = (survey) => survey.isModifiable;
 export default function SurveyDelete () {
 	const {
 		[Store.Survey]: survey,
 		[Store.Delete]: doDelete
-	} = Store.useMonitor([Store.Survey]);
+	} = Store.useMonitor([Store.Survey, Store.Delete]);
 
 	if (!SurveyDelete.canDelete(survey)) { return null; }
 

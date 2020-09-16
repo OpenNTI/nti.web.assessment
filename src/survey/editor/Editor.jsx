@@ -7,6 +7,7 @@ import {Editor as QuestionSetEditor} from '../../question-set';
 
 import Store from './Store';
 import SaveButton from './parts/SaveButton';
+import Mask from './parts/Mask';
 
 const CustomBlocks = [
 	Editor.CustomBlocks.BuiltInBlock.Build(BLOCKS.BLOCKQUOTE),
@@ -19,7 +20,7 @@ const MonitorFields = [
 	Store.Survey,
 	Store.Saving,
 	Store.Deleting,
-	Store.Errors,
+	Store.Error,
 	Store.CreateQuestion
 ];
 
@@ -54,6 +55,7 @@ function SurveyEditor ({survey: surveyProp, container, afterSave}) {
 	const questionsProp = Store.useProperty('questions');
 
 	const allErrors = ([
+		error,
 		titleProp.error,
 		contentsProp.error,
 		questionsProp.error
@@ -66,6 +68,8 @@ function SurveyEditor ({survey: surveyProp, container, afterSave}) {
 		}
 	};
 
+	const mask = deleting ? (<Mask deleting />) : null;
+
 	return (
 		<QuestionSetEditor
 			questionSet={survey}
@@ -77,7 +81,7 @@ function SurveyEditor ({survey: surveyProp, container, afterSave}) {
 		>
 			<Editor>
 				<Editor.Header />
-				<Editor.Content>
+				<Editor.Content mask={mask} error={error}>
 					<Editor.Content.Title {...titleProp} />
 					<Editor.Content.Description />
 					<Editor.Content.Body

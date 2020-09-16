@@ -1,6 +1,7 @@
 import React from 'react';
 import {Stores} from '@nti/lib-store';
 import {Hooks} from '@nti/web-commons';
+import {wait} from '@nti/lib-commons';
 
 const {useForceUpdate} = Hooks;
 
@@ -12,6 +13,7 @@ const Survey = 'SurveyProp';
 const Containers = 'ContainersProp';
 const SaveChanges = 'SaveChanges';
 const Delete = 'Delete';
+const Deleted = 'Deleted';
 const CanReset = 'CanReset';
 
 const CreateQuestion = 'CreateQuestion';
@@ -33,6 +35,10 @@ const EqualityChecks = {
 			return poll.NTIID === original[index].NTIID;
 		});
 	}
+};
+
+const MinWaitsBefore = {
+	Delete: 3000
 };
 
 export default class SurveyEditorStore extends Stores.BoundStore {
@@ -149,6 +155,22 @@ export default class SurveyEditorStore extends Stores.BoundStore {
 		return hasData ? payload : null;
 	}
 
+	#setError (error) {
+		const property = this.#properties[error?.field];
+
+		if (property?.setError) {
+			property.setError(error);
+		} else {
+			this.set({[ErrorField]: error});
+		}
+	}
+
+	#clearGlobalError () {
+		if (this.get(ErrorField)) {
+			this.set({[ErrorField]: null});
+		}
+	}
+
 	async [SaveChanges] () {
 		if (this.#hasErrors()) {
 			throw new Error('Must resolve errors');
@@ -172,12 +194,31 @@ export default class SurveyEditorStore extends Stores.BoundStore {
 		}
 	}
 
-	[Delete] () {}
+	async [Delete] () {
+		const survey = this[Survey];
+		const minWait = wait(MinWaitsBefore.Delete);
+
+		this.setImmediate({[Deleting]: true});
+
+		try {
+			await survey.delete();
+			await minWait;
+
+			this.set({[Deleted]: true});
+			this.binding.onDelete?.();
+		} catch (e) {
+			this.#setError(e);
+		} finally {
+			this.set({[Deleting]: false});
+		}
+	}
 
 	[OnPropertyChange] () {
 		if (!this.canReset) {
 			this[SaveChanges]();
 		}
+
+		this.#clearGlobalError();
 	}
 
 	[OnPropertyError] () {}
