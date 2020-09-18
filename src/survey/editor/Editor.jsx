@@ -38,10 +38,13 @@ SurveyEditor.propTypes = {
 		save: PropTypes.func
 	}),
 
+	breadcrumb: PropTypes.any,
+	pageSource: PropTypes.any,
+
 	afterSave: PropTypes.func,
 	onDelete: PropTypes.func,
 };
-function SurveyEditor ({survey: surveyProp, container, afterSave}) {
+function SurveyEditor ({survey: surveyProp, container, breadcrumb, pageSource}) {
 	const {
 		[Store.Survey]: survey,
 		[Store.Error]: error,
@@ -80,7 +83,7 @@ function SurveyEditor ({survey: surveyProp, container, afterSave}) {
 			noSolutions
 		>
 			<Editor>
-				<Editor.Header />
+				<Editor.Header breadcrumb={breadcrumb} pageSource={pageSource} />
 				<Editor.Content mask={mask} error={error}>
 					<Editor.Content.Title {...titleProp} />
 					<Editor.Content.Description />
