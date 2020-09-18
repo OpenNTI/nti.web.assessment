@@ -41,7 +41,8 @@ const EqualityChecks = {
 
 const AutoSaveChecks = {
 	default: () => true,
-	questions: (questions) => (questions ?? []).every(q => !q.isNew)
+	questions: (questions) => (questions ?? []).every(q => !q.isNew),
+	contents: (contents) => contents.indexOf('.. new-question') === -1//eww should probably do this better
 };
 
 const MinWaitsBefore = {
