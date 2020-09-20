@@ -15,6 +15,9 @@ QuestionSetEditor.propTypes = {
 	}),
 
 	noSolutions: PropTypes.bool,
+	canAddQuestion: PropTypes.bool,
+	canReorderQuestions: PropTypes.bool,
+	canRemoveQuestions: PropTypes.bool,
 
 	children: PropTypes.any
 };
@@ -32,6 +35,9 @@ export default Store.WrapCmp(QuestionSetEditor, {
 
 		questionSet: props.questionSet,
 
-		noSolutions: props.noSolutions
+		noSolutions: props.noSolutions,
+		canAddQuestion: props.canAddQuestion,
+		canReorderQuestions: props.canReorderQuestions,
+		canRemoveQuestions: props.canRemoveQuestions
 	})
 });

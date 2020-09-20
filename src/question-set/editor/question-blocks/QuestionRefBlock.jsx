@@ -39,6 +39,8 @@ export default function QuestionRefBlock ({block, blockProps}) {
 	const {
 		question,
 		noSolutions,
+		canReorder,
+		canRemove,
 		error,
 		clearError,
 		onChange: questionStoreChange,
@@ -76,10 +78,10 @@ export default function QuestionRefBlock ({block, blockProps}) {
 					onChange={onChange}
 					noSolutions={noSolutions}
 					error={error}
-					draggable
+					draggable={canReorder}
 				/>
 			)}
-			{question && (<Controls block={block} blockProps={blockProps} />)}
+			{question && (<Controls block={block} blockProps={blockProps} canReorder={canReorder} canRemove={canRemove} />)}
 		</CustomBlock>
 	);
 }

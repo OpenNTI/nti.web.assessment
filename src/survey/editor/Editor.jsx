@@ -9,19 +9,12 @@ import Store from './Store';
 import SaveButton from './parts/SaveButton';
 import Mask from './parts/Mask';
 
+
 const CustomBlocks = [
 	Editor.CustomBlocks.BuiltInBlock.Build(BLOCKS.BLOCKQUOTE),
 	Editor.CustomBlocks.BuiltInBlock.Build(BLOCKS.ORDERED_LIST_ITEM),
 	Editor.CustomBlocks.BuiltInBlock.Build(BLOCKS.UNORDERED_LIST_ITEM),
 	...QuestionSetEditor.QuestionBlocks
-];
-
-const MonitorFields = [
-	Store.Survey,
-	Store.Saving,
-	Store.Deleting,
-	Store.Error,
-	Store.CreatePoll
 ];
 
 
@@ -50,8 +43,21 @@ function SurveyEditor ({survey: surveyProp, container, breadcrumb, pageSource}) 
 		[Store.Error]: error,
 		[Store.Saving]: saving,
 		[Store.Deleting]: deleting,
-		[Store.CreatePoll]: createPoll
-	} = Store.useMonitor(MonitorFields);
+		[Store.CreatePoll]: createPoll,
+		[Store.CanAddPoll]: canAddPoll,
+		[Store.CanReorderPolls]: canReorderPolls,
+		[Store.CanRemovePolls]: canRemovePolls
+	} = Store.useMonitor([
+		Store.Survey,
+		Store.Saving,
+		Store.Deleting,
+		Store.Error,
+		Store.CreatePoll,
+		Store.CanAddPoll,
+		Store.CanReorderPolls,
+		Store.CanRemovePolls
+	]);
+
 
 	const titleProp = Store.useProperty('title');
 	const contentsProp = Store.useProperty('contents');
@@ -81,6 +87,9 @@ function SurveyEditor ({survey: surveyProp, container, breadcrumb, pageSource}) 
 			onQuestionsChange={onQuestionsChange}
 
 			noSolutions
+			canAddQuestion={canAddPoll}
+			canReorderQuestions={canReorderPolls}
+			canRemoveQuestions={canRemovePolls}
 		>
 			<Editor>
 				<Editor.Header breadcrumb={breadcrumb} pageSource={pageSource} />

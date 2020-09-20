@@ -10,6 +10,9 @@ function isPreflightStructural (resp) {
 }
 
 const NoSolutions = 'NoSolutions';
+const CanAddQuestion = 'CanAddQuestion';
+const CanReorderQuestions = 'CanReorderQuestions';
+const CanRemoveQuestions = 'CanRemoveQuestions';
 
 const CreateQuestion = 'CreateQuestion';
 const GetQuestion = 'GetQuestion';
@@ -20,6 +23,8 @@ const RegisterQuestionStore = 'RegisterQuestionStore';
 
 export default class QuestionSetEditorState extends Stores.BoundStore {
 	static NoSolutions = NoSolutions;
+	static CanAddQuestion = CanAddQuestion;
+
 	static CreateQuestion = CreateQuestion;
 	static GetQuestion = GetQuestion;
 	static OnQuestionChange = OnQuestionChange;
@@ -83,6 +88,9 @@ export default class QuestionSetEditorState extends Stores.BoundStore {
 
 		const questionSet = this.useMonitor([
 			NoSolutions,
+			CanReorderQuestions,
+			CanRemoveQuestions,
+
 			GetQuestion,
 			OnQuestionChange,
 			OnQuestionError,
@@ -144,7 +152,9 @@ export default class QuestionSetEditorState extends Stores.BoundStore {
 			id,
 			question,
 
-			noSolutions: questionSet.NoSolutions,
+			noSolutions: questionSet[NoSolutions],
+			canReorder: questionSet[CanReorderQuestions],
+			canRemove: questionSet[CanRemoveQuestions],
 
 			get updates () { return updates.current; },
 			get error () { return error.current; },
@@ -168,17 +178,24 @@ export default class QuestionSetEditorState extends Stores.BoundStore {
 	#questionStores = {};
 	#newQuestions = {};
 
-
 	load () {
-		const questionSet = this.get('questionsSet');
-
-		if (this.binding.questionSet === questionSet) { return; }
+		if (
+			this.binding.questionSet === this.get('questionsSet') &&
+			this.binding.noSolutions === this.get(NoSolutions) &&
+			this.binding.canAddQuestion === this.get(CanAddQuestion) &&
+			this.binding.canReorderQuestions === this.get(CanReorderQuestions) &&
+			this.binding.canRemoveQuestions === this.get(CanRemoveQuestions)
+		) { return; }
 
 		const {questions} = this.binding.questionSet ?? {};
 
 		this.setImmediate({
 			questionSet: this.binding.questionSet ?? [],
-			questionMap: (questions ?? []).reduce((acc, question) => ({...acc, [question.getID()]: question}), {})
+			questionMap: (questions ?? []).reduce((acc, question) => ({...acc, [question.getID()]: question}), {}),
+			[NoSolutions]: this.binding.noSolutions,
+			[CanAddQuestion]: this.binding.canAddQuestion,
+			[CanReorderQuestions]: this.binding.canReorderQuestions,
+			[CanRemoveQuestions]: this.binding.canRemoveQuestions
 		});
 	}
 

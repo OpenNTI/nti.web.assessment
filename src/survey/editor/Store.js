@@ -14,6 +14,10 @@ const Containers = 'ContainersProp';
 const SaveChanges = 'SaveChanges';
 const Delete = 'Delete';
 const Deleted = 'Deleted';
+
+const CanAddPoll = 'CanAddPoll';
+const CanReorderPolls = 'CanReorderPolls';
+const CanRemovePolls = 'CanRemovePolls';
 const CanReset = 'CanReset';
 
 const CreatePoll = 'CreatePoll';
@@ -58,6 +62,10 @@ export default class SurveyEditorStore extends Stores.BoundStore {
 	static Containers = Containers;
 	static SaveChanges = SaveChanges;
 	static Delete = Delete;
+
+	static CanAddPoll = CanAddPoll;
+	static CanReorderPolls = CanReorderPolls;
+	static CanRemovePolls = CanRemovePolls;
 	static CanReset = CanReset;
 
 	static CreatePoll = CreatePoll;
@@ -125,6 +133,9 @@ export default class SurveyEditorStore extends Stores.BoundStore {
 	get [Survey] () { return this.binding.survey; }
 	get [Containers] () { return Array.isArray(this.binding.container) ? this.binding.container.reverse() : [this.binding.container]; }
 
+	get [CanAddPoll] () { return !this[Survey]?.isPublished(); }
+	get [CanReorderPolls] () { return !this[Survey]?.isPublished(); }
+	get [CanRemovePolls] () { return !this[Survey]?.isPublished(); }
 	get [CanReset] () { return this[Survey]?.hasLink('Reset'); }
 
 	load () {
@@ -132,7 +143,15 @@ export default class SurveyEditorStore extends Stores.BoundStore {
 
 		this.emitChange([Survey, Containers, CanReset]);
 
-		this.cleanupListener = this[Survey]?.subscribeToChange(() => this.emitChange([Survey, CanReset]));
+		this.cleanupListener = this[Survey]?.subscribeToChange(
+			() => this.emitChange([
+				Survey,
+				CanReset,
+				CanAddPoll,
+				CanReorderPolls,
+				CanRemovePolls
+			])
+		);
 	}
 
 	[CreatePoll] (data) {

@@ -5,6 +5,7 @@ import {BLOCKS} from '@nti/web-editor';
 import {Editor} from '@nti/web-reading';
 
 import {NewQuestion} from '../Constants';
+import Store from '../Store';
 
 const {Variant} = HOC;
 const {CustomBlocks} = Editor;
@@ -19,6 +20,8 @@ QuestionButton.propTypes = {
 	})
 };
 export default function QuestionButton ({type}) {
+	const {[Store.CanAddQuestion]: canAddQuestion} = Store.useMonitor([Store.CanAddQuestion]);
+
 	const isBlock = block => false;//TODO: figure this out
 	const createBlock = (insertBlock) => (
 		insertBlock({
@@ -42,6 +45,7 @@ export default function QuestionButton ({type}) {
 			createBlock={createBlock}
 			isBlock={isBlock}
 			type={type.type}
+			disabled={!canAddQuestion}
 		/>
 	);
 }
