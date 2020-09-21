@@ -14,6 +14,9 @@ const CustomBlocks = [
 	Editor.CustomBlocks.BuiltInBlock.Build(BLOCKS.BLOCKQUOTE),
 	Editor.CustomBlocks.BuiltInBlock.Build(BLOCKS.ORDERED_LIST_ITEM),
 	Editor.CustomBlocks.BuiltInBlock.Build(BLOCKS.UNORDERED_LIST_ITEM),
+	Editor.CustomBlocks.Callout,
+	Editor.CustomBlocks.Iframe,
+	Editor.CustomBlocks.VideoRef,
 	...QuestionSetEditor.QuestionBlocks
 ];
 
@@ -98,11 +101,12 @@ function SurveyEditor ({survey: surveyProp, container, breadcrumb, pageSource}) 
 					<Editor.Content.Description />
 					<Editor.Content.Body
 						customBlocks={CustomBlocks}
+						customBlockProps={{container}}
 						content={contentsProp.value}
 						onChange={contentsProp.onChange}
 					/>
 				</Editor.Content>
-				<Editor.Sidebar customBlocks={CustomBlocks} />
+				<Editor.Sidebar customBlocks={CustomBlocks} customBlockProps={{container}}/>
 				<Editor.ControlBar
 					errors={allErrors}
 					saveButton={<SaveButton />}
