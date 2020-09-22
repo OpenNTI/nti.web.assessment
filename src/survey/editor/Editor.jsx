@@ -6,6 +6,7 @@ import {Editor} from '@nti/web-reading';
 import {Editor as QuestionSetEditor} from '../../question-set';
 
 import Store from './Store';
+import Availability from './parts/Availability';
 import SaveButton from './parts/SaveButton';
 import Mask from './parts/Mask';
 
@@ -96,7 +97,9 @@ function SurveyEditor ({survey: surveyProp, container, breadcrumb, pageSource}) 
 			canRemoveQuestions={canRemovePolls}
 		>
 			<Editor>
-				<Editor.Header breadcrumb={breadcrumb} pageSource={pageSource} />
+				<Editor.Header breadcrumb={breadcrumb} pageSource={pageSource}>
+					<Availability />
+				</Editor.Header>
 				<Editor.Content mask={mask} error={error}>
 					<Editor.Content.Title {...titleProp} />
 					<Editor.Content.Description />
