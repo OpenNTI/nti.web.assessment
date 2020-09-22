@@ -9,7 +9,7 @@ import Styles from './Availability.css';
 
 const cx = classnames.bind(Styles);
 const t = scoped('nti-assessment.survey.editor.parts.Availability', {
-	title: 'Survey is Available to Students',
+	title: 'This Survey is Available to Students',
 	description: 'To protect students work and submissions, certain edit functionality has been disabled. In order to re-enable those features please reset submissions and unpublish the survey.',
 	action: 'Reset and Unpublish'
 });
