@@ -133,9 +133,9 @@ export default class SurveyEditorStore extends Stores.BoundStore {
 	get [Survey] () { return this.binding.survey; }
 	get [Containers] () { return Array.isArray(this.binding.container) ? this.binding.container.reverse() : [this.binding.container]; }
 
-	get [CanAddPoll] () { return !this[Survey]?.isPublished(); }
-	get [CanReorderPolls] () { return !this[Survey]?.isPublished(); }
-	get [CanRemovePolls] () { return !this[Survey]?.isPublished(); }
+	get [CanAddPoll] () { return this[Survey]?.hasLink('InsertPoll'); }
+	get [CanReorderPolls] () { return this[Survey]?.hasLink('MovePoll'); }
+	get [CanRemovePolls] () { return this[Survey]?.hasLink('RemovePoll'); }
 	get [CanReset] () { return this[Survey]?.hasLink('Reset'); }
 
 	load () {
