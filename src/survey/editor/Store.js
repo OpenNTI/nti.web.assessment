@@ -261,7 +261,6 @@ export default class SurveyEditorStore extends Stores.BoundStore {
 			if (shouldAutoSave) {
 				this[SaveChanges]();
 			} else {
-				debugger;
 				this.set({
 					[HasChanges]: true
 				});
