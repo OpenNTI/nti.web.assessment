@@ -75,10 +75,13 @@ export default function QuestionRefBlock ({block, blockProps}) {
 				<Editor
 					index={index != null ? (index + 1) : null}
 					question={updates ?? question}
+					error={error}
 					onChange={onChange}
 					noSolutions={noSolutions}
-					error={error}
 					draggable={canReorder}
+					canAddPartOption={question.hasLink('InsertPartOption')}
+					canRemovePartOption={question.hasLink('RemovePartOption')}
+					canReorderPartOption={question.hasLink('MovePartOption')}
 				/>
 			)}
 			{question && (<Controls block={block} blockProps={blockProps} canReorder={canReorder} canRemove={canRemove} />)}

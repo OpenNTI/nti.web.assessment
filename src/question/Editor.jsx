@@ -37,9 +37,23 @@ QuestionEditor.propTypes = {
 	onChange: PropTypes.func,
 
 	noSolutions: PropTypes.bool,
-	draggable: PropTypes.bool
+	draggable: PropTypes.bool,
+	canAddPartOption: PropTypes.bool,
+	canRemovePartOption: PropTypes.bool,
+	canReorderPartOption: PropTypes.bool
 };
-export default function QuestionEditor ({index, error, question, onChange, noSolutions, draggable}) {
+export default function QuestionEditor ({
+	index,
+	error,
+	question,
+	onChange,
+
+	noSolutions,
+	draggable,
+	canAddPartOption,
+	canRemovePartOption,
+	canReorderPartOption
+}) {
 	const {content, parts} = question;
 
 	const errorLabel = t('errorLabel', {index});
@@ -80,6 +94,9 @@ export default function QuestionEditor ({index, error, question, onChange, noSol
 							noSolutions={noSolutions}
 							errorLabel={errorLabel}
 							error={partError}
+							canAddOption={canAddPartOption}
+							canRemoveOption={canRemovePartOption}
+							canReorderOption={canReorderPartOption}
 						/>
 					))}
 				</div>

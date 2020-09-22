@@ -181,6 +181,7 @@ export default class QuestionSetEditorState extends Stores.BoundStore {
 	load () {
 		if (
 			this.binding.questionSet === this.get('questionsSet') &&
+			this.binding.questionSet.questions === this.get('questionSet').questions &&
 			this.binding.noSolutions === this.get(NoSolutions) &&
 			this.binding.canAddQuestion === this.get(CanAddQuestion) &&
 			this.binding.canReorderQuestions === this.get(CanReorderQuestions) &&

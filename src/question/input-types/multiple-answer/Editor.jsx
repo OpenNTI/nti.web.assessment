@@ -40,8 +40,6 @@ const updatePart = (newChoices, part) => {
 
 
 MultipleAnswerEditor.propTypes = {
-	noSolutions: PropTypes.bool,
-
 	onChange: PropTypes.func,
 	part: PropTypes.shape({
 		NTIID: PropTypes.string,
@@ -50,9 +48,23 @@ MultipleAnswerEditor.propTypes = {
 		)
 	}),
 
-	error: PropTypes.any
+	error: PropTypes.any,
+
+	noSolutions: PropTypes.bool,
+	canAddOption: PropTypes.bool,
+	canRemoveOption: PropTypes.bool,
+	canReorderOption: PropTypes.bool
 };
-export default function MultipleAnswerEditor ({noSolutions, onChange:onChangeProp, part, error}) {
+export default function MultipleAnswerEditor ({
+	onChange:onChangeProp,
+	part,
+	error,
+
+	noSolutions,
+	canAddOption,
+	canRemoveOption,
+	canReorderOption
+}) {
 	const choices = getChoices(part, error, noSolutions);
 	const onChange = newChoices => onChangeProp?.(updatePart(newChoices, part));
 
@@ -62,14 +74,14 @@ export default function MultipleAnswerEditor ({noSolutions, onChange:onChangePro
 			choices={choices}
 			onChange={onChange}
 
-			noSolutions={noSolutions}
 			multipleSolutions
 
 			addLabel={t('addLabel')}
 
-			canReorder
-			canRemove
-			canAdd
+			noSolutions={noSolutions}
+			canReorder={canReorderOption}
+			canRemove={canRemoveOption}
+			canAdd={canAddOption}
 		/>
 	);
 }

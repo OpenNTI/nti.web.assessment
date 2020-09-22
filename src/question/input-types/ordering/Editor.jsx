@@ -54,8 +54,6 @@ const updatePart = ({labels, values}, part) => {
 };
 
 OrderingEditor.propTypes = {
-	noSolutions: PropTypes.bool,
-
 	onChange: PropTypes.func,
 	part: PropTypes.shape({
 		NTIID: PropTypes.string,
@@ -66,9 +64,23 @@ OrderingEditor.propTypes = {
 		})
 	}),
 
-	error: PropTypes.any
+	error: PropTypes.any,
+
+	noSolutions: PropTypes.bool,
+	canAddOption: PropTypes.bool,
+	canRemoveOption: PropTypes.bool,
+	canReorderOption: PropTypes.bool
 };
-export default function OrderingEditor ({noSolutions, onChange: onChangeProp, part, error}) {
+export default function OrderingEditor ({
+	onChange: onChangeProp,
+	part,
+	error,
+
+	noSolutions,
+	canAddOption,
+	canReorderOption,
+	canRemoveOption
+}) {
 	const forceUpdate = Hooks.useForceUpdate();
 
 	const {labels, values} = getChoices(part);
@@ -78,8 +90,8 @@ export default function OrderingEditor ({noSolutions, onChange: onChangeProp, pa
 	const focusRef = React.useRef();
 
 	const totalRows = labels.length;
-	const canRemove = totalRows > 2;
-	const canReorder = true;
+	const canRemove = canRemoveOption && totalRows > 2;
+	const canReorder = canReorderOption;
 
 	React.useEffect(() => (
 		setLabelOrder(labels.map((l, index) => index)),
@@ -262,10 +274,12 @@ export default function OrderingEditor ({noSolutions, onChange: onChangeProp, pa
 					readOnly={!canReorder}
 				/>
 			)}
-			<button className={cx('add-row')} onClick={() => addRowAfter(totalRows - 1)}>
-				<Icons.Plus className={cx('icon')} />
-				<Text.Base className={cx('label')}>{t('addLabel')}</Text.Base>
-			</button>
+			{canAddOption && (
+				<button className={cx('add-row')} onClick={() => addRowAfter(totalRows - 1)}>
+					<Icons.Plus className={cx('icon')} />
+					<Text.Base className={cx('label')}>{t('addLabel')}</Text.Base>
+				</button>
+			)}
 		</div>
 	);
 }

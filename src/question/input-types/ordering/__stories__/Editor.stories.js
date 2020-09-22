@@ -13,32 +13,27 @@ const getInitialPart = () => ({
 export default {
 	title: 'Questions/Input Types/Ordering/Editor',
 	component: Editor,
-	argTypes: {onChange: {action: 'changed'}}
+	argTypes: {
+		onChange: {action: 'changed'},
+		noSolutions: {control: {type: 'boolean'}},
+		canAddOption: {control: {type: 'boolean'}},
+		canRemoveOption: {control: {type: 'boolean'}},
+		canReorderOption: {control: {type: 'boolean'}}
+	}
 };
 
-export const Solutions = ({onChange}) => {
+export const Base = ({onChange, ...props}) => {
 	const [part, setPart] = React.useState(getInitialPart);
 
 	return (
 		<Editor
 			part={part}
 			onChange={p => (setPart(p), onChange?.(p))}
+			{...props}
 		/>
 	);
 };
 
-export const NoSolutions = ({onChange}) => {
-	const [part, setPart] = React.useState(getInitialPart);
-
-	return (
-		<Editor
-			noSolutions
-			part={part}
-			onChange={p => (setPart(p), onChange?.(p))}
-		/>
-	);
-};
-
-Solutions.propTypes = NoSolutions.propTypes = {
+Base.propTypes = {
 	onChange: PropTypes.func
 };

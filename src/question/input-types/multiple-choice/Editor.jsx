@@ -61,8 +61,6 @@ const mergeChoices = (original, updated) => {
 };
 
 MultipleChoiceEditor.propTypes = {
-	noSolutions: PropTypes.bool,
-
 	onChange: PropTypes.func,
 	part: PropTypes.shape({
 		NTIID: PropTypes.string,
@@ -71,9 +69,23 @@ MultipleChoiceEditor.propTypes = {
 		)
 	}),
 
-	error: PropTypes.any
+	error: PropTypes.any,
+
+	noSolutions: PropTypes.bool,
+	canAddOption: PropTypes.bool,
+	canRemoveOption: PropTypes.bool,
+	canReorderOption: PropTypes.bool
 };
-export default function MultipleChoiceEditor ({noSolutions, onChange: onChangeProp, part, error}) {
+export default function MultipleChoiceEditor ({
+	onChange: onChangeProp,
+	part,
+	error,
+
+	noSolutions,
+	canAddOption,
+	canRemoveOption,
+	canReorderOption
+}) {
 	const choices = getChoices(part, error, noSolutions);
 	const onChange = newChoices => (
 		onChangeProp?.(
@@ -91,9 +103,9 @@ export default function MultipleChoiceEditor ({noSolutions, onChange: onChangePr
 
 			addLabel={t('addLabel')}
 
-			canReorder
-			canRemove
-			canAdd
+			canReorder={canReorderOption}
+			canRemove={canRemoveOption}
+			canAdd={canAddOption}
 		/>
 	);
 }
