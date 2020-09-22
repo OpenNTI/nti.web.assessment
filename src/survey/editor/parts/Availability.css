@@ -31,4 +31,19 @@
 
 .action {
 	flex: 0 0 auto;
+	position: relative;
+
+	&.busy {
+		& .label {
+			opacity: 0;
+		}
+
+		& .spinner {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			margin-top: -12px;
+			margin-left: -12px;
+		}
+	}
 }
