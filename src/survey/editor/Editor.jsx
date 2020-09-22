@@ -11,12 +11,13 @@ import Mask from './parts/Mask';
 
 
 const CustomBlocks = [
+	Editor.CustomBlocks.CourseFigure,
+	Editor.CustomBlocks.VideoRef,
 	Editor.CustomBlocks.BuiltInBlock.Build(BLOCKS.BLOCKQUOTE),
 	Editor.CustomBlocks.BuiltInBlock.Build(BLOCKS.ORDERED_LIST_ITEM),
 	Editor.CustomBlocks.BuiltInBlock.Build(BLOCKS.UNORDERED_LIST_ITEM),
 	Editor.CustomBlocks.Callout,
 	Editor.CustomBlocks.Iframe,
-	Editor.CustomBlocks.VideoRef,
 	...QuestionSetEditor.QuestionBlocks
 ];
 
