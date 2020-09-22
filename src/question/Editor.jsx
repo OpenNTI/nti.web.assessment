@@ -61,7 +61,7 @@ export default function QuestionEditor ({index, error, question, onChange, noSol
 		<div className={cx('question-editor')}>
 			<div className={cx('question')}>
 				<div className={cx('content')}>
-					{draggable && (<DnD.DragHandle className={cx('drag')} />)}
+					{draggable && (<DnD.DragHandle className={cx('drag-handle')} />)}
 					{(index != null) && (<Text.Base className={cx('index')}>{t('index', {index})}</Text.Base>)}
 					<ContentEditor
 						content={content}

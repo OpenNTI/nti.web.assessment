@@ -20,6 +20,13 @@
 		flex: 0 0 auto;
 	}
 
+	& .drag-handle {
+		display: flex;
+		flex-direction: row;
+		align-items: flex-start;
+		padding-top: 0.25rem;
+	}
+
 	& .index {
 		font-size: 0.875rem;
 		line-height: 1.5;
