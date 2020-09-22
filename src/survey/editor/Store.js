@@ -8,6 +8,7 @@ const {useForceUpdate} = Hooks;
 const Saving = 'saving';
 const Deleting = 'deleting';
 const ErrorField = 'error-field';
+const HasChanges = 'HasChanges';
 
 const Survey = 'SurveyProp';
 const Containers = 'ContainersProp';
@@ -16,6 +17,7 @@ const Delete = 'Delete';
 const Deleted = 'Deleted';
 
 const IsAvailable = 'IsAvailable';
+const IsPublished = 'IsPublished';
 const CanAddPoll = 'CanAddPoll';
 const CanReorderPolls = 'CanReorderPolls';
 const CanRemovePolls = 'CanRemovePolls';
@@ -44,7 +46,7 @@ const EqualityChecks = {
 	}
 };
 
-const AutoSaveChecks = {
+const ValidityChecks = {
 	default: () => true,
 	questions: (questions) => (questions ?? []).every(q => !q.isNew),
 	contents: (contents) => contents.indexOf('.. new-question') === -1//eww should probably do this better
@@ -58,6 +60,7 @@ export default class SurveyEditorStore extends Stores.BoundStore {
 	static Saving = Saving;
 	static Deleting = Deleting;
 	static Error = ErrorField;
+	static HasChanges = HasChanges;
 
 	static Survey = Survey;
 	static Containers = Containers;
@@ -65,6 +68,7 @@ export default class SurveyEditorStore extends Stores.BoundStore {
 	static Delete = Delete;
 
 	static IsAvailable = IsAvailable;
+	static IsPublished = IsPublished;
 	static CanAddPoll = CanAddPoll;
 	static CanReorderPolls = CanReorderPolls;
 	static CanRemovePolls = CanRemovePolls;
@@ -136,6 +140,7 @@ export default class SurveyEditorStore extends Stores.BoundStore {
 	get [Containers] () { return Array.isArray(this.binding.container) ? this.binding.container.reverse() : [this.binding.container]; }
 
 	get [IsAvailable] () { return this[Survey]?.isAvailable(); }
+	get [IsPublished] () { return this[Survey]?.isPublished(); }
 	get [CanAddPoll] () { return this[Survey]?.hasLink('InsertPoll'); }
 	get [CanReorderPolls] () { return this[Survey]?.hasLink('MovePoll'); }
 	get [CanRemovePolls] () { return this[Survey]?.hasLink('RemovePoll'); }
@@ -171,6 +176,8 @@ export default class SurveyEditorStore extends Stores.BoundStore {
 	}
 
 	#hasErrors () {
+		if (this.get([ErrorField])) { return true; }
+
 		const properties = Object.entries(this.#properties);
 
 		return properties.some(([name, prop]) => Boolean(prop.error));
@@ -214,13 +221,26 @@ export default class SurveyEditorStore extends Stores.BoundStore {
 	}
 
 	#shouldAutoSave () {
-		if (this[CanReset] || this.#hasErrors()) { return false; }
+		return !this[IsPublished] && !this.#hasErrors();
+	}
 
+	#isValid () {
 		return Object.entries(this.#properties)
 			.every(([name, prop]) => {
-				const check = AutoSaveChecks[name] ?? AutoSaveChecks.default;
+				const validityCheck = ValidityChecks[name] ?? ValidityChecks.default;
 
-				return check(prop.value);
+				return validityCheck(prop.value);
+			});
+	}
+
+	#hasChanges () {
+		const survey = this[Survey];
+
+		return Object.entries(this.#properties)
+			.some(([name, prop]) => {
+				const equalityCheck = EqualityChecks[name] ?? EqualityChecks.default;
+
+				return !equalityCheck(prop.value, survey[name]);
 			});
 	}
 
@@ -231,8 +251,20 @@ export default class SurveyEditorStore extends Stores.BoundStore {
 
 		this.#autoSaveTimeout = setTimeout(() => {
 			this.#autoSaveTimeout = null;
-			if (this.#shouldAutoSave()) {
+
+			const shouldAutoSave = this.#shouldAutoSave();
+			const isValid = this.#isValid();
+			const hasChanges = this.#hasChanges();
+
+			if (!hasChanges || !isValid) { return; }
+
+			if (shouldAutoSave) {
 				this[SaveChanges]();
+			} else {
+				debugger;
+				this.set({
+					[HasChanges]: true
+				});
 			}
 		}, AutoSaveDelay);
 	}

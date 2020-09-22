@@ -228,7 +228,7 @@ export default class QuestionSetEditorState extends Stores.BoundStore {
 
 			acc.updates.push({
 				NTIID: id,
-				isNew: state.isNew,
+				...(state.isNew ? ({isNew: true}) : {}),
 				...(state.updates ?? {})
 			});
 
