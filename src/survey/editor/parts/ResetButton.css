@@ -39,5 +39,6 @@
 		color: white;
 		text-align: center;
 		background-color: var(--primary-red);
+		margin-bottom: 0.625rem;
 	}
 }

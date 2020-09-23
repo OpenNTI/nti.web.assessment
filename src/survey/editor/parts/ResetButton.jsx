@@ -23,7 +23,8 @@ const t = scoped('nti-assessment.survey.editor.parts.ResetButton', {
 	text: 'Resetting or deleting this survey will result in erasing students work and submissions. You cannot undo this action.',
 	editorText: 'This instructor must reset this survey before a publish change can occur.',
 	error: 'Could not reset the survey at this time. Please try again later.',
-	reset: 'Reset Survey'
+	reset: 'Reset Survey',
+	saveChanges: 'Save Changes'
 });
 
 
@@ -35,8 +36,14 @@ export default function SurveyResetButton () {
 	const {
 		[Store.Survey]: survey,
 		[Store.Saving]: disabled,
-		[Store.SaveChanges]: afterReset
-	} = Store.useMonitor([Store.Survey, Store.Saving]);
+		[Store.SaveChanges]: afterReset,
+		[Store.HasChanges]: hasChanges
+	} = Store.useMonitor([
+		Store.Survey,
+		Store.Saving,
+		Store.SaveChanges,
+		Store.HasChanges
+	]);
 
 	const flyoutRef = React.useRef();
 
@@ -49,7 +56,7 @@ export default function SurveyResetButton () {
 
 	const trigger = (
 		<div className={cx('survey-reset-trigger', {disabled})}>
-			<PublishTrigger value={value} />
+			<PublishTrigger value={value} hasChanges={hasChanges} />
 		</div>
 	);
 
@@ -65,7 +72,19 @@ export default function SurveyResetButton () {
 
 			afterReset();
 		} catch (e) {
-			setError(true);
+			setError(t('reset-error'));
+		} finally {
+			setBusy(false);
+		}
+	};
+
+	const onSaveChanges = async () => {
+		try {
+			setBusy(true);
+			await afterReset();
+			flyoutRef.current?.dismiss();
+		} catch (e) {
+			setError(e);
 		} finally {
 			setBusy(false);
 		}
@@ -84,14 +103,13 @@ export default function SurveyResetButton () {
 			<Text.Base className={cx('label')}>{label}</Text.Base>
 			<Text.Base className={cx('text')}>{text}</Text.Base>
 			{!busy && (<Delete />)}
-			{error && (<Errors.Message className={cx('reset-error')} error={t('error')} />)}
+			{error && (<Errors.Message className={error} error={t('error')} />)}
 			<Loading.Placeholder loading={busy} delay={0} fallback={<Loading.Spinner />}>
-				<Button
-					plain
-					className={cx('flyout-fullwidth-btn', 'publish-reset', {error})}
-					onClick={onReset}
-				>
+				<Button	plain className={cx('flyout-fullwidth-btn', 'publish-reset', {error})} onClick={onReset}>
 					{t('reset')}
+				</Button>
+				<Button plain className={cx('flyout-fullwidth-btn', 'save-changes', {changed: hasChanges})} onClick={onSaveChanges}>
+					{t('saveChanges')}
 				</Button>
 			</Loading.Placeholder>
 		</Flyout.Triggered>
