@@ -5,6 +5,7 @@ import {scoped} from '@nti/lib-locale';
 import {Input} from '@nti/web-commons';
 
 import Styles from './Styles.css';
+import {Data} from './utils';
 
 const cx = classnames.bind(Styles);
 const t = scoped('nti-assessment.question.input-types.free-response.Editor', {
@@ -20,8 +21,6 @@ const t = scoped('nti-assessment.question.input-types.free-response.Editor', {
 FreeResponseEditor.propTypes = {
 	onChange: PropTypes.func,
 
-	noSolutions: PropTypes.bool,
-
 	part: PropTypes.shape({
 		content: PropTypes.string,
 		solutions: PropTypes.arrayOf(
@@ -31,7 +30,9 @@ FreeResponseEditor.propTypes = {
 		)
 	})
 };
-export default function FreeResponseEditor ({noSolutions, part, onChange}) {
+export default function FreeResponseEditor ({part, onChange}) {
+	const noSolutions = !Data.hasSolutions(part);
+
 	return (
 		<div className={cx('free-response-editor', {'no-solutions': noSolutions})}>
 			<div className={cx('disclaimer')}>

@@ -66,7 +66,6 @@ OrderingEditor.propTypes = {
 
 	error: PropTypes.any,
 
-	noSolutions: PropTypes.bool,
 	canAddOption: PropTypes.bool,
 	canRemoveOption: PropTypes.bool,
 	canReorderOption: PropTypes.bool
@@ -76,7 +75,6 @@ export default function OrderingEditor ({
 	part,
 	error,
 
-	noSolutions,
 	canAddOption,
 	canReorderOption,
 	canRemoveOption
@@ -92,6 +90,7 @@ export default function OrderingEditor ({
 	const totalRows = labels.length;
 	const canRemove = canRemoveOption && totalRows > 2;
 	const canReorder = canReorderOption;
+	const noSolutions = !Data.hasSolutions(part);
 
 	React.useEffect(() => (
 		setLabelOrder(labels.map((l, index) => index)),

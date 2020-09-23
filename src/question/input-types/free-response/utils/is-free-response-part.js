@@ -1,6 +1,10 @@
-const handles = 'application/vnd.nextthought.assessment.freeresponsepart';
+const handles = [
+	'application/vnd.nextthought.assessment.freeresponsepart',
+	'application/vnd.nextthought.assessment.nongradablefreeresponsepart'
+];
 
-isFreeResponsePart.preferredMimeType = handles;
+isFreeResponsePart.preferredMimeType = handles[0];
+isFreeResponsePart.noSolutionsMimeType = handles[1];
 export default function isFreeResponsePart (part) {
-	return part?.MimeType === handles;
+	return handles.indexOf(part?.MimeType) > -1;
 }

@@ -1,12 +1,17 @@
 import isModeledContentPart from './is-modeled-content-part';
 
+const {noSolutionsMimeType, preferredMimeType} = isModeledContentPart;
+
+export const hasSolutions = part => part.isNonGradable;
+
 export function updatePart (part) {
 	return part;
 }
 
-export function generateBlankPart () {
+export function generateBlankPart ({noSolutions}) {
 	return {
-		MimeType: isModeledContentPart.preferredMimeType,
+		MimeType: noSolutions ? noSolutionsMimeType : preferredMimeType,
+		isNonGradable: true,
 		content: '',
 		hints: []
 	};

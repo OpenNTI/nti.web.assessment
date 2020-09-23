@@ -1,5 +1,7 @@
 import isFreeResponsePart from './is-free-response-part';
 
+const {noSolutionsMimeType, preferredMimeType} = isFreeResponsePart;
+
 const SolutionMimeType = 'application/vnd.nextthought.assessment.freeresponsesolution';
 const SolutionClass = 'FreeResponseSolution';
 
@@ -11,14 +13,25 @@ function generateSolution (value) {
 	};
 }
 
+export const hasSolutions = (part) => !part.isNonGradable;
+
 export function updatePart (part, solutions) {
-	return {
-		MimeType: part.MimeType,
+	const data = {
+		MimeType: hasSolutions(part) ? part.MimeType : noSolutionsMimeType,
 		content: part.content ?? '',
-		solutions: (solutions ?? []).map(s => generateSolution(s))
+		isNonGradable: part.isNonGradable
 	};
+
+	if (hasSolutions(part)) {
+		data.solutions = (solutions ?? []).map(s => generateSolution(s));
+	}
+
+	return data;
 }
 
-export function generateBlankPart () {
-	return updatePart({MimeType: isFreeResponsePart.preferredMimeType});
+export function generateBlankPart ({noSolutions}) {
+	return updatePart({
+		MimeType: noSolutions ? noSolutionsMimeType : preferredMimeType,
+		isNonGradable: noSolutions
+	});
 }

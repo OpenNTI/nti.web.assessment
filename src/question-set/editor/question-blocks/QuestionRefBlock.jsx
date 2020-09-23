@@ -38,7 +38,6 @@ export default function QuestionRefBlock ({block, blockProps}) {
 
 	const {
 		question,
-		noSolutions,
 		canReorder,
 		canRemove,
 		error,
@@ -77,7 +76,6 @@ export default function QuestionRefBlock ({block, blockProps}) {
 					question={updates ?? question}
 					error={error}
 					onChange={onChange}
-					noSolutions={noSolutions}
 					draggable={canReorder}
 					canAddPartOption={question.hasLink('InsertPartOption')}
 					canRemovePartOption={question.hasLink('RemovePartOption')}

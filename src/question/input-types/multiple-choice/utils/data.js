@@ -2,6 +2,8 @@ import {scoped} from '@nti/lib-locale';
 
 import isMultipleChoicePart from './is-multiple-choice-part';
 
+const {noSolutionsMimeType, preferredMimeType} = isMultipleChoicePart;
+
 const t = scoped('nti-assessment.question.input-types.multiple-choice', {
 	blankPart: {
 		'choice': 'Choice 1'
@@ -19,19 +21,30 @@ function generateSolution (value) {
 	};
 }
 
+export const hasSolutions = part => !part.isNonGradable;
+
 export function updatePart (part, choices, solution) {
-	return {
-		MimeType: part.MimeType,
+	const data = {
+		MimeType: hasSolutions(part) ? part.MimeType : noSolutionsMimeType,
 		content: part.content ?? '',
 		hints: part.hints ?? [],
-		choices,
-		solutions: [generateSolution(solution)]
+		isNonGradable: part.isNonGradable,
+		choices
 	};
+
+	if (hasSolutions(part)) {
+		data.solutions = [generateSolution(solution)];
+	}
+
+	return data;
 }
 
-export function generateBlankPart () {
+export function generateBlankPart ({noSolutions}) {
 	return updatePart(
-		{MimeType: isMultipleChoicePart.preferredMimeType},
+		{
+			MimeType: noSolutions ? noSolutionsMimeType : preferredMimeType,
+			isNonGradable: noSolutions
+		},
 		[t('blankPart.choice')],
 		0
 	);

@@ -20,10 +20,16 @@ QuestionButton.propTypes = {
 	})
 };
 export default function QuestionButton ({type}) {
-	const {[Store.CanAddQuestion]: canAddQuestion} = Store.useMonitor([Store.CanAddQuestion]);
+	const {
+		[Store.CanAddQuestion]: canAddQuestion,
+		[Store.NoSolutions]: noSolutions
+	} = Store.useMonitor([
+		Store.CanAddQuestion,
+		Store.NoSolutions
+	]);
 
 	const isBlock = block => false;//TODO: figure this out
-	const createBlock = (insertBlock) => (
+	const createBlock = (insertBlock) => {
 		insertBlock({
 			type: BLOCKS.ATOMIC,
 			text: '',
@@ -32,11 +38,11 @@ export default function QuestionButton ({type}) {
 				arguments: '',
 				body: [],
 				options: {
-					parts: [type.generateBlankPart()]
+					parts: [type.generateBlankPart({noSolutions})]
 				}
 			}
-		})
-	);
+		});
+	};
 
 	return (
 		<CustomBlocks.Button

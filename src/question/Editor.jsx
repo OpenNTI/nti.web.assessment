@@ -36,7 +36,6 @@ QuestionEditor.propTypes = {
 	}),
 	onChange: PropTypes.func,
 
-	noSolutions: PropTypes.bool,
 	draggable: PropTypes.bool,
 	canAddPartOption: PropTypes.bool,
 	canRemovePartOption: PropTypes.bool,
@@ -48,7 +47,6 @@ export default function QuestionEditor ({
 	question,
 	onChange,
 
-	noSolutions,
 	draggable,
 	canAddPartOption,
 	canRemovePartOption,
@@ -91,7 +89,6 @@ export default function QuestionEditor ({
 							key={partIndex}
 							part={part}
 							onChange={(newPart) => onPartChange(newPart, partIndex)}
-							noSolutions={noSolutions}
 							errorLabel={errorLabel}
 							error={partError}
 							canAddOption={canAddPartOption}

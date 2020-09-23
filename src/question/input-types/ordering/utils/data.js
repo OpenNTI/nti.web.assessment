@@ -2,6 +2,8 @@ import {scoped} from '@nti/lib-locale';
 
 import isOrderingPart from './is-ordering-part';
 
+const {noSolutionsMimeType, preferredMimeType} = isOrderingPart;
+
 const t = scoped('nti-assessment.question.input-types.ordering.utils.data', {
 	blankPart: {
 		labelOne: 'Label 1',
@@ -24,21 +26,32 @@ function generateSolution (value) {
 	};
 }
 
+export const hasSolutions = (part) => !part.isNonGradable;
+
 export function updatePart (part, labels, values, solutions) {
-	return {
-		MimeType: part.MimeType,
+	const data = {
+		MimeType: hasSolutions(part) ? part.MimeType : noSolutionsMimeType,
 		content: part.content ?? '',
+		hints: part.hints ?? [],
+		isNonGradable: part.isNonGradable,
+		randomize: true,
 		labels,
 		values,
-		solutions: [generateSolution(solutions ?? getSolutionFromLabels(labels))],
-		hints: part.hints ?? [],
-		randomize: true
 	};
+
+	if (hasSolutions(part)) {
+		data.solutions = [generateSolution(solutions ?? getSolutionFromLabels(labels))];
+	}
+
+	return data;
 }
 
-export function generateBlankPart () {
+export function generateBlankPart ({noSolutions}) {
 	return updatePart(
-		{MimeType: isOrderingPart.preferredMimeType},
+		{
+			MimeType: noSolutions ? noSolutionsMimeType : preferredMimeType,
+			isNonGradable: noSolutions
+		},
 		[t('blankPart.labelOne'), t('blankPart.labelTwo')],
 		[t('blankPart.valueOne'), t('blankPart.valueTwo')]
 	);

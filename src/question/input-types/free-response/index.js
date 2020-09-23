@@ -13,4 +13,4 @@ export Input from './Input';
 export const Label = t('label');
 export const type = Symbol('Free Response');
 export const canHandlePart = p => isFreeResponsePart(p);
-export const generateBlankPart = () => Data.generateBlankPart();
+export const generateBlankPart = (...args) => Data.generateBlankPart(...args);

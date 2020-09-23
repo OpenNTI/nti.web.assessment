@@ -71,7 +71,6 @@ MultipleChoiceEditor.propTypes = {
 
 	error: PropTypes.any,
 
-	noSolutions: PropTypes.bool,
 	canAddOption: PropTypes.bool,
 	canRemoveOption: PropTypes.bool,
 	canReorderOption: PropTypes.bool
@@ -81,11 +80,12 @@ export default function MultipleChoiceEditor ({
 	part,
 	error,
 
-	noSolutions,
 	canAddOption,
 	canRemoveOption,
 	canReorderOption
 }) {
+	const noSolutions = !Data.hasSolutions(part);
+
 	const choices = getChoices(part, error, noSolutions);
 	const onChange = newChoices => (
 		onChangeProp?.(

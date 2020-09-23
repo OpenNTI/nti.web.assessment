@@ -15,6 +15,6 @@ export Input from './Input';
 export const Label = t('label');
 export const type = Symbol('Ordering');
 export const canHandlePart = p => isOrderingPart(p);
-export const generateBlankPart = () => Data.generateBlankPart();
+export const generateBlankPart = (...args) => Data.generateBlankPart(...args);
 
 export const ContentPurpose = ContentPurposes.Prompt;

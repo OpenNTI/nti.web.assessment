@@ -15,6 +15,6 @@ export Input from './Input';
 export const Label = t('label');
 export const type = Symbol('Modeled Content');
 export const canHandlePart = p => isModeledContentPart(p);
-export const generateBlankPart = () => Data.generateBlankPart();
+export const generateBlankPart = (...args) => Data.generateBlankPart(...args);
 
 export const ContentPurpose = ContentPurposes.Prompt;

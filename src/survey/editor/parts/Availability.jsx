@@ -32,7 +32,7 @@ export default function SurveyAvailability () {
 	const resetUnpublish = async () => {
 		setBusy(true);
 		try {
-			await survey.maybeResetAllSubmissions();
+			await survey.resetAllSubmissions();
 			await survey.setPublishState(false);
 		} catch (e) {
 			setError(e);
