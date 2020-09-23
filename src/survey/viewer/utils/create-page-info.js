@@ -32,6 +32,8 @@ const objectRenderers = {
 	'napollref': (obj, survey, index) => {
 		const question = survey.questions.find(q => q.getID() === obj.arguments);
 
+		if (!question) { return ''; }
+
 		return questionPartTpl(question, index);
 	},
 	'course-figure': async (obj, survey, index) => {
