@@ -26,6 +26,8 @@ const questionPartTpl = (object, index) => `
 	</object>
 `;
 
+const paramTpl = (name, value) => `<param name="${name}" value="${value}" />`;
+
 const objectRenderers = {
 	'napollref': (obj, survey, index) => {
 		const question = survey.questions.find(q => q.getID() === obj.arguments);
@@ -69,6 +71,43 @@ const objectRenderers = {
 				</span>
 				${caption}
 			</div>
+		`;
+	},
+	'nti:embedwidget': (obj, survey, index) => {
+		const {arguments: src, options} = obj;
+
+		const params = Object.entries(options)
+			.reduce((acc, [name, value]) => {
+				if (name === 'allowfullscreen') {
+					const allow = value || 'false';
+
+					acc.push(paramTpl('webkitallowfullscreen', allow));
+					acc.push(paramTpl('allowfullscreen', allow));
+					acc.push(paramTpl('mozallowfullscreen', allow));
+				} else {
+					acc.push(paramTpl(name, value));
+				}
+
+				return acc;
+			}, [
+				paramTpl('ntiid', `${survey.getID()}#embed-widget${index}`),
+				paramTpl('source', src)
+			]);
+
+		return `
+			<object class="nti-content-embed-widget" type="application/vnd.nextthought.content.embeded.widget">
+				${params.join('\n')}
+			</object>
+		`;
+	},
+	'ntivideoref': (obj) => {
+		const {arguments: id} = obj;
+
+		return `
+			<object class="ntivideoref" type="application/vnd.nextthought.ntivideoref">
+				${paramTpl('ntiid', id)}
+				${paramTpl('targetMimeType', 'application/vnd.nextthought.ntivideo')}
+			</object>
 		`;
 	}
 };
