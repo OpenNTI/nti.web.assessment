@@ -29,7 +29,7 @@ const RegisterProperty = 'RegisterProperty';
 const OnPropertyChange = 'OnPropertyChange';
 const OnPropertyError = 'OnPropertyError';
 
-const AutoSaveDelay = 1000;
+const AutoSaveDelay = 3000;
 
 const EqualityChecks = {
 	default: (updated, original) => updated === original,
