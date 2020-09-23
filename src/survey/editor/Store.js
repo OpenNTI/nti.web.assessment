@@ -283,6 +283,10 @@ export default class SurveyEditorStore extends Stores.BoundStore {
 			this.set({[Saving]: true});
 
 			await survey.save(payload);
+
+			this.set({
+				[HasChanges]: false
+			});
 		} catch (e) {
 			this.set({[ErrorField]: e});
 			throw e;
