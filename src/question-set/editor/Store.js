@@ -242,11 +242,12 @@ export default class QuestionSetEditorState extends Stores.BoundStore {
 	[OnQuestionError] () { this.#internalQuestionChange(); }
 
 	[RegisterQuestionStore] (id, store) {
-		const isNew = !this.#questionStores[id];
+		const isAdded = !this.#questionStores[id] && store;
+		const isRemoved = this.#questionStores[id] && !store;
 
 		this.#questionStores[id] = store;
 
-		if (isNew) {
+		if (isAdded || isRemoved) {
 			this.#internalQuestionChange();
 		}
 
