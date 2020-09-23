@@ -109,6 +109,21 @@ const objectRenderers = {
 				${paramTpl('targetMimeType', 'application/vnd.nextthought.ntivideo')}
 			</object>
 		`;
+	},
+	'sidebar': (obj) => {
+		const {arguments: title, body} = obj;
+
+		const draftState = Parsers.RST.toDraftState(body.join('\n'));
+		const parts = EditorParsers.HTML.fromDraftState(draftState)
+			.filter(x => typeof x === 'string')
+			.join('\n');
+
+		return `
+			<div class="sidebar">
+				<div class="sidebar-title">${title}</div>
+				${parts}
+			</div>
+		`;
 	}
 };
 
