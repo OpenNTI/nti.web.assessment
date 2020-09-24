@@ -9,6 +9,28 @@ import Choice from './Choice';
 
 const cx = classnames.bind(Styles);
 
+const Actions = {
+	reset: 'reset',
+	change: 'change',
+	commit: 'commit'
+};
+const initialOrder = {order: []};
+const orderReducer = (state, action) => {
+	switch (action.type) {
+	case Actions.reset:
+		return {order: action.choices.map((c, index) => index), choices: action.choices};
+	case Actions.change:
+		return {order: arr.move(state.order, action.original, action.updated), choices: state.choices};
+	case Actions.commit:
+		action.onChange(state.order.map((o) => state.choices[o]));
+		return state;
+	default:
+		throw new Error('Unknown action');
+	}
+};
+
+const getChoicesHash = (choices) => choices.map(c => c.label).join(',');
+
 ChoiceList.propTypes = {
 	className: PropTypes.string,
 	containerId: PropTypes.string,
@@ -50,18 +72,12 @@ export default function ChoiceList ({
 	canRemove
 }) {
 	const focused = React.useRef();
-	const [order, setOrder] = React.useState();
+	const [{order}, dispatch] = React.useReducer(orderReducer, initialOrder);
 
-	React.useEffect(() => {
-		setOrder(choices.map((c, index) => index));
-	}, [choices]);
+	React.useEffect(() => dispatch({type: Actions.reset, choices}), [getChoicesHash(choices)]);
 
-	const onOrderChange = (original, updated) => setOrder(arr.move(order, original, updated));
-	const commitOrder = () => (
-		onChange(
-			order.map((o) => choices[o])
-		)
-	);
+	const onOrderChange = (original, updated) => dispatch({type: Actions.change, original, updated});
+	const commitOrder = () => dispatch({type: Actions.commit, onChange});
 
 	const onChoiceChange = (index, choice) => onChange([
 		...choices.slice(0, index),
@@ -116,8 +132,6 @@ export default function ChoiceList ({
 			</DnD.Item>
 		);
 	};
-
-	if (!order) { return null;}
 
 	return (
 		<div className={cx('choices-editor', className)}>
