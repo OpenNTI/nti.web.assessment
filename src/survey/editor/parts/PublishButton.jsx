@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames/bind';
-import {Publish, Constants} from '@nti/web-commons';
+import {Publish, Constants, Errors} from '@nti/web-commons';
 
 import Store from '../Store';
 
@@ -53,6 +53,7 @@ export default function SurveyPublishButton () {
 			);
 		} catch (e) {
 			setError(e);
+			throw e;
 		}
 	};
 
@@ -60,7 +61,7 @@ export default function SurveyPublishButton () {
 		<div className={cx('survey-publish-button', {disabled})}>
 			<Publish
 				alignment="top-right"
-				error={error}
+				error={error ? Errors.Messages.getMessage(error) : null}
 				value={value}
 				onChange={onChange}
 				onDismiss={() => setError(void 0)}
