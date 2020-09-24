@@ -17,6 +17,8 @@ const t = scoped('nti-assessment.question.content.Editor', {
 	}
 });
 
+const Initial = Symbol('Initial');
+
 const toDraftState = (content) => Parsers.HTML.toDraftState(content);
 const fromDraftState = (draftState) => Parsers.HTML.fromDraftState(draftState)?.join('\n') ?? '';
 
@@ -49,10 +51,10 @@ export default function ContentEditor ({content, onChange: onChangeProp, purpose
 	const [editorState, setEditorState] = React.useState(null);
 	const settingUp = !editorState;
 
-	const contentRef = React.useRef(null);
+	const contentRef = React.useRef(Initial);
 
 	React.useEffect(() => {
-		if (!contentRef.current || content !== contentRef.current) {
+		if (contentRef.current === Initial || content !== contentRef.current) {
 			setEditorState(toDraftState(content));
 		}
 

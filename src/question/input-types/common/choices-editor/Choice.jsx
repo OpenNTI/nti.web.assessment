@@ -9,6 +9,8 @@ import Styles from './Styles.css';
 
 const cx = classnames.bind(Styles);
 
+const Initial = Symbol('Initial');
+
 const {getKeyCode} = Events;
 
 const toDraftState = x => Parsers.HTML.toDraftState(x);
@@ -77,7 +79,7 @@ export default function Choice ({
 	const [plugins, setPlugins] = React.useState(null);
 	const settingUp = !editorState || !plugins;
 
-	const contentRef = React.useRef(null);
+	const contentRef = React.useRef(Initial);
 
 	React.useEffect(() => {
 		if (autoFocus && !settingUp) {
@@ -103,7 +105,7 @@ export default function Choice ({
 	), [addChoiceAfter, onRemove]);
 
 	React.useEffect(() => {
-		if (!contentRef.current || label !== contentRef.current) {
+		if (contentRef.current === Initial || label !== contentRef.current) {
 			setEditorState(toDraftState(label));
 		}
 
