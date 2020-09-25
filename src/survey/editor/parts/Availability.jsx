@@ -10,7 +10,7 @@ import Styles from './Availability.css';
 const cx = classnames.bind(Styles);
 const t = scoped('nti-assessment.survey.editor.parts.Availability', {
 	title: 'This Survey is Available to Students',
-	description: 'To protect students work and submissions, certain edit functionality has been disabled. In order to re-enable those features please reset submissions and unpublish the survey.',
+	description: 'To protect students\' work, certain editing functionality has been disabled. To re-enable those features please reset submissions and unpublish the survey.',
 	action: 'Reset and Unpublish',
 	confirm: 'Resetting this survey will remove all student progress and submissions. Unpublishing will make the survey unavailable to students, and it will have to be re-published to become available again.'
 });
