@@ -65,6 +65,7 @@ function SurveyEditor ({survey: surveyProp, container, breadcrumb, pageSource}) 
 
 
 	const titleProp = Store.useProperty('title');
+	const descriptionProp = Store.useProperty('description');
 	const contentsProp = Store.useProperty('contents');
 	const questionsProp = Store.useProperty('questions');
 
@@ -102,7 +103,7 @@ function SurveyEditor ({survey: surveyProp, container, breadcrumb, pageSource}) 
 				</Editor.Header>
 				<Editor.Content mask={mask} error={error}>
 					<Editor.Content.Title {...titleProp} />
-					<Editor.Content.Description />
+					<Editor.Content.Description {...descriptionProp} />
 					<Editor.Content.Body
 						customBlocks={CustomBlocks}
 						customBlockProps={{container}}
