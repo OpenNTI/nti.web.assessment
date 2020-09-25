@@ -127,7 +127,7 @@ export default function OrderingEditor ({
 
 	const onValueChange = (index, value) => onChange(
 		labels,
-		[...values.slice(0, index), value, ...labels.slice(index + 1)]
+		[...values.slice(0, index), value, ...values.slice(index + 1)]
 	);
 
 	const removeRow = (index) => (
