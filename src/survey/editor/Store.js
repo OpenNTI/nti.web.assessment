@@ -288,7 +288,15 @@ export default class SurveyEditorStore extends Stores.BoundStore {
 				[HasChanges]: false
 			});
 		} catch (e) {
-			this.set({[ErrorField]: e});
+			const {field} = e;
+			const property = this.#properties[field];
+
+			if (property) {
+				property.setError(e);
+			} else {
+				this.set({[ErrorField]: e});
+			}
+
 			throw e;
 		} finally {
 			this.set({[Saving]: false});
