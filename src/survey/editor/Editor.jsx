@@ -7,8 +7,9 @@ import {Editor as QuestionSetEditor} from '../../question-set';
 
 import Store from './Store';
 import Availability from './parts/Availability';
-import SaveButton from './parts/SaveButton';
 import Mask from './parts/Mask';
+import Options from './parts/Options';
+import SaveButton from './parts/SaveButton';
 
 
 const CustomBlocks = [
@@ -102,6 +103,9 @@ function SurveyEditor ({survey: surveyProp, container, breadcrumb, pageSource}) 
 					<Availability />
 				</Editor.Header>
 				<Editor.Content mask={mask} error={error}>
+					<Editor.Content.Options title={Options.Title} description={titleProp.value} >
+						<Options />
+					</Editor.Content.Options>
 					<Editor.Content.Title {...titleProp} />
 					<Editor.Content.Description {...descriptionProp} />
 					<Editor.Content.Body
