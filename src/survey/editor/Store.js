@@ -163,16 +163,27 @@ export default class SurveyEditorStore extends Stores.BoundStore {
 		);
 	}
 
+	#inflightPollCreation = null;
+
 	[CreatePoll] (data) {
-		if (this[Survey]?.createPoll) { return this[Survey].createPoll(data); }
+		const createPoll = () => {
+			if (this[Survey]?.createPoll) { return this[Survey].createPoll(data); }
 
-		for (let c of this[Containers]) {
-			if (c.createPoll) {
-				return c.createPoll(data);
+			for (let c of this[Containers]) {
+				if (c.createPoll) {
+					return c.createPoll(data);
+				}
 			}
-		}
 
-		throw new Error('Unable to create poll');
+			throw new Error('Unable to create poll');
+		};
+
+		const inflight = this.#inflightPollCreation ?? Promise.resolve();
+
+		this.#inflightPollCreation = inflight.then(createPoll, createPoll);
+
+		return this.#inflightPollCreation;
+
 	}
 
 	#hasErrors () {
