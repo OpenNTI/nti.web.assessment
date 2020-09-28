@@ -37,11 +37,15 @@ const objectRenderers = {
 		return questionPartTpl(question, index);
 	},
 	'course-figure': async (obj, survey, index) => {
+		const {origin} = global.location;
 		const {arguments: url, body} = obj;
+		const remote = (new URL(url, origin)).origin === origin ? null : 'crossorigin="anonymous"';
 
 		const size = await new Promise((fulfill) => {
 			const img = new Image();
-			img.crossorigin = 'anonymous';
+			if (remote) {
+				img.crossorigin = 'anonymous';
+			}
 
 			img.onload = () => {
 				const {width, height} = img;
@@ -69,7 +73,7 @@ const objectRenderers = {
 		return `
 			<div class="figure">
 				<span itemprop="nti-data-markupdisabled">
-					<img crossorigin="anonymous" data-caption="${caption.replace('<', '&lt;')}" id="${index}" src="${url}" ${sizeAttr} />
+					<img ${remote} data-caption="${caption.replace('<', '&lt;')}" id="${index}" src="${url}" ${sizeAttr} />
 				</span>
 				${caption}
 			</div>
