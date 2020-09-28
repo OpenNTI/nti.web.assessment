@@ -20,6 +20,7 @@ const CustomBlocks = [
 	Editor.CustomBlocks.BuiltInBlock.Build(BLOCKS.UNORDERED_LIST_ITEM),
 	Editor.CustomBlocks.Callout,
 	Editor.CustomBlocks.Iframe,
+	Editor.CustomBlocks.Code,
 	...QuestionSetEditor.QuestionBlocks
 ];
 
