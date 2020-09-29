@@ -1,5 +1,26 @@
 import {Parsers} from '@nti/web-reading';
-import {Parsers as EditorParsers} from '@nti/web-editor';
+import {Parsers as EditorParsers, BLOCKS} from '@nti/web-editor';
+
+
+const HTMLStrategy = {
+	TypeToTag: {
+		[BLOCKS.HEADER_TWO]: {tag: 'div', attributes: {class: 'chapter title'}},
+		[BLOCKS.HEADER_THREE]: {tag: 'div', attributes: {class: 'subsection title'}},
+		[BLOCKS.HEADER_FOUR]: {tag: 'div', attributes: {class: 'paragraph title'}},
+		[BLOCKS.BLOCKQUOTE]: {tag: 'p', attributes: {class: 'par'}},
+		[BLOCKS.UNSTYLED]: {tag: 'p', attributes: {class: 'par'}}
+	},
+
+	OrderedListTag: {tag: 'ol', attributes: {class: 'enumerate'}},
+	UnorderedListTag: {tag: 'ul', attributes: {class: 'itemize'}},
+
+	WrapperTags: {
+		[BLOCKS.BLOCKQUOTE]: {
+			open: input => ([{tag: 'blockquote', attributes: {class: 'ntiblockquote'}}, ...input]),
+			close: input => ([...input, 'blockquote'])
+		}
+	}
+};
 
 const pageTpl = (title, ntiid, contents) => `
 	<head>
@@ -7,6 +28,9 @@ const pageTpl = (title, ntiid, contents) => `
 	</head>
 	<body>
 		<div class="page-contents">
+			<div class="titlepage">
+				<div class="title">${title}</div>
+			</div>
 			<div data-ntiid="${ntiid}" ntiid="${ntiid}">
 				${contents}
 			</div>
@@ -139,8 +163,8 @@ const objectRenderers = {
 };
 
 export default async function createPageInfo (survey) {
-	const draftState = Parsers.RST.toDraftState(survey.contents);
-	const parts = EditorParsers.HTML.fromDraftState(draftState);
+	const draftState = Parsers.RST.toDraftState(survey.contents, {startingHeaderLevel: 2});
+	const parts = EditorParsers.HTML.fromDraftState(draftState, HTMLStrategy);
 
 	const renderedParts = await Promise.all(
 		parts.map((part, index) => {
