@@ -162,19 +162,43 @@ const objectRenderers = {
 	}
 };
 
+const objectCounters = {
+	'default': {
+		get: (counter) => (counter.default ?? 0) + 1,
+		update: (counter) => ({...counter, default: (counter.default ?? 0) + 1})
+	},
+
+	'napollref': {
+		get: (counter) => (counter.poll ?? 0) + 1,
+		update: (counter) => ({...counter, poll: (counter.poll ?? 0) + 1})
+	}
+};
+
 export default async function createPageInfo (survey) {
 	const draftState = Parsers.RST.toDraftState(survey.contents, {startingHeaderLevel: 2});
 	const parts = EditorParsers.HTML.fromDraftState(draftState, HTMLStrategy);
 
-	const renderedParts = await Promise.all(
-		parts.map((part, index) => {
-			if (typeof part === 'string') { return contentPartTpl(part); }
+	const {partRenderers} = parts.reduce((acc, part) => {
+		if (typeof part === 'string') {
+			return {
+				partRenderers: [...acc.partRenderers, contentPartTpl(part)],
+				count: acc.count
+			};
+		}
 
-			const renderer = objectRenderers[part.name];
+		const counter = objectCounters[part.name] ?? objectCounters.default;
+		const renderer = objectRenderers[part.name];
 
-			return renderer?.(part, survey, index) ?? '';
-		})
-	);
+		return {
+			partRenderers: [
+				...acc.partRenderers,
+				renderer?.(part, survey, counter.get(acc.count)) ?? ''
+			],
+			count: counter.update(acc.count)
+		};
+	}, {partRenderers: [], count: {}});
+
+	const renderedParts = await Promise.all(partRenderers);
 
 	const content = pageTpl(
 		survey.title,
