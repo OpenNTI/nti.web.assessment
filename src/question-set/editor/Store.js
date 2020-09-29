@@ -217,7 +217,7 @@ export default class QuestionSetEditorState extends Stores.BoundStore {
 	#internalQuestionChange () {
 		const stores = Object
 			.entries(this.#questionStores ?? {})
-			.sort(([,a], [,b]) => b.index - a.index);
+			.sort(([,a], [,b]) => a.index - b.index);
 
 		const change = stores.reduce((acc, store) => {
 			const [id, state] = store;
