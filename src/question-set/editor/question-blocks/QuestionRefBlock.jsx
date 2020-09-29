@@ -68,8 +68,19 @@ export default function QuestionRefBlock ({block, blockProps}) {
 		questionStoreSetIndex(index);
 	}, [index]);
 
+	const onRemoval = () => {
+		//TODO: show some indication that the removal was blocked
+		return canRemove;
+	};
+
 	return (
-		<CustomBlock className={cx('block')} draggable block={block} blockProps={blockProps}>
+		<CustomBlock
+			className={cx('block')}
+			draggable
+			block={block}
+			blockProps={blockProps}
+			onRemoval={onRemoval}
+		>
 			{question && (
 				<Editor
 					index={index != null ? (index + 1) : null}
