@@ -130,6 +130,11 @@ const objectRenderers = {
 				${parts}
 			</div>
 		`;
+	},
+	'code-block': (obj) => {
+		const {arguments: lang, body} = obj;
+
+		return `<pre class="code ${lang} literal-block">${body.join('<br />')}</pre>`;
 	}
 };
 
