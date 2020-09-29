@@ -39,7 +39,7 @@ const objectRenderers = {
 	'course-figure': async (obj, survey, index) => {
 		const {origin} = global.location;
 		const {arguments: url, body} = obj;
-		const remote = (new URL(url, origin)).origin === origin ? null : 'crossorigin="anonymous"';
+		const remote = (new URL(url, origin)).origin !== origin;
 
 		const size = await new Promise((fulfill) => {
 			const img = new Image();
@@ -73,7 +73,7 @@ const objectRenderers = {
 		return `
 			<div class="figure">
 				<span itemprop="nti-data-markupdisabled">
-					<img ${remote} data-caption="${caption.replace('<', '&lt;')}" id="${index}" src="${url}" ${sizeAttr} />
+					<img ${remote ? 'crossorigin="anonymous"' : ''} data-caption="${caption.replace('<', '&lt;')}" id="${index}" src="${url}" ${sizeAttr} />
 				</span>
 				${caption}
 			</div>
