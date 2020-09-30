@@ -1,6 +1,6 @@
 import React from 'react';
 import {Stores} from '@nti/lib-store';
-import {Hooks} from '@nti/web-commons';
+import {Hooks, Errors} from '@nti/web-commons';
 import {wait} from '@nti/lib-commons';
 
 const {useForceUpdate} = Hooks;
@@ -56,6 +56,26 @@ const ValidityChecks = {
 const MinWaitsBefore = {
 	Delete: 3000
 };
+
+const ErrorMaps = [
+	(e) => {
+		if (e.code !== 'InvalidValue' || e.field !== 'contents') { return e; }
+
+		const message = Errors.Messages.getMessage(e);
+
+		if (message.indexOf('Error in "sidebar" directive:') >= 0) {
+			return Errors.Messages.mapMessage(e, 'Call Outs must have a title and body');
+		}
+
+		if (message.indexOf('Content block expected for the "code-block" directive') >= 0) {
+			return Errors.Messages.mapMessage(e, 'Code cannot be empty');
+		}
+
+		return e;
+	}
+];
+
+const mapError = (e) => ErrorMaps.reduce((acc, map) => map(acc), e);
 
 export default class SurveyEditorStore extends Stores.BoundStore {
 	static Saving = Saving;
@@ -307,18 +327,19 @@ export default class SurveyEditorStore extends Stores.BoundStore {
 				[HasChanges]: false
 			});
 		} catch (e) {
-			const {field} = e;
+			const err = mapError(e);
+			const {field} = err;
 			const property = this.#properties[field];
 
 			if (property) {
-				property.setError(e);
+				property.setError(err);
 			}
 
 			if (!hideErrors) {
-				this.set({[ErrorField]: e});
+				this.set({[ErrorField]: err});
 			}
 
-			throw e;
+			throw err;
 		} finally {
 			this.set({[Saving]: false});
 		}
