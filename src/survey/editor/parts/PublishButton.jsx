@@ -28,12 +28,14 @@ export default function SurveyPublishButton () {
 		[Store.Survey]: survey,
 		[Store.Saving]: disabled,
 		[Store.SaveChanges]: beforePublish,
-		[Store.HasChanges]: hasChanges
+		[Store.HasChanges]: hasChanges,
+		[Store.NavigateToPublished]: navigateToPublished
 	} = Store.useMonitor([
 		Store.Survey,
 		Store.Saving,
 		Store.SaveChanges,
-		Store.HasChanges
+		Store.HasChanges,
+		Store.NavigateToPublished
 	]);
 
 	const [error, setError] = React.useState(null);
@@ -45,12 +47,17 @@ export default function SurveyPublishButton () {
 	const onChange = async (newValue) => {
 		try {
 			const before = await beforePublish().catch?.(() => Abort);
+			const wasAvailable = survey.isAvailable();
 
 			if (before === Abort || newValue === value) { return; }
 
 			await survey.setPublishState(
 				newValue instanceof Date ? newValue : PublishStateMap[newValue]
 			);
+
+			if (!wasAvailable && survey.isAvailable()) {
+				navigateToPublished?.();
+			}
 		} catch (e) {
 			setError(e);
 			throw e;

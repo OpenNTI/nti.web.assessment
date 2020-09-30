@@ -41,7 +41,7 @@ SurveyEditor.propTypes = {
 	breadcrumb: PropTypes.any,
 	pageSource: PropTypes.any,
 
-	afterSave: PropTypes.func,
+	navigateToPublished: PropTypes.func,
 	onDelete: PropTypes.func,
 };
 function SurveyEditor ({survey: surveyProp, container, breadcrumb, pageSource}) {

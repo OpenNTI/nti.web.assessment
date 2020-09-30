@@ -15,6 +15,7 @@ const Containers = 'ContainersProp';
 const SaveChanges = 'SaveChanges';
 const Delete = 'Delete';
 const Deleted = 'Deleted';
+const NavigateToPublished = 'NavigateToPublished';
 
 const IsAvailable = 'IsAvailable';
 const IsPublished = 'IsPublished';
@@ -66,6 +67,7 @@ export default class SurveyEditorStore extends Stores.BoundStore {
 	static Containers = Containers;
 	static SaveChanges = SaveChanges;
 	static Delete = Delete;
+	static NavigateToPublished = NavigateToPublished;
 
 	static IsAvailable = IsAvailable;
 	static IsPublished = IsPublished;
@@ -138,6 +140,8 @@ export default class SurveyEditorStore extends Stores.BoundStore {
 
 	get [Survey] () { return this.binding.survey; }
 	get [Containers] () { return Array.isArray(this.binding.container) ? this.binding.container.reverse() : [this.binding.container]; }
+	get [NavigateToPublished] () { return this.binding.navigateToPublished; }
+
 
 	get [IsAvailable] () { return this[Survey]?.isAvailable(); }
 	get [IsPublished] () { return this[Survey]?.isPublished(); }
