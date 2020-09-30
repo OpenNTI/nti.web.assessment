@@ -164,12 +164,12 @@ const objectRenderers = {
 
 const objectCounters = {
 	'default': {
-		get: (counter) => (counter.default ?? 0) + 1,
+		get: (counter) => (counter.default ?? 0),
 		update: (counter) => ({...counter, default: (counter.default ?? 0) + 1})
 	},
 
 	'napollref': {
-		get: (counter) => (counter.poll ?? 0) + 1,
+		get: (counter) => (counter.poll ?? 0),
 		update: (counter) => ({...counter, poll: (counter.poll ?? 0) + 1})
 	}
 };
