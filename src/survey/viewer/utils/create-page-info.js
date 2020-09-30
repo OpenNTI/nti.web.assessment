@@ -52,6 +52,13 @@ const questionPartTpl = (object, index) => `
 
 const paramTpl = (name, value) => `<param name="${name}" value="${value}" />`;
 
+const parseRST = (rst) => {
+	const draftState = Parsers.RST.toDraftState(rst);
+	const html = EditorParsers.HTML.fromDraftState(draftState);
+
+	return html.filter(x => typeof x === 'string');
+};
+
 const objectRenderers = {
 	'napollref': (obj, survey, index) => {
 		const question = survey.questions.find(q => q.getID() === obj.arguments);
@@ -141,12 +148,10 @@ const objectRenderers = {
 		`;
 	},
 	'sidebar': (obj) => {
-		const {arguments: title, body} = obj;
+		const {arguments: args, body} = obj;
 
-		const draftState = Parsers.RST.toDraftState(body.join('\n'));
-		const parts = EditorParsers.HTML.fromDraftState(draftState)
-			.filter(x => typeof x === 'string')
-			.join('\n');
+		const title = parseRST(args)[0];
+		const parts = parseRST(body.join('\b')).join('\n');
 
 		return `
 			<div class="sidebar">
