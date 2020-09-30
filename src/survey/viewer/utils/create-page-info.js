@@ -4,15 +4,15 @@ import {Parsers as EditorParsers, BLOCKS} from '@nti/web-editor';
 
 const HTMLStrategy = {
 	TypeToTag: {
-		[BLOCKS.HEADER_TWO]: {tag: 'div', attributes: {class: 'chapter title'}},
-		[BLOCKS.HEADER_THREE]: {tag: 'div', attributes: {class: 'subsection title'}},
-		[BLOCKS.HEADER_FOUR]: {tag: 'div', attributes: {class: 'paragraph title'}},
-		[BLOCKS.BLOCKQUOTE]: {tag: 'p', attributes: {class: 'par'}},
-		[BLOCKS.UNSTYLED]: {tag: 'p', attributes: {class: 'par'}}
+		[BLOCKS.HEADER_TWO]: {tag: 'div', attributes: {class: 'chapter title', 'data-non-anchorable': 'true'}},
+		[BLOCKS.HEADER_THREE]: {tag: 'div', attributes: {class: 'subsection title', 'data-non-anchorable': 'true'}},
+		[BLOCKS.HEADER_FOUR]: {tag: 'div', attributes: {class: 'paragraph title', 'data-non-anchorable': 'true'}},
+		[BLOCKS.BLOCKQUOTE]: {tag: 'p', attributes: {class: 'par', 'data-non-anchorable': 'true'}},
+		[BLOCKS.UNSTYLED]: {tag: 'p', attributes: {class: 'par', 'data-non-anchorable': 'true'}}
 	},
 
-	OrderedListTag: {tag: 'ol', attributes: {class: 'enumerate'}},
-	UnorderedListTag: {tag: 'ul', attributes: {class: 'itemize'}},
+	OrderedListTag: {tag: 'ol', attributes: {class: 'enumerate', 'data-non-anchorable': 'true'}},
+	UnorderedListTag: {tag: 'ul', attributes: {class: 'itemize', 'data-non-anchorable': 'true'}},
 
 	WrapperTags: {
 		[BLOCKS.BLOCKQUOTE]: {
@@ -31,7 +31,7 @@ const pageTpl = (title, ntiid, contents) => `
 			<div class="titlepage">
 				<div class="title">${title}</div>
 			</div>
-			<div data-ntiid="${ntiid}" ntiid="${ntiid}">
+			<div data-ntiid="${ntiid}" ntiid="${ntiid}" data-no-anchors-within="true">
 				${contents}
 			</div>
 		</div>
