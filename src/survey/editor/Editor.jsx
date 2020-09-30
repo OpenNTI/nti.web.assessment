@@ -72,7 +72,7 @@ function SurveyEditor ({survey: surveyProp, container, breadcrumb, pageSource}) 
 	const questionsProp = Store.useProperty('questions');
 
 	const allErrors = ([
-		error,
+		error?.field ? null : error,
 		titleProp.error,
 		contentsProp.error,
 		questionsProp.error

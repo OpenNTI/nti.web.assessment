@@ -270,7 +270,7 @@ export default class SurveyEditorStore extends Stores.BoundStore {
 			if (!hasChanges || !isValid) { return; }
 
 			if (shouldAutoSave) {
-				this[SaveChanges]();
+				this[SaveChanges](true);
 			} else {
 				this.set({
 					[HasChanges]: true
@@ -279,8 +279,12 @@ export default class SurveyEditorStore extends Stores.BoundStore {
 		}, AutoSaveDelay);
 	}
 
-	async [SaveChanges] () {
+	async [SaveChanges] (hideErrors) {
 		if (this.#hasErrors()) {
+			this.set({
+				[ErrorField]: this.get(ErrorField) ?? this.#properties.contents?.error
+			});
+
 			throw new Error('Must resolve errors');
 		}
 
@@ -304,7 +308,9 @@ export default class SurveyEditorStore extends Stores.BoundStore {
 
 			if (property) {
 				property.setError(e);
-			} else {
+			}
+
+			if (!hideErrors) {
 				this.set({[ErrorField]: e});
 			}
 
