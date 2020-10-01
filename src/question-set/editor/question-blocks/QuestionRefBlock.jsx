@@ -47,8 +47,18 @@ export default function QuestionRefBlock ({block, blockProps}) {
 	} = Store.useQuestionStore(id);
 
 	const onChange = (newQuestion) => {
+		const newUpdates = {};
+
+		if (newQuestion.content !== question.content) {
+			newUpdates.content = newQuestion.content;
+		}
+
+		if (newQuestion.parts !== question.parts) {
+			newUpdates.parts = newQuestion.parts;
+		}
+
 		clearError();
-		setBlockDataImmediately({updates: newQuestion});
+		setBlockDataImmediately({updates: newUpdates});
 	};
 
 	React.useEffect(() => {
@@ -84,7 +94,10 @@ export default function QuestionRefBlock ({block, blockProps}) {
 			{question && (
 				<Editor
 					index={index != null ? (index + 1) : null}
-					question={updates ?? question}
+					question={{
+						content: updates?.content ?? question.content,
+						parts: updates?.parts ?? question.parts
+					}}
 					error={error}
 					onChange={onChange}
 					draggable={canReorder}
