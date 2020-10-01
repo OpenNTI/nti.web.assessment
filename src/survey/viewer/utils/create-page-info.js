@@ -8,7 +8,9 @@ const HTMLStrategy = {
 		[BLOCKS.HEADER_THREE]: {tag: 'div', attributes: {class: 'subsection title', 'data-non-anchorable': 'true'}},
 		[BLOCKS.HEADER_FOUR]: {tag: 'div', attributes: {class: 'paragraph title', 'data-non-anchorable': 'true'}},
 		[BLOCKS.BLOCKQUOTE]: {tag: 'p', attributes: {class: 'par', 'data-non-anchorable': 'true'}},
-		[BLOCKS.UNSTYLED]: {tag: 'p', attributes: {class: 'par', 'data-non-anchorable': 'true'}}
+		[BLOCKS.UNSTYLED]: {tag: 'p', attributes: {class: 'par', 'data-non-anchorable': 'true'}},
+		[BLOCKS.ORDERED_LIST_ITEM]: [{tag: 'li'}, {tag: 'span'}],
+		[BLOCKS.UNERDERED_LIST_ITEM]: [{tag: 'li'}, {tag: 'span'}]
 	},
 
 	OrderedListTag: {tag: 'ol', attributes: {class: 'enumerate', 'data-non-anchorable': 'true'}},
