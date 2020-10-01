@@ -151,7 +151,7 @@ const objectRenderers = {
 		const {arguments: args, body} = obj;
 
 		const title = parseRST(args)[0];
-		const parts = parseRST(body.join('\b')).join('\n');
+		const parts = parseRST(body.join('\n')).join('\n');
 
 		return `
 			<div class="sidebar">
@@ -162,8 +162,9 @@ const objectRenderers = {
 	},
 	'code-block': (obj) => {
 		const {arguments: lang, body} = obj;
+		const code = body.map(line => `<span>${line}\n</span>`);
 
-		return `<pre class="code ${lang} literal-block">${body.join('<br />')}</pre>`;
+		return `<pre class="code ${lang} literal-block">${code.join('\n')}</pre>`;
 	}
 };
 
