@@ -5,6 +5,7 @@ import {BLOCKS, getAtomicBlockData, Plugins} from '@nti/web-editor';
 
 import {Editor} from '../../../question';
 import Store from '../Store';
+import {PollRef, QuestionRef} from '../Constants';
 
 import Styles from './Styles.css';
 import Controls from './Controls';
@@ -14,8 +15,8 @@ const cx = classnames.bind(Styles);
 const {CustomBlock} = Plugins.CustomBlocks;
 
 const Handles = {
-	'naquestionref': true,
-	'napollref': true
+	[QuestionRef]: true,
+	[PollRef]: true
 };
 
 const StoreChangeDelay = 300;

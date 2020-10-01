@@ -6,7 +6,7 @@ import {BLOCKS, getAtomicBlockData, Plugins} from '@nti/web-editor';
 import {Loading} from '@nti/web-commons';
 
 import {Placeholder} from '../../../question';
-import {NewQuestion} from '../Constants';
+import {NewQuestion, PollRef, QuestionRef} from '../Constants';
 import Store from '../Store';
 
 import Styles from './Styles.css';
@@ -45,7 +45,7 @@ export default function NewQuestionBlock ({block, blockProps}) {
 			await minWait;
 
 			blockProps.setBlockData({
-				name: question.isPoll ? 'napollref' : 'naquestionref',
+				name: question.isPoll ? PollRef : QuestionRef,
 				arguments: question.getID(),
 				options: {}
 			});
