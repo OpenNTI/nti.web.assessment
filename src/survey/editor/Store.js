@@ -63,7 +63,10 @@ const ErrorMaps = [
 
 		const message = Errors.Messages.getMessage(e);
 
-		if (message.indexOf('Error in "sidebar" directive:') >= 0) {
+		if (
+			message.indexOf('Error in "sidebar" directive:') >= 0 ||
+			message.indexOf('Content block expected for the "sidebar" directive;') >= 0
+		) {
 			return Errors.Messages.mapMessage(e, 'Call Outs must have a title and body');
 		}
 
