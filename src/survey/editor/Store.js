@@ -338,7 +338,7 @@ export default class SurveyEditorStore extends Stores.BoundStore {
 				property.setError(err);
 			}
 
-			if (!hideErrors) {
+			if (!hideErrors && (!err.field || err.field === 'contents')) {
 				this.set({[ErrorField]: err});
 			}
 
