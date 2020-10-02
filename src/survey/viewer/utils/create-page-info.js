@@ -164,7 +164,13 @@ const objectRenderers = {
 	},
 	'code-block': (obj) => {
 		const {arguments: lang, body} = obj;
-		const code = body.map(line => `<span>${line}\n</span>`);
+		const code = body.map((line) => {
+			const fixed = line
+				.replace(/&/g, '&amp;')
+				.replace(/</g, '&lt;');
+
+			return `<span>${fixed}\n</span>`;
+		});
 
 		return `<pre class="code ${lang} literal-block">${code.join('\n')}</pre>`;
 	}
