@@ -10,7 +10,7 @@ const HTMLStrategy = {
 		[BLOCKS.BLOCKQUOTE]: {tag: 'p', attributes: {class: 'par', 'data-non-anchorable': 'true'}},
 		[BLOCKS.UNSTYLED]: {tag: 'p', attributes: {class: 'par', 'data-non-anchorable': 'true'}},
 		[BLOCKS.ORDERED_LIST_ITEM]: [{tag: 'li'}, {tag: 'span'}],
-		[BLOCKS.UNERDERED_LIST_ITEM]: [{tag: 'li'}, {tag: 'span'}]
+		[BLOCKS.UNORDERED_LIST_ITEM]: [{tag: 'li'}, {tag: 'span'}]
 	},
 
 	OrderedListTag: {tag: 'ol', attributes: {class: 'enumerate', 'data-non-anchorable': 'true'}},
