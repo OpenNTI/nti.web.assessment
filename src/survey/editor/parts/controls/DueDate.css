@@ -1,0 +1,22 @@
+.due-date-form {
+	padding: 0.625rem 1rem 1rem;
+
+	& :global(.daytime-picker) {
+		margin: 0;
+
+		& :global(.DayPicker) {
+			width: 200px;
+			margin: 0 auto;
+		}
+	}
+}
+
+.has-due-date {
+	font-size: 0.875rem;
+}
+
+.save-button {
+	width: 100%;
+	border: none;
+	margin-top: 0.625rem;
+}
