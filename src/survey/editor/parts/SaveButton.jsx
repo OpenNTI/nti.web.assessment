@@ -7,10 +7,10 @@ import ResetButton from './ResetButton';
 
 export default function SurveySaveButton () {
 	const {
-		[Store.CanReset]: canReset
-	} = Store.useMonitor([Store.CanReset]);
+		[Store.PublishLocked]: publishLocked
+	} = Store.useMonitor([Store.PublishLocked]);
 
-	return canReset ?
+	return publishLocked ?
 		(<ResetButton />) :
 		(<PublishButton />);
 }

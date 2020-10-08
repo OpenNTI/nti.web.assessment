@@ -23,6 +23,8 @@ const CanAddPoll = 'CanAddPoll';
 const CanReorderPolls = 'CanReorderPolls';
 const CanRemovePolls = 'CanRemovePolls';
 const CanReset = 'CanReset';
+const HasPublishingLinks = 'HasPublishingLinks';
+const PublishLocked = 'PublishedLock';
 
 const CreatePoll = 'CreatePoll';
 
@@ -98,6 +100,8 @@ export default class SurveyEditorStore extends Stores.BoundStore {
 	static CanReorderPolls = CanReorderPolls;
 	static CanRemovePolls = CanRemovePolls;
 	static CanReset = CanReset;
+	static HasPublishingLinks = HasPublishingLinks;
+	static PublishLocked = PublishLocked;
 
 	static CreatePoll = CreatePoll;
 
@@ -172,6 +176,24 @@ export default class SurveyEditorStore extends Stores.BoundStore {
 	get [CanReorderPolls] () { return this[Survey]?.hasLink('MovePoll'); }
 	get [CanRemovePolls] () { return this[Survey]?.hasLink('RemovePoll'); }
 	get [CanReset] () { return this[Survey]?.hasLink('Reset'); }
+	get [HasPublishingLinks] () {
+		const survey = this[Survey];
+
+		return survey?.hasLink('publish') || survey?.hasLink('unpublish');
+	}
+	get [PublishLocked] () {
+		const survey = this[Survey];
+
+		// The survey is published locked
+		// Reset (present when submissions, hidden no submissions && non-instructors)
+		// Publish Links (present when no submissions, hidden for submissions)
+		// Date Edit Start (present when no submissions, hidden for submissions)
+
+		return survey && (
+			(!this[CanReset] && this[HasPublishingLinks]) ||
+			(!this[CanReset] && survey.hasLink('date-edit-start'))
+		);
+	}
 
 	load () {
 		this.cleanupListener?.();
@@ -185,7 +207,8 @@ export default class SurveyEditorStore extends Stores.BoundStore {
 				CanReset,
 				CanAddPoll,
 				CanReorderPolls,
-				CanRemovePolls
+				CanRemovePolls,
+				PublishLocked
 			])
 		);
 	}
