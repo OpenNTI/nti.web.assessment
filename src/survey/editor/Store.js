@@ -189,10 +189,12 @@ export default class SurveyEditorStore extends Stores.BoundStore {
 		// Publish Links (present when no submissions, hidden for submissions)
 		// Date Edit Start (present when no submissions, hidden for submissions)
 
-		return survey && (
+		const publishable = survey && (
 			(!this[CanReset] && this[HasPublishingLinks]) ||
 			(!this[CanReset] && survey.hasLink('date-edit-start'))
 		);
+
+		return !publishable;
 	}
 
 	load () {
