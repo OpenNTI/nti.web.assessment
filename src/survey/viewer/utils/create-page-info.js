@@ -29,6 +29,25 @@ const pageTpl = (title, ntiid, contents) => `
 		<title>${title}</title>
 	</head>
 	<body>
+		<style type="text/css">
+			#NTIContent .sidebar {
+				padding-top: 1em;
+				padding-bottom: 1em;
+				padding-left: 3em;
+				padding-right: 3em;
+				background-color: rgba(235, 235, 235, 0.3);
+			}
+
+			#NTIContent .sidebar-title {
+				font-size: 175%;
+				font-weight: 200;
+				margin-bottom: 0.5em;
+			}
+
+			#NTIContent .sidebar-title p {
+				margin: 0;
+			}
+		</style>
 		<div class="page-contents">
 			<div class="titlepage">
 				<div class="title">${title}</div>
