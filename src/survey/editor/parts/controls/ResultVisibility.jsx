@@ -41,6 +41,8 @@ export default function ResultVisibility () {
 		[Store.Survey]: survey
 	} = Store.useMonitor([Store.Survey]);
 
+	const controlRef = React.useRef(null);
+
 	const [disclosure, setDisclosure] = React.useState(null);
 	const [saving, setSaving] = React.useState(false);
 	const [error, setError] = React.useState(null);
@@ -65,6 +67,7 @@ export default function ResultVisibility () {
 		try {
 			setSaving(true);
 			await survey.save({disclosure});
+			controlRef.current?.dismiss();
 		} catch (e) {
 			setError(e);
 		} finally {
@@ -75,6 +78,7 @@ export default function ResultVisibility () {
 
 	return (
 		<Editor.Header.Controls.Control
+			ref={controlRef}
 			label={t('label')}
 			value={Values[disclosure]}
 			onDismiss={onDismiss}

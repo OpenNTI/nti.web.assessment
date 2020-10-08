@@ -26,6 +26,8 @@ const isSurveyDueDate = (date, survey) => {
 export default function DueDate () {
 	const {[Store.Survey]: survey} = Store.useMonitor([Store.Survey]);
 
+	const controlRef = React.useRef(null);
+
 	const [date, setDate] = React.useState(null);
 	const [checked, setChecked] = React.useState(false);
 	const [saving, setSaving] = React.useState(false);
@@ -45,8 +47,8 @@ export default function DueDate () {
 		setChecked(newChecked);
 	};
 
-	const onDateChanged = (date) => {
-		setDate(date);
+	const onDateChanged = (newDate) => {
+		setDate(newDate);
 		setChecked(true);
 	};
 
@@ -54,6 +56,7 @@ export default function DueDate () {
 		try {
 			setSaving(true);
 			await survey.setDueDate(date);
+			controlRef.current?.dismiss();
 		} catch (e) {
 			setError(e);
 		} finally {
@@ -64,6 +67,7 @@ export default function DueDate () {
 
 	return (
 		<Editor.Header.Controls.Control
+			ref={controlRef}
 			label={t('label')}
 			value={
 				date !== null ?
