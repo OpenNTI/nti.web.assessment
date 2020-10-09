@@ -37,12 +37,14 @@ export default function SurveyResetButton () {
 		[Store.Survey]: survey,
 		[Store.Saving]: disabled,
 		[Store.SaveChanges]: afterReset,
-		[Store.HasChanges]: hasChanges
+		[Store.HasChanges]: hasChanges,
+		[Store.CanReset]: canReset
 	} = Store.useMonitor([
 		Store.Survey,
 		Store.Saving,
 		Store.SaveChanges,
-		Store.HasChanges
+		Store.HasChanges,
+		Store.CanReset
 	]);
 
 	const flyoutRef = React.useRef();
@@ -105,9 +107,11 @@ export default function SurveyResetButton () {
 			{!busy && (<Delete />)}
 			{error && (<Errors.Message className={error} error={t('error')} />)}
 			<Loading.Placeholder loading={busy} delay={0} fallback={<Loading.Spinner />}>
-				<Button	plain className={cx('flyout-fullwidth-btn', 'publish-reset', {error})} onClick={onReset}>
-					{t('reset')}
-				</Button>
+				{canReset && (
+					<Button	plain className={cx('flyout-fullwidth-btn', 'publish-reset', {error})} onClick={onReset}>
+						{t('reset')}
+					</Button>
+				)}
 				<Button plain className={cx('flyout-fullwidth-btn', 'save-changes', {changed: hasChanges})} onClick={onSaveChanges}>
 					{t('saveChanges')}
 				</Button>
