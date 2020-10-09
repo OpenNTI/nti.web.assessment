@@ -31,14 +31,16 @@ const PurposeToPlaceholder = {
 	}
 };
 
-const plugins = [
-	Plugins.LimitBlockTypes.create({allow: new Set([BLOCKS.UNSTYLED, BLOCKS.CODE])}),
-	Plugins.LimitStyles.create({allow: new Set([STYLES.BOLD, STYLES.ITALIC, STYLES.UNDERLINE])}),
-	Plugins.EnsureFocusableBlock.create(),
-	Plugins.Links.AutoLink.create(),
-	Plugins.Links.CustomLinks.create(),
-	Plugins.EnsureFocusableBlock.create()
-];
+const getPlugins = () => {
+	return ([
+		Plugins.LimitBlockTypes.create({allow: new Set([BLOCKS.UNSTYLED, BLOCKS.CODE])}),
+		Plugins.LimitStyles.create({allow: new Set([STYLES.BOLD, STYLES.ITALIC, STYLES.UNDERLINE])}),
+		Plugins.EnsureFocusableBlock.create(),
+		Plugins.Links.AutoLink.create(),
+		Plugins.Links.CustomLinks.create(),
+		Plugins.EnsureFocusableBlock.create()
+	]);
+};
 
 ContentEditor.propTypes = {
 	content: PropTypes.string,
@@ -49,7 +51,8 @@ ContentEditor.propTypes = {
 };
 export default function ContentEditor ({content, onChange: onChangeProp, purpose, error, errorLabel}) {
 	const [editorState, setEditorState] = React.useState(null);
-	const settingUp = !editorState;
+	const [plugins] = React.useState(getPlugins);
+	const settingUp = !editorState || !plugins;
 
 	const contentRef = React.useRef(Initial);
 
