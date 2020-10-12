@@ -62,7 +62,7 @@ export default function QuestionButton ({type}) {
 					parts: [type.generateBlankPart({noSolutions})]
 				}
 			}
-		});
+		}, false, true);
 	};
 
 	return (
