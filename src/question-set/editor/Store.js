@@ -178,6 +178,10 @@ export default class QuestionSetEditorState extends Stores.BoundStore {
 	#questionStores = {};
 	#newQuestions = {};
 
+	cleanup () {
+		this.cleanupListener?.();
+	}
+
 	load () {
 		if (
 			this.binding.questionSet === this.get('questionsSet') &&
@@ -188,16 +192,25 @@ export default class QuestionSetEditorState extends Stores.BoundStore {
 			this.binding.canRemoveQuestions === this.get(CanRemoveQuestions)
 		) { return; }
 
-		const {questions} = this.binding.questionSet ?? {};
 
-		this.setImmediate({
-			questionSet: this.binding.questionSet ?? [],
-			questionMap: (questions ?? []).reduce((acc, question) => ({...acc, [question.getID()]: question}), {}),
-			[NoSolutions]: this.binding.noSolutions,
-			[CanAddQuestion]: this.binding.canAddQuestion,
-			[CanReorderQuestions]: this.binding.canReorderQuestions,
-			[CanRemoveQuestions]: this.binding.canRemoveQuestions
-		});
+		const setup = () => {
+			const {questions} = this.binding.questionSet ?? {};
+
+			this.setImmediate({
+				questionSet: this.binding.questionSet ?? [],
+				questionMap: (questions ?? []).reduce((acc, question) => ({...acc, [question.getID()]: question}), {}),
+				[NoSolutions]: this.binding.noSolutions,
+				[CanAddQuestion]: this.binding.canAddQuestion,
+				[CanReorderQuestions]: this.binding.canReorderQuestions,
+				[CanRemoveQuestions]: this.binding.canRemoveQuestions
+			});
+		};
+
+		setup();
+
+		this.cleanupListener?.();
+		this.cleanupListener = this.binding.questionSet.subscribeToChange(setup);
+
 	}
 
 	async [CreateQuestion] (data) {

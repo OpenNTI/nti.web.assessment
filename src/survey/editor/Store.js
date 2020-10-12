@@ -197,6 +197,10 @@ export default class SurveyEditorStore extends Stores.BoundStore {
 		return !publishable;
 	}
 
+	cleanup () {
+		this.cleanupListener?.();
+	}
+
 	load () {
 		this.cleanupListener?.();
 
