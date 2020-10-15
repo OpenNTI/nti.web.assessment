@@ -37,7 +37,7 @@
   },
   "devDependencies": {
     "@nti/cmp-scripts": "^2.25.8",
-    "@nti/style-common": "^1.10.0",
+    "@nti/style-common": "NextThought/nti.style.common",
     "@storybook/addon-actions": "^6.0.13",
     "@storybook/addon-essentials": "^6.0.13",
     "@storybook/addon-links": "^6.0.13",
