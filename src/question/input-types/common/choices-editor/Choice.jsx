@@ -143,7 +143,7 @@ export default function Choice ({
 						autoNest
 					/>
 				)}
-				{error && (<Errors.Target className={cx('editor')} error={error} />)}
+				{error && (<Errors.Target className={cx('error')} error={error} />)}
 			</div>
 			{onRemove && (<div className={cx('delete')} onClick={onRemove}><Icons.X className={cx('delete-icon')}/></div>)}
 		</div>
