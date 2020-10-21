@@ -27,6 +27,7 @@ const HTMLStrategy = {
 const pageTpl = (title, ntiid, contents) => `
 	<head>
 		<title>${title}</title>
+		<meta name="NTIID" content="${ntiid}">
 	</head>
 	<body>
 		<style type="text/css">
@@ -48,12 +49,14 @@ const pageTpl = (title, ntiid, contents) => `
 				margin: 0;
 			}
 		</style>
-		<div class="page-contents">
-			<div class="titlepage">
-				<div class="title">${title}</div>
-			</div>
-			<div data-ntiid="${ntiid}" ntiid="${ntiid}" data-no-anchors-within="true">
-				${contents}
+		<div id="NTIContent" data-page-ntiid="${ntiid}">
+			<div class="page-contents" >
+				<div data-ntiid="${ntiid}" ntiid="${ntiid}">
+					<div class="chapter title">${title}</div>
+					<div data-no-anchors-within="true">
+						${contents}
+					</div>
+				</div>
 			</div>
 		</div>
 	</body>
