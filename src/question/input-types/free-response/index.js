@@ -3,7 +3,7 @@ import {scoped} from '@nti/lib-locale';
 import {isFreeResponsePart, Data} from './utils';
 
 const t = scoped('nti-assessment.question.input-types.free-response.index', {
-	label: 'Short Answer'
+	label: 'Answer'
 });
 
 export Icon from './assets/shortanswer.svg';

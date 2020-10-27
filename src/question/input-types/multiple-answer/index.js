@@ -3,7 +3,7 @@ import {scoped} from '@nti/lib-locale';
 import {isMultipleAnswerPart, Data} from './utils';
 
 const t = scoped('nti-assessment.question.input-types.multiple-answer.index', {
-	label: 'Multiple Answer'
+	label: 'Multi'
 });
 
 export Icon from './assets/checkboxes.svg';

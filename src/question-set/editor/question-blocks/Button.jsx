@@ -1,11 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import {scoped} from '@nti/lib-locale';
 import {HOC} from '@nti/web-commons';
 import {BLOCKS, getAtomicBlockData} from '@nti/web-editor';
 import {Editor} from '@nti/web-reading';
 
 import {NewQuestion, PollRef, QuestionRef} from '../Constants';
 import Store from '../Store';
+
+const t = scoped('nti-assessment.question-set.editor.question-blocks.Button', {
+	group: 'Interactive'
+});
 
 const {Variant} = HOC;
 const {CustomBlocks} = Editor;
@@ -23,6 +28,7 @@ function getPartForBlock (block, editorState, getQuestion) {
 	}
 }
 
+QuestionButton.group = t('group');
 QuestionButton.Build = (type) => Variant(QuestionButton, {type});
 QuestionButton.propTypes = {
 	type: PropTypes.shape({

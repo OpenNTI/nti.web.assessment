@@ -4,7 +4,14 @@ import Button from './Button';
 import NewQuestionBlock from './NewQuestionBlock';
 import QuestionRefBlock from './QuestionRefBlock';
 
-const {Types} = InputTypes;
+
+const Types = [
+	InputTypes.MultipleChoice,
+	InputTypes.MultipleAnswer,
+	InputTypes.Ordering,
+	InputTypes.ModeledContent,
+	InputTypes.FreeResponse
+];
 
 export default [
 	{
@@ -23,6 +30,7 @@ export default [
 		.filter(type => Boolean(type.Label))
 		.map((type) => ({
 			Button: Button.Build(type),
+			group: Button.group,
 			type: type.type
 		}))
 ];

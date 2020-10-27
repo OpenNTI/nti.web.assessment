@@ -5,7 +5,7 @@ import {ContentPurposes} from '../../Constants';
 import {isOrderingPart, Data} from './utils';
 
 const t = scoped('nti-assesment.question.input-types.ordering.index', {
-	label: 'Ordering'
+	label: 'Order'
 });
 
 export Icon from './assets/ordering.svg';

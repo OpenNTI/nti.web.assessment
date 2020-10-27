@@ -3,7 +3,7 @@ import {scoped} from '@nti/lib-locale';
 import {isMultipleChoicePart, Data} from './utils';
 
 const t = scoped('nti-assessment.question.input-types.multiple-choice.index', {
-	label: 'Multiple Choice'
+	label: 'Single'
 });
 
 export Icon from './assets/multiplechoice.svg';
