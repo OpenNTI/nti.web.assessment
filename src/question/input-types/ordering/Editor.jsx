@@ -221,7 +221,7 @@ export default function OrderingEditor ({
 					hideSolutions
 
 					onChange={(...args) => onValueChange(index, ...args)}
-					onRemove={canRemove && ((...args) => removeRow(index, ...args))}
+					onRemove={canRemove ? (...args) => removeRow(index, ...args) : undefined}
 					addChoiceAfter={(...args) => addRowAfter(index, ...args)}
 
 					customKeyBindings={{
