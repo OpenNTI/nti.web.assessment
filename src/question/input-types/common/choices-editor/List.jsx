@@ -126,8 +126,8 @@ export default function ChoiceList ({
 					multipleSolutions={multipleSolutions}
 
 					onChange={(...args) => onChoiceChange(index, ...args)}
-					onRemove={canRemove && (() => onChoiceRemove(index))}
-					addChoiceAfter={canAdd && (() => addChoiceAfter(index))}
+					onRemove={canRemove ? (() => onChoiceRemove(index)) : undefined}
+					addChoiceAfter={canAdd ? (() => addChoiceAfter(index)) : undefined}
 				/>
 			</DnD.Item>
 		);
