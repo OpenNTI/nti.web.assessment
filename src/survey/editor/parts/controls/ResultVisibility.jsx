@@ -23,17 +23,23 @@ const t = scoped('nti-assessments.survey.editor.parts.controls.ResultVisibility'
 	afterClose: {
 		label: 'After Due Date',
 		description: 'Students will only be able to see results after the survey has closed.'
+	},
+	afterSubmission: {
+		label: 'After Submission',
+		description: 'Students will be able to see results after submitting the survey.'
 	}
 });
 
 const Instructors = 'never';
 const Always = 'always';
 const AfterClose = 'termination';
+const AfterSubmission = 'submission';
 
 const Values = {
 	[Instructors]: t('instructorsOnly.label'),
 	[Always]: t('always.label'),
-	[AfterClose]: t('afterClose.label')
+	[AfterClose]: t('afterClose.label'),
+	[AfterSubmission]: t('afterSubmission.label')
 };
 
 export default function ResultVisibility () {
@@ -105,6 +111,16 @@ export default function ResultVisibility () {
 					noError
 				>
 					<Text.Base>{t('always.description')}</Text.Base>
+				</Form.Input.Radio>
+				<Form.Input.Radio
+					name="results-visibility"
+					value={AfterSubmission}
+					label={t('afterSubmission.label')}
+					checked={disclosure === AfterSubmission}
+					onChange={maybeSetDisclosure}
+					noError
+				>
+					<Text.Base>{t('afterSubmission.description')}</Text.Base>
 				</Form.Input.Radio>
 				<Form.Input.Radio
 					name="results-visibility"
