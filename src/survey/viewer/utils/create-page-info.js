@@ -24,6 +24,12 @@ const HTMLStrategy = {
 	}
 };
 
+const escapeHTML = html => (
+	html
+		.replace(/&/g, '&amp;')
+		.replace(/</g, '&lt;')
+);
+
 const pageTpl = (title, ntiid, contents) => `
 	<head>
 		<title>${title}</title>
@@ -52,7 +58,7 @@ const pageTpl = (title, ntiid, contents) => `
 		<div id="NTIContent" data-page-ntiid="${ntiid}">
 			<div class="page-contents" >
 				<div data-ntiid="${ntiid}" ntiid="${ntiid}">
-					<div class="chapter title">${title}</div>
+					<div class="chapter title">${escapeHTML(title)}</div>
 					<div data-no-anchors-within="true">
 						${contents}
 					</div>
@@ -187,9 +193,7 @@ const objectRenderers = {
 	'code-block': (obj) => {
 		const {arguments: lang, body} = obj;
 		const code = body.map((line) => {
-			const fixed = line
-				.replace(/&/g, '&amp;')
-				.replace(/</g, '&lt;');
+			const fixed = escapeHTML(line);
 
 			return `<span>${fixed}\n</span>`;
 		});
