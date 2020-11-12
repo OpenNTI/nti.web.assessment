@@ -87,6 +87,12 @@ const questionPartTpl = (object, index) => `
 
 const paramTpl = (name, value) => `<param name="${name}" value="${value}" />`;
 
+const parseRSTString = (rst) => {
+	const draftState = Parsers.RST.toDraftState(rst);
+
+	return EditorParsers.PlainText.fromDraftState(draftState);
+};
+
 const parseRST = (rst) => {
 	const draftState = Parsers.RST.toDraftState(rst);
 	const html = EditorParsers.HTML.fromDraftState(draftState);
@@ -133,8 +139,8 @@ const objectRenderers = {
 			img.src = url;
 		});
 
-		const title = str(body[0]).trim() || t('figureTitle', {index: index + 1});
-		const description = str(body[1]).trim();
+		const title = str(body[0]).trim() ? parseRSTString(body[0].trim()) : t('figureTitle', {index: index + 1});
+		const description = str(body[1]).trim() ? parseRSTString(body[1].trim()) : '';
 
 		const caption = `<div class='caption'><b>${title}</b>${description ? '<span>: </span>' : ''}<span>${description}</span></div>`;
 		const sizeAttr = size ? `width="${size.width}" height="${size.height}"` : 'style="max-width: 100%;';
