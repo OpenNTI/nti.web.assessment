@@ -1,5 +1,10 @@
 import {Parsers} from '@nti/web-reading';
 import {Parsers as EditorParsers, BLOCKS} from '@nti/web-editor';
+import {scoped} from '@nti/lib-locale';
+
+const t = scoped('nti-assessment.survey.viewer.create-page-info', {
+	figureTitle: 'Figure %(index)s'
+});
 
 
 const HTMLStrategy = {
@@ -128,13 +133,16 @@ const objectRenderers = {
 			img.src = url;
 		});
 
-		const caption = `<div class='caption'><b>${str(body[0])}</b>${body[1] ? '<span>: </span>' : ''}<span>${str(body[1])}</span></div>`;
+		const title = str(body[0]).trim() || t('figureTitle', {index: index + 1});
+		const description = str(body[1]).trim();
+
+		const caption = `<div class='caption'><b>${title}</b>${description ? '<span>: </span>' : ''}<span>${description}</span></div>`;
 		const sizeAttr = size ? `width="${size.width}" height="${size.height}"` : 'style="max-width: 100%;';
 
 		return `
 			<div class="figure">
 				<span itemprop="nti-data-markupdisabled">
-					<img ${remote ? 'crossorigin="anonymous"' : ''} data-caption="${caption.replace('<', '&lt;')}" id="${index}" src="${url}" ${sizeAttr} />
+					<img ${remote ? 'crossorigin="anonymous"' : ''} data-caption="${caption.replace('<', '&lt;')}" id="survey-${index}" src="${url}" ${sizeAttr} />
 				</span>
 				${caption}
 			</div>
@@ -211,6 +219,11 @@ const objectCounters = {
 	'napollref': {
 		get: (counter) => (counter.poll ?? 0),
 		update: (counter) => ({...counter, poll: (counter.poll ?? 0) + 1})
+	},
+
+	'course-figure': {
+		get: (counter) => (counter.figure ?? 0),
+		update: (counter) => ({...counter, figure: (counter.figure ?? 0) + 1})
 	}
 };
 
