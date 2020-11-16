@@ -5,8 +5,8 @@ import Editor from '../Editor';
 import { Data } from '../utils';
 
 const getInitialPart = () => ({
-	...Data.generateBlankPart(),
-	NTIID: 'test-ntiid',
+	...Data.generateBlankPart({}),
+	NTIID: 'test-ntiid'
 });
 
 export default {

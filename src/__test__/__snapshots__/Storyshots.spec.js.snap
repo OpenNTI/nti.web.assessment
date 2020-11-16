@@ -1,0 +1,89 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Storyshots Questions/Input Types/File Upload/Editor Basic 1`] = `
+<div>
+  File Input Editor
+</div>
+`;
+
+exports[`Storyshots Questions/Input Types/File Upload/Input Basic 1`] = `
+<div>
+  File Upload Input
+</div>
+`;
+
+exports[`Storyshots Questions/Input Types/Free Response/Editor No Solutions 1`] = `
+<div
+  className="free-response-editor no-solutions"
+>
+  <div
+    className="disclaimer"
+  >
+    
+  </div>
+  <input
+    className="nti-text-input input"
+    disabled={true}
+    placeholder="Students will write here."
+    type="text"
+  />
+</div>
+`;
+
+exports[`Storyshots Questions/Input Types/Free Response/Editor Solution 1`] = `
+<div
+  className="free-response-editor"
+>
+  <div
+    className="disclaimer"
+  >
+    Short answer questions can be auto graded, but the responses must be a 100% match. List as many possible answers as you're willing to accept including common misspellings.
+  </div>
+</div>
+`;
+
+exports[`Storyshots Questions/Input Types/Free Response/Input Basic 1`] = `
+<div>
+  Free Response Input
+</div>
+`;
+
+exports[`Storyshots Questions/Input Types/Modeled Content/Editor Basic 1`] = `
+<div
+  className="modeled-content-editor"
+>
+  <span
+    className="nti-text placeholder"
+  >
+    Students will write here...
+  </span>
+</div>
+`;
+
+exports[`Storyshots Questions/Input Types/Modeled Content/Input Basic 1`] = `
+<div>
+  Modeled Content Input
+</div>
+`;
+
+exports[`Storyshots Questions/Input Types/Multiple Answer/Input Basic 1`] = `
+<div>
+  Multiple Answer Input
+</div>
+`;
+
+exports[`Storyshots Questions/Input Types/Multiple Choice/Input Basic 1`] = `
+<div>
+  Multiple Choice Input
+</div>
+`;
+
+exports[`Storyshots Questions/Input Types/Ordering/Input Basic 1`] = `
+<div>
+  Ordering Input
+</div>
+`;
+
+exports[`Storyshots Questions/Question Editor No Solutions 1`] = `null`;
+
+exports[`Storyshots Questions/Question Editor Solutions 1`] = `null`;
