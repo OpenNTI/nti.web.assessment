@@ -1,9 +1,11 @@
 import path from 'path';
 
 import initStoryshots from '@storybook/addon-storyshots';
-
-console.log('RUNNING STORYSHOTS');
+// import { imageSnapshot, axeTest } from '@storybook/addon-storyshots-puppeteer';
 
 initStoryshots({
-	configPath: path.resolve(__dirname, '../../.storybook')
+	configPath: path.resolve(__dirname, '../../.storybook'),
+	test: (...args) => {
+		console.log('RUNNING TEST: ', ...args);
+	}
 });

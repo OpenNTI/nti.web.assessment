@@ -28,11 +28,13 @@
   "homepage": "https://github.com/NextThought/nti.web.assessment#readme",
   "dependencies": {
     "@nti/lib-commons": "NextThought/nti.lib.commons",
-    "@nti/lib-locale": "NextThought/nti.lib.ntiids",
+    "@nti/lib-locale": "NextThought/nti.lib.locale",
     "@nti/lib-store": "NextThought/nti.lib.store",
     "@nti/web-commons": "NextThought/nti.web.commons",
     "@nti/web-editor": "NextThought/nti.web.editor",
-    "@nti/web-reading": "NextThought/nti.web.reading"
+    "@nti/web-reading": "NextThought/nti.web.reading",
+    "classnames": "^2.2.6",
+    "jest-image-snapshot": "^4.2.0"
   },
   "devDependencies": {
     "@nti/cmp-scripts": "^2.25.8",
@@ -41,8 +43,11 @@
     "@storybook/addon-essentials": "^6.0.13",
     "@storybook/addon-links": "^6.0.13",
     "@storybook/addon-storyshots": "^6.0.28",
+    "@storybook/addon-storyshots-puppeteer": "^6.0.28",
     "@storybook/react": "^6.0.13",
+    "@wordpress/jest-puppeteer-axe": "^1.10.0",
     "prop-types": "^15.7.2",
+    "puppeteer": "^5.5.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-is": "^16.13.1",

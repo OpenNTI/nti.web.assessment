@@ -1,3 +1,4 @@
+/* eslint-env jest */
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -82,4 +83,10 @@ SolutionsCmp.propTypes = NoSolutionsCmp.propTypes = {
 	onChange: PropTypes.func,
 	type: PropTypes.string,
 	index: PropTypes.number,
+};
+
+SolutionsCmp.parameters = NoSolutions.parameters = {
+	async puppeteerTest (page) {
+		expect(true).toBeFalsy();
+	}
 };
