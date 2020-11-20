@@ -12,16 +12,12 @@ const getInitialPart = () => ({
 export default {
 	title: 'Questions/Input Types/Ordering/Editor',
 	component: Editor,
-	argTypes: {
-		onChange: { action: 'changed' },
-		noSolutions: { control: { type: 'boolean' } },
-		canAddOption: { control: { type: 'boolean' } },
-		canRemoveOption: { control: { type: 'boolean' } },
-		canReorderOption: { control: { type: 'boolean' } },
-	},
 };
 
-export const Base = ({ onChange, ...props }) => {
+TestCmp.propTypes = {
+	onChange: PropTypes.func
+};
+function TestCmp ({onChange, ...props}) {
 	const [part, setPart] = React.useState(getInitialPart);
 
 	return (
@@ -31,8 +27,24 @@ export const Base = ({ onChange, ...props }) => {
 			{...props}
 		/>
 	);
+}
+
+export const Playground = (props) => (<TestCmp {...props} />);
+Playground.argTypes = {
+	onChange: {action: 'changed'},
+	noSolutions: {control: {type: 'boolean'}},
+	canAddOption: {control: {type: 'boolean'}},
+	canRemoveOption: {control: {type: 'boolean'}},
+	canReorderOption: {control: {type: 'boolean'}}
 };
 
-Base.propTypes = {
-	onChange: PropTypes.func,
+export const CanChangeOptions = () => (<TestCmp canAddOption canRemoveOption canReorderOption />);
+export const OptionsLocked = () => (<TestCmp  />);
+
+CanChangeOptions.parameters = {
+	regressionTest: {}
+};
+
+OptionsLocked.parameters = {
+	regressionTest: {}
 };
