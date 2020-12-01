@@ -1,6 +1,7 @@
 import {Parsers} from '@nti/web-reading';
 import {Parsers as EditorParsers, BLOCKS} from '@nti/web-editor';
 import {scoped} from '@nti/lib-locale';
+import {String as StringUtils} from '@nti/lib-commons';
 
 const t = scoped('nti-assessment.survey.viewer.create-page-info', {
 	figureTitle: 'Figure %(index)s'
@@ -28,12 +29,6 @@ const HTMLStrategy = {
 		}
 	}
 };
-
-const escapeHTML = html => (
-	html
-		.replace(/&/g, '&amp;')
-		.replace(/</g, '&lt;')
-);
 
 const pageTpl = (title, ntiid, contents) => `
 	<head>
@@ -63,7 +58,7 @@ const pageTpl = (title, ntiid, contents) => `
 		<div id="NTIContent" data-page-ntiid="${ntiid}">
 			<div class="page-contents" >
 				<div data-ntiid="${ntiid}" ntiid="${ntiid}">
-					<div class="chapter title">${escapeHTML(title)}</div>
+					<div class="chapter title">${StringUtils.escapeHTML(title)}</div>
 					<div data-no-anchors-within="true">
 						${contents}
 					</div>
@@ -207,7 +202,7 @@ const objectRenderers = {
 	'code-block': (obj) => {
 		const {arguments: lang, body} = obj;
 		const code = body.map((line) => {
-			const fixed = escapeHTML(line);
+			const fixed = StringUtils.escapeHTML(line);
 
 			return `<span>${fixed}\n</span>`;
 		});
