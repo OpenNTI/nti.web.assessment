@@ -85,7 +85,7 @@ export default function Choice ({
 
 	const contentRef = useRef(Initial);
 
-	const remove = useMemo(() => onRemove.bind(null, index), [onRemove, index]);
+	const remove = useMemo(() => onRemove?.bind(null, index), [onRemove, index]);
 
 	useEffect(() => {
 		if (autoFocus && !settingUp) {
