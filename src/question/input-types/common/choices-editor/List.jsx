@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames/bind';
 import {DnD, Icons, Text} from '@nti/web-commons';
@@ -85,22 +85,22 @@ export default function ChoiceList ({
 		...choices.slice(index + 1)
 	]);
 
-	const onChoiceRemove = (index) => (
+	const onChoiceRemove = useCallback((index) => (
 		onChange?.([
 			...choices.slice(0, index),
 			...choices.slice(index + 1)
 		]),
 		focused.current = index - 1
-	);
+	), [choices]);
 
-	const addChoiceAfter = (index) => (
+	const addChoiceAfter = useCallback((index) => (
 		onChange?.([
 			...choices.slice(0, index + 1),
 			{label: '', isSolution: false},
 			...choices.slice(index + 1)
 		]),
 		focused.current = index + 1
-	);
+	), [choices]);
 
 	const renderChoice = (index, itemProps) => {
 		const choice = choices[index];
@@ -126,8 +126,8 @@ export default function ChoiceList ({
 					multipleSolutions={multipleSolutions}
 
 					onChange={(...args) => onChoiceChange(index, ...args)}
-					onRemove={canRemove ? (() => onChoiceRemove(index)) : undefined}
-					addChoiceAfter={canAdd ? (() => addChoiceAfter(index)) : undefined}
+					onRemove={canRemove ? onChoiceRemove : undefined}
+					addChoiceAfter={canAdd ? addChoiceAfter : undefined}
 				/>
 			</DnD.Item>
 		);

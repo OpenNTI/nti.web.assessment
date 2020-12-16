@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames/bind';
 import {Events} from '@nti/lib-commons';
@@ -16,12 +16,16 @@ const {getKeyCode} = Events;
 const toDraftState = x => Parsers.HTML.toDraftState(x);
 const fromDraftState = x => Parsers.HTML.fromDraftState(x)?.join('\n') ?? '';
 
-const getPlugins = (keyBindings) => ([
+const CONST_PLUGINS = [
 	Plugins.LimitBlockTypes.create({allow: new Set([BLOCKS.UNSTYLED])}),
 	Plugins.LimitStyles.create({allow: new Set([STYLES.BOLD, STYLES.ITALIC, STYLES.UNDERLINE])}),
 	Plugins.EnsureFocusableBlock.create(),
 	Plugins.Links.AutoLink.create(),
 	Plugins.Links.CustomLinks.create(),
+];
+
+const getPlugins = (keyBindings) => ([
+	...CONST_PLUGINS,
 	Plugins.CustomKeyBindings.create(keyBindings)
 ]);
 
@@ -87,22 +91,24 @@ export default function Choice ({
 		}
 	}, [autoFocus, settingUp]);
 
-	React.useEffect(() => (
-		setPlugins(getPlugins(customKeyBindings || {
-			[getKeyCode.ENTER]: () => {
-				addChoiceAfter?.();
-				return true;
-			},
-			[getKeyCode.BACKSPACE]: (newEditorState) => {
-				const value = fromDraftState(newEditorState);
+	const keyBinds = useMemo(() => (customKeyBindings || {
+		[getKeyCode.ENTER]: () => {
+			addChoiceAfter?.(index);
+			return true;
+		},
+		[getKeyCode.BACKSPACE]: (newEditorState) => {
+			const value = fromDraftState(newEditorState);
 
-				if (!value) {
-					onRemove?.();
-					return true;
-				}
+			if (!value) {
+				onRemove?.(index);
+				return true;
 			}
-		}))
-	), [addChoiceAfter, onRemove]);
+		}
+	}), [customKeyBindings, addChoiceAfter, onRemove, index]);
+
+	React.useEffect(() => {
+		setPlugins(getPlugins(keyBinds));
+	}, [keyBinds]);
 
 	React.useEffect(() => {
 		if (contentRef.current === Initial || label !== contentRef.current) {

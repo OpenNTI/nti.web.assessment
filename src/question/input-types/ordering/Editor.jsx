@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames/bind';
 import {Array as arr, Events} from '@nti/lib-commons';
@@ -82,172 +82,114 @@ export default function OrderingEditor ({
 	const forceUpdate = Hooks.useForceUpdate();
 
 	const {labels, values} = getChoices(part);
-	const [labelOrder, setLabelOrder] = React.useState();
-	const [valueOrder, setValueOrder] = React.useState();
+	const [labelOrder, setLabelOrder] = useState();
+	const [valueOrder, setValueOrder] = useState();
 
-	const focusRef = React.useRef();
+	const focusRef = useRef();
 
 	const totalRows = labels.length;
 	const canRemove = canRemoveOption && totalRows > 2;
 	const canReorder = canReorderOption;
 	const noSolutions = !Data.hasSolutions(part);
 
-	React.useEffect(() => (
+	useEffect(() => (
 		setLabelOrder(labels.map((l, index) => index)),
 		setValueOrder(values.map((v, index) => index))
 	), [part]);
 
-	const onChange = (newLabels, newValues) => (
+	const onChange = useCallback((newLabels, newValues) => (
 		onChangeProp?.(
 			updatePart({labels: newLabels, values: newValues}, part)
 		)
-	);
+	), [onChangeProp, part]);
 
-	const onLabelOrderChange = (original, updated) => setLabelOrder(arr.move(labelOrder, original, updated));
-	const onValueOrderChange = (original, updated) => setValueOrder((arr.move(valueOrder, original, updated)));
+	const onLabelOrderChange = useCallback((original, updated) => setLabelOrder(arr.move(labelOrder, original, updated)), [labelOrder]);
+	const onValueOrderChange = useCallback((original, updated) => setValueOrder(arr.move(valueOrder, original, updated)), [valueOrder]);
 
-	const onLabelOrderCommit = () => (
+	const onLabelOrderCommit = useCallback(() => (
 		onChange(
 			labelOrder.map(i => labels[i]),
 			values
 		)
-	);
+	), [onChange, labelOrder, labels, values]);
 
-	const onValueOrderCommit = () => (
+	const onValueOrderCommit = useCallback(() => (
 		onChange(
 			labels,
 			valueOrder.map(i => values[i])
 		)
-	);
+	), [onChange, labels, valueOrder, values]);
 
-	const onLabelChange = (index, label) => onChange(
+	const onLabelChange = useCallback((index, label) => onChange(
 		[...labels.slice(0, index), label, ...labels.slice(index + 1)],
 		values
-	);
+	), [labels, values, onChange]);
 
-	const onValueChange = (index, value) => onChange(
+	const onValueChange = useCallback((index, value) => onChange(
 		labels,
 		[...values.slice(0, index), value, ...values.slice(index + 1)]
-	);
+	), [labels, values, onChange]);
 
-	const removeRow = (index) => (
+	const removeRow = useCallback((index) => (
 		onChange(
 			[...labels.slice(0, index), ...labels.slice(index + 1)],
 			[...values.slice(0, index), ...values.slice(index + 1)]
 		),
 		focusRef.current = {column: 'label', index: Math.max(index - 1, 0)}
-	);
+	), [labels, values, onChange]);
 
-	const addRowAfter = (index) => (
+	const addRowAfter = useCallback((index) => (
 		onChange(
 			[...labels.slice(0, index + 1), {label: ''}, ...labels.slice(index + 1)],
 			[...values.slice(0, index + 1), {label: ''}, ...values.slice(index + 1)]
 		),
 		focusRef.current = {column: 'label', index: index + 1}
-	);
+	), [onChange, labels, values]);
 
-	const renderLabel = (index, itemProps) => {
-		const label = labels[index];
+	const setFocus = useCallback((F) => {
+		focusRef.current = F;
+		forceUpdate();
+	}, []);
 
-		if (!label) { return null; }
-
+	const renderLabel = useCallback((index, itemProps) => {
 		return (
-			<DnD.Item
-				customHandle
-				className={cx('ordering-drag-item')}
+			<Label
 				key={index}
-				{...itemProps}
-			>
-				<Choice
-					className={cx('ordering-choice-editor')}
-					choice={label}
-					index={index}
+				index={index}
+				itemProps={itemProps}
 
-					autoFocus={focusRef.current?.column === 'label' && focusRef.current?.index === index}
+				autoFocus={focusRef.current?.column === 'label' && focusRef.current?.index === index}
+				setFocus={setFocus}
 
-					draggable={canReorder}
+				labels={labels}
 
-					hideSolutions
-
-					onChange={(...args) => onLabelChange(index, ...args)}
-					addChoiceAfter={(...args) => addRowAfter(index, ...args)}
-
-					customKeyBindings={{
-						[getKeyCode.ENTER]: () => {
-							addRowAfter(index);
-							return true;
-						},
-						[getKeyCode.TAB]: () => {
-							focusRef.current = {column: 'value', index};
-							forceUpdate();
-							return true;
-						},
-						[getKeyCode.SHIFT_TAB]: () => {
-							if (index > 0) {
-								focusRef.current = {column: 'value', index: index - 1};
-								forceUpdate();
-								return true;
-							}
-
-							return false;
-						}
-					}}
-				/>
-			</DnD.Item>
+				canReorder={canReorder}
+				addRowAfter={addRowAfter}
+				onChange={onLabelChange}
+			/>
 		);
-	};
+	}, [addRowAfter, onLabelChange, setFocus, canReorder, labels]);
 
-	const renderValue = (index, itemProps) => {
-		const value = values[index];
-
-		if (!value) { return null; }
-
+	const renderValue = useCallback((index, itemProps) => {
 		return (
-			<DnD.Item
-				customHandle
-				className={cx('ordering-drag-item')}
+			<Value
 				key={index}
-				{...itemProps}
-			>
-				<Choice
-					className={cx('ordering-choice-editor')}
-					choice={{label: value.label, isSolution: !noSolutions, error: value.error}}
-					index={index}
+				index={index}
+				itemProps={itemProps}
+				totalRows={totalRows}
 
-					autoFocus={focusRef.current?.column === 'value' && focusRef.current?.index === index}
+				autoFocus={focusRef.current?.column === 'value' && focusRef.current?.index === index}
+				setFocus={setFocus}
 
-					draggable={canReorder}
+				values={values}
 
-					hideSolutions
-
-					onChange={(...args) => onValueChange(index, ...args)}
-					onRemove={canRemove ? (...args) => removeRow(index, ...args) : undefined}
-					addChoiceAfter={(...args) => addRowAfter(index, ...args)}
-
-					customKeyBindings={{
-						[getKeyCode.ENTER]: () => {
-							addRowAfter(index);
-							return true;
-						},
-						[getKeyCode.TAB]: () => {
-							if (index < totalRows - 1) {
-								focusRef.current = {column: 'label', index: index + 1};
-								forceUpdate();
-								return true;
-							}
-
-							return false;
-						},
-						[getKeyCode.SHIFT_TAB]: () => {
-							focusRef.current = {column: 'label', index};
-							forceUpdate();
-							return true;
-						}
-					}}
-				/>
-			</DnD.Item>
+				canReorder={canReorder}
+				addRowAfter={addRowAfter}
+				onChange={onValueChange}
+				onRemove={canRemove ? removeRow : undefined}
+			/>
 		);
-	};
+	}, [addRowAfter, onValueChange, removeRow, canRemove, canReorder, totalRows, values]);
 
 	return (
 		<div className={cx('ordering-editor', {'no-solutions': noSolutions})}>
@@ -281,4 +223,154 @@ export default function OrderingEditor ({
 			)}
 		</div>
 	);
+}
+
+
+Label.propTypes = {
+	index: PropTypes.number,
+	itemProps: PropTypes.any,
+	labels: PropTypes.array,
+	autoFocus: PropTypes.bool,
+	canReorder: PropTypes.bool,
+	setFocus: PropTypes.func,
+	addRowAfter: PropTypes.func,
+	onChange: PropTypes.func,
+};
+
+function Label ({index, itemProps, labels, autoFocus, canReorder, setFocus, addRowAfter, onChange: onLabelChange}) {
+	const label = labels[index];
+
+	const binds = useMemo(() => ({
+		[getKeyCode.ENTER]: () => {
+			addRowAfter(index);
+			return true;
+		},
+		[getKeyCode.TAB]: () => {
+			setFocus({column: 'value', index});
+			return true;
+		},
+		[getKeyCode.SHIFT_TAB]: () => {
+			if (index > 0) {
+				setFocus({column: 'value', index: index - 1});
+				return true;
+			}
+
+			return false;
+		}
+	}), [setFocus, addRowAfter, index]);
+
+	const change = useMemo(() => onLabelChange?.bind(null, index), [onLabelChange, index]);
+	const addRow = useMemo(() => addRowAfter?.bind(null, index), [addRowAfter, index]);
+
+	if (!label) { return null; }
+
+	return (
+		<DnD.Item
+			customHandle
+			className={cx('ordering-drag-item')}
+			{...itemProps}
+		>
+			<Choice
+				className={cx('ordering-choice-editor')}
+				choice={label}
+				index={index}
+
+				autoFocus={autoFocus}
+
+				draggable={canReorder}
+
+				hideSolutions
+
+				addChoiceAfter={addRow}
+				onChange={change}
+
+				customKeyBindings={binds}
+			/>
+		</DnD.Item>
+	);
+}
+
+
+Value.propTypes = {
+	index: PropTypes.number,
+	itemProps: PropTypes.any,
+	values: PropTypes.array,
+	autoFocus: PropTypes.bool,
+	canReorder: PropTypes.bool,
+	setFocus: PropTypes.func,
+	addRowAfter: PropTypes.func,
+	onChange: PropTypes.func,
+	onRemove: PropTypes.func,
+	noSolutions: PropTypes.bool,
+	totalRows: PropTypes.number,
+};
+
+function Value ({
+	index,
+	itemProps,
+	values,
+	autoFocus,
+	canReorder,
+	setFocus,
+	addRowAfter,
+	onChange: onValueChange,
+	onRemove,
+	noSolutions,
+	totalRows,
+}) {
+	const value = values[index];
+
+	const binds = useMemo(() => ({
+		[getKeyCode.ENTER]: () => {
+			addRowAfter(index);
+			return true;
+		},
+		[getKeyCode.TAB]: () => {
+			if (index < totalRows - 1) {
+				setFocus({column: 'label', index: index + 1});
+				return true;
+			}
+
+			return false;
+		},
+		[getKeyCode.SHIFT_TAB]: () => {
+			setFocus({column: 'label', index});
+			return true;
+		}
+	}), [setFocus, addRowAfter, index, totalRows]);
+
+	const choice = useMemo(() => ({label: value?.label, isSolution: !noSolutions, error: value?.error}), [value, noSolutions]);
+
+	const change = useMemo(() => onValueChange?.bind(null, index), [onValueChange, index]);
+	const remove = useMemo(() => onRemove?.bind(null, index), [onRemove, index]);
+	const addRow = useMemo(() => addRowAfter?.bind(null, index), [addRowAfter, index]);
+
+	if (!value) { return null; }
+
+	return (
+		<DnD.Item
+			customHandle
+			className={cx('ordering-drag-item')}
+			{...itemProps}
+		>
+			<Choice
+				className={cx('ordering-choice-editor')}
+				choice={choice}
+				index={index}
+
+				autoFocus={autoFocus}
+
+				draggable={canReorder}
+
+				hideSolutions
+
+				addChoiceAfter={addRow}
+				onChange={change}
+				onRemove={remove}
+
+				customKeyBindings={binds}
+			/>
+		</DnD.Item>
+	);
+
 }
