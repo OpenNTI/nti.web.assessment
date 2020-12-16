@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames/bind';
 import {Events} from '@nti/lib-commons';
@@ -77,15 +77,17 @@ export default function Choice ({
 }) {
 	const {label, isSolution, error} = choice;
 
-	const editorRef = React.useRef();
+	const editorRef = useRef();
 
-	const [editorState, setEditorState] = React.useState(null);
-	const [plugins, setPlugins] = React.useState(null);
+	const [editorState, setEditorState] = useState(null);
+	const [plugins, setPlugins] = useState(null);
 	const settingUp = !editorState || !plugins;
 
-	const contentRef = React.useRef(Initial);
+	const contentRef = useRef(Initial);
 
-	React.useEffect(() => {
+	const remove = useMemo(() => onRemove.bind(null, index), [onRemove, index]);
+
+	useEffect(() => {
 		if (autoFocus && !settingUp) {
 			editorRef.current?.focus();
 		}
@@ -106,11 +108,11 @@ export default function Choice ({
 		}
 	}), [customKeyBindings, addChoiceAfter, onRemove, index]);
 
-	React.useEffect(() => {
+	useEffect(() => {
 		setPlugins(getPlugins(keyBinds));
 	}, [keyBinds]);
 
-	React.useEffect(() => {
+	useEffect(() => {
 		if (contentRef.current === Initial || label !== contentRef.current) {
 			setEditorState(toDraftState(label));
 		}
@@ -151,7 +153,7 @@ export default function Choice ({
 				)}
 				{error && (<Errors.Target className={cx('error')} error={error} />)}
 			</div>
-			{onRemove && (<div className={cx('delete')} onClick={onRemove}><Icons.X className={cx('delete-icon')}/></div>)}
+			{onRemove && (<div className={cx('delete')} onClick={remove}><Icons.X className={cx('delete-icon')}/></div>)}
 		</div>
 	);
 }
