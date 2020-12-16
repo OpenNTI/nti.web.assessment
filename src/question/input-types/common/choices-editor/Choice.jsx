@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames/bind';
 import {Events} from '@nti/lib-commons';
@@ -12,9 +12,13 @@ const cx = classnames.bind(Styles);
 const Initial = Symbol('Initial');
 
 const {getKeyCode} = Events;
-
-const toDraftState = x => Parsers.HTML.toDraftState(x);
-const fromDraftState = x => Parsers.HTML.fromDraftState(x)?.join('\n') ?? '';
+// NTI-9913
+// Draft will sometimes construct the incorrect selection range if the
+// initial value is empty. (carrot drops behind the first typed character)
+// So, we will always have at least a zero-width space. We should attempt
+// to trim this guy out.
+const toDraftState = x => Parsers.HTML.toDraftState(x || '\u200b');
+const fromDraftState = x => Parsers.HTML.fromDraftState(x)?.join('\n').replace(/\u200b/g, '') ?? '';
 
 const PLUGINS = [
 	Plugins.LimitBlockTypes.create({allow: new Set([BLOCKS.UNSTYLED])}),
@@ -105,14 +109,14 @@ export default function Choice ({
 
 	const usedKeyBindings = customKeyBindings || keyBindings;
 
-	useEffect(() => {
+	useLayoutEffect(() => {
 		setPlugins([
 			...PLUGINS,
 			Plugins.CustomKeyBindings.create(usedKeyBindings)
 		]);
 	}, [usedKeyBindings]);
 
-	useEffect(() => {
+	useLayoutEffect(() => {
 		if (contentRef.current === Initial || label !== contentRef.current) {
 			setEditorState(toDraftState(label));
 		}
