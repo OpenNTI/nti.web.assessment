@@ -87,7 +87,6 @@ export default function QuestionEditor ({
 						<Part
 							key={partIndex}
 							part={part}
-							parts={parts}
 							onChange={onPartsChange}
 							errorLabel={errorLabel}
 							error={partError}
