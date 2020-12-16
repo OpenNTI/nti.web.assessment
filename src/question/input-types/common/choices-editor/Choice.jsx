@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames/bind';
 import {Events} from '@nti/lib-commons';
@@ -120,13 +120,13 @@ export default function Choice ({
 		contentRef.current = label;
 	}, [label]);
 
-	const onSolutionChange = (e) => onChange?.({label, isSolution: e.target.checked});
-	const onContentChange = (newEditorState) => {
+	const onSolutionChange = useCallback((e) => onChange?.({label, isSolution: e.target.checked}), [label, isSolution]);
+	const onContentChange = useCallback((newEditorState) => {
 		const newContent = fromDraftState(newEditorState);
 
 		contentRef.current = newContent;
 		onChange?.({label: newContent, isSolution});
-	};
+	}, [onChange, isSolution]);
 
 	return (
 		<div className={cx('choice-editor', className, {error: Boolean(error), solution: isSolution, draggable})}>
