@@ -16,18 +16,13 @@ const {getKeyCode} = Events;
 const toDraftState = x => Parsers.HTML.toDraftState(x);
 const fromDraftState = x => Parsers.HTML.fromDraftState(x)?.join('\n') ?? '';
 
-const CONST_PLUGINS = [
+const PLUGINS = [
 	Plugins.LimitBlockTypes.create({allow: new Set([BLOCKS.UNSTYLED])}),
 	Plugins.LimitStyles.create({allow: new Set([STYLES.BOLD, STYLES.ITALIC, STYLES.UNDERLINE])}),
 	Plugins.EnsureFocusableBlock.create(),
 	Plugins.Links.AutoLink.create(),
 	Plugins.Links.CustomLinks.create(),
 ];
-
-const getPlugins = (keyBindings) => ([
-	...CONST_PLUGINS,
-	Plugins.CustomKeyBindings.create(keyBindings)
-]);
 
 Choice.propTypes = {
 	className: PropTypes.string,
@@ -93,7 +88,7 @@ export default function Choice ({
 		}
 	}, [autoFocus, settingUp]);
 
-	const keyBinds = useMemo(() => (customKeyBindings || {
+	const keyBindings = useMemo(() => ({
 		[getKeyCode.ENTER]: () => {
 			addChoiceAfter?.(index);
 			return true;
@@ -106,11 +101,16 @@ export default function Choice ({
 				return true;
 			}
 		}
-	}), [customKeyBindings, addChoiceAfter, onRemove, index]);
+	}), [addChoiceAfter, onRemove, index]);
+
+	const usedKeyBindings = customKeyBindings || keyBindings;
 
 	useEffect(() => {
-		setPlugins(getPlugins(keyBinds));
-	}, [keyBinds]);
+		setPlugins([
+			...PLUGINS,
+			Plugins.CustomKeyBindings.create(usedKeyBindings)
+		]);
+	}, [usedKeyBindings]);
 
 	useEffect(() => {
 		if (contentRef.current === Initial || label !== contentRef.current) {

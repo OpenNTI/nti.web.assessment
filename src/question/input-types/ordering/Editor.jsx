@@ -78,7 +78,7 @@ export default function OrderingEditor ({
 }) {
 	const forceUpdate = Hooks.useForceUpdate();
 
-	const {labels, values} = getChoices(part);
+	const {labels, values} = useMemo(() => getChoices(part), [part]);
 	const [labelOrder, setLabelOrder] = useState();
 	const [valueOrder, setValueOrder] = useState();
 
@@ -146,7 +146,7 @@ export default function OrderingEditor ({
 	const setFocus = useCallback((F) => {
 		focusRef.current = F;
 		forceUpdate();
-	}, []);
+	}, [focusRef]);
 
 	const renderLabel = useCallback((index, itemProps) => {
 		return (
