@@ -86,6 +86,7 @@ export default function QuestionEditor ({
 					{(parts ?? []).map((part, partIndex) => (
 						<Part
 							key={partIndex}
+							index={partIndex}
 							part={part}
 							onChange={onPartsChange}
 							errorLabel={errorLabel}
