@@ -59,9 +59,6 @@ OrderingEditor.propTypes = {
 		NTIID: PropTypes.string,
 		labels: PropTypes.arrayOf(PropTypes.string),
 		values: PropTypes.arrayOf(PropTypes.string),
-		solutions: PropTypes.shape({
-			values: PropTypes.object
-		})
 	}),
 
 	error: PropTypes.any,
