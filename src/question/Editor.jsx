@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames/bind';
 import {scoped} from '@nti/lib-locale';
@@ -58,16 +58,15 @@ export default function QuestionEditor ({
 	const partError = isKnownPartError(error) ? error : null;
 	const contentError = !partError && error;
 
-	const onContentChange = (newContent) => onChange?.({
+	const onContentChange = useCallback((newContent) => onChange?.({
 		content:newContent,
 		parts
-	});
+	}), [parts]);
 
-	const onPartChange = (part, partIndex) => onChange?.({
+	const onPartsChange = useCallback((part, partIndex) => onChange?.({
 		content,
 		parts: parts.map((p, i) => i === partIndex ? part : p)
-	});
-
+	}), [content, parts]);
 
 	return (
 		<div className={cx('question-editor')}>
@@ -85,10 +84,11 @@ export default function QuestionEditor ({
 				</div>
 				<div className={cx('parts')}>
 					{(parts ?? []).map((part, partIndex) => (
-						<PartEditor
+						<Part
 							key={partIndex}
 							part={part}
-							onChange={(newPart) => onPartChange(newPart, partIndex)}
+							parts={parts}
+							onChange={onPartsChange}
 							errorLabel={errorLabel}
 							error={partError}
 							canAddOption={canAddPartOption}
@@ -99,5 +99,16 @@ export default function QuestionEditor ({
 				</div>
 			</div>
 		</div>
+	);
+}
+
+Part.propTypes = {
+	index: PropTypes.number,
+	onChange: PropTypes.func,
+};
+function Part ({index, onChange, ...props}) {
+	const onPartChange = useCallback((part) => onChange?.(part, index), [index]);
+	return (
+		<PartEditor onChange={onPartChange} {...props} />
 	);
 }
