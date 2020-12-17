@@ -17,8 +17,10 @@ const {getKeyCode} = Events;
 // initial value is empty. (carrot drops behind the first typed character)
 // So, we will always have at least a zero-width space. We should attempt
 // to trim this guy out.
+const cleanPlaceholder = x => x?.replace(/\u200b/g, '');
 const toDraftState = x => Parsers.HTML.toDraftState(x || '\u200b');
-const fromDraftState = x => Parsers.HTML.fromDraftState(x)?.join('\n').replace(/\u200b/g, '') ?? '';
+const fromDraftState = x => cleanPlaceholder(Parsers.HTML.fromDraftState(x)?.join('\n')) ?? '';
+const textFromDraftState = x => cleanPlaceholder(Parsers.PlainText.fromDraftState(x)?.join('\n'));
 
 const PLUGINS = [
 	Plugins.LimitBlockTypes.create({allow: new Set([BLOCKS.UNSTYLED])}),
@@ -98,7 +100,7 @@ export default function Choice ({
 			return true;
 		},
 		[getKeyCode.BACKSPACE]: (newEditorState) => {
-			const value = fromDraftState(newEditorState);
+			const value = textFromDraftState(newEditorState);
 
 			if (!value) {
 				onRemove?.(index);
