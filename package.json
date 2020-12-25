@@ -35,13 +35,6 @@
     "@nti/web-reading": "NextThought/nti.web.reading"
   },
   "devDependencies": {
-    "@nti/cmp-scripts": "^2.29.31",
-    "@nti/style-common": "NextThought/nti.style.common"
-  },
-  "peerDependencies": {
-    "classnames": "*",
-    "react": "*",
-    "react-dom": "*",
-    "prop-types": "*"
+    "@nti/cmp-scripts": "^2.31.8"
   }
 }
