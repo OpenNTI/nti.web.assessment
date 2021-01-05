@@ -71,7 +71,7 @@ export default function DueDate () {
 			label={t('label')}
 			value={
 				date !== null ?
-					(<DateTime date={date} format="L" />) :
+					(<DateTime date={date} format={DateTime.DATE_PADDED} />) :
 					<Text.Base className="placeholder">{t('placeholder')}</Text.Base>
 			}
 			error={error}
