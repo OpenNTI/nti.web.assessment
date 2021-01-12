@@ -91,9 +91,11 @@ export default function QuestionRefBlock ({block, blockProps}) {
 			block={block}
 			blockProps={blockProps}
 			onRemoval={onRemoval}
+			key={id}
 		>
 			{question && (
 				<Editor
+					key={id}
 					index={index != null ? (index + 1) : null}
 					question={{
 						content: updates?.content ?? question.content,

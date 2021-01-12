@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect, useReducer, useRef } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames/bind';
 import {scoped} from '@nti/lib-locale';
@@ -58,15 +58,17 @@ export default function QuestionEditor ({
 	const partError = isKnownPartError(error) ? error : null;
 	const contentError = !partError && error;
 
-	const onContentChange = useCallback((newContent) => onChange?.({
-		content:newContent,
-		parts
-	}), [parts]);
+	const [state, dispatch] = useReducer((s, action) => ({...s, ...action}), {content, parts});
+	const stateRef = useRef(state);
+	useEffect(() => {
+		if (state !== stateRef.current) {
+			stateRef.current = state;
+			onChange?.(state);
+		}
+	}, [state, stateRef, onChange]);
 
-	const onPartsChange = useCallback((part, partIndex) => onChange?.({
-		content,
-		parts: parts.map((p, i) => i === partIndex ? part : p)
-	}), [content, parts]);
+	const onContentChange = (c) => dispatch({ content: c });
+	const onPartsChange = (part, partIndex) => dispatch({ parts: parts.map((p, i) => i === partIndex ? part : p) });
 
 	return (
 		<div className={cx('question-editor')}>
