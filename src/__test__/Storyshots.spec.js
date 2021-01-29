@@ -26,17 +26,15 @@ async function a11yCheck (page, test, options) {
 	await expect(page).toPassAxeTests({...params, include});
 }
 
-function snapshotCheck (page, test, options) {
+async function snapshotCheck (page, test, options) {
 	if (test?.disableScreenshot) { return; }
 
-	const {screenshot} = test ?? {};
-
-	const {before, getTarget, after, options, matchOptions} = test ?? {};
+	const {before, getTarget, after, screenshotOptions, matchOptions} = test ?? {};
 
 	await before?.(page);
 
 	const element = await getTarget?.(page);
-	const image = await (element ?? page).screenshot({...BaseScreenShotOptions, ...(options ?? {})});
+	const image = await (element ?? page).screenshot({...BaseScreenShotOptions, ...(screenshotOptions ?? {})});
 
 	await after?.(image, page);
 
