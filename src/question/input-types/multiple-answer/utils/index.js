@@ -1,2 +1,2 @@
 export * as Data from './data';
-export isMultipleAnswerPart from './is-multiple-answer-part';
+export { default as isMultipleAnswerPart } from './is-multiple-answer-part';

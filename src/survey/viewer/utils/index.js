@@ -1,1 +1,1 @@
-export createPageInfo from './create-page-info';
+export { default as createPageInfo } from './create-page-info';

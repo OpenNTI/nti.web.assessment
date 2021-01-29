@@ -1,2 +1,2 @@
 export * as Data from './data';
-export isModeledContentPart from './is-modeled-content-part';
+export { default as isModeledContentPart } from './is-modeled-content-part';

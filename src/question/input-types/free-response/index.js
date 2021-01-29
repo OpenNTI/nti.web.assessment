@@ -6,9 +6,9 @@ const t = scoped('nti-assessment.question.input-types.free-response.index', {
 	label: 'Answer'
 });
 
-export Icon from './assets/shortanswer.svg';
-export Editor from './Editor';
-export Input from './Input';
+export { default as Icon } from './assets/shortanswer.svg';
+export { default as Editor } from './Editor';
+export { default as Input } from './Input';
 
 export const Label = t('label');
 export const type = Symbol('Free Response');

@@ -1,2 +1,2 @@
 export * as Data from './data';
-export isOrderingPart from './is-ordering-part';
+export { default as isOrderingPart } from './is-ordering-part';

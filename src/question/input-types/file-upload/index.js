@@ -1,7 +1,7 @@
 import {isFileUploadPart} from './utils';
 
-export Icon from './assets/upload.svg';
-export Editor from './Editor';
-export Input from './Input';
+export { default as Icon } from './assets/upload.svg';
+export { default as Editor } from './Editor';
+export { default as Input } from './Input';
 
 export const canHandlePart = p => isFileUploadPart(p);

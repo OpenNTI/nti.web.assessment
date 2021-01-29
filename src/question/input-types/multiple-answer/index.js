@@ -6,9 +6,9 @@ const t = scoped('nti-assessment.question.input-types.multiple-answer.index', {
 	label: 'Multi'
 });
 
-export Icon from './assets/checkboxes.svg';
-export Editor from './Editor';
-export Input from './Input';
+export { default as Icon } from './assets/checkboxes.svg';
+export { default as Editor } from './Editor';
+export { default as Input } from './Input';
 
 export const Label = t('label');
 export const type = Symbol('Multiple Answer');
