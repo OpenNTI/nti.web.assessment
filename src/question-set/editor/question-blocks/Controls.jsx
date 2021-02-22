@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames/bind';
-import {StandardUI, Icons} from '@nti/web-commons';
+import { StandardUI, Icons } from '@nti/web-commons';
 
 import Styles from './Styles.css';
 
@@ -17,25 +17,40 @@ QuestionBlockControls.propTypes = {
 		isLast: PropTypes.bool,
 		moveBlockUp: PropTypes.func,
 		moveBlockDown: PropTypes.func,
-		removeBlock: PropTypes.func
-	})
+		removeBlock: PropTypes.func,
+	}),
 };
-export default function QuestionBlockControls ({blockProps, canReorder, canRemove}) {
-	const {isFirst, isLast, moveBlockUp, moveBlockDown, removeBlock} = blockProps ?? {};
+export default function QuestionBlockControls({
+	blockProps,
+	canReorder,
+	canRemove,
+}) {
+	const { isFirst, isLast, moveBlockUp, moveBlockDown, removeBlock } =
+		blockProps ?? {};
 
 	return (
 		<StandardUI.Card className={cx('controls')}>
 			<Icons.Arrow.Up
 				fill
-				className={cx('icon', 'move-up', {disabled: isFirst || !moveBlockUp || !canReorder})}
+				className={cx('icon', 'move-up', {
+					disabled: isFirst || !moveBlockUp || !canReorder,
+				})}
 				onClick={moveBlockUp}
 			/>
 			<Icons.Arrow.Down
 				fill
-				className={cx('icon', 'move-down', {disabled: isLast || !moveBlockDown || !canReorder})}
+				className={cx('icon', 'move-down', {
+					disabled: isLast || !moveBlockDown || !canReorder,
+				})}
 				onClick={moveBlockDown}
 			/>
-			<Icons.TrashCan fill className={cx('icon', 'delete', {disabled: !removeBlock || !canRemove})} onClick={removeBlock} />
+			<Icons.TrashCan
+				fill
+				className={cx('icon', 'delete', {
+					disabled: !removeBlock || !canRemove,
+				})}
+				onClick={removeBlock}
+			/>
 		</StandardUI.Card>
 	);
 }

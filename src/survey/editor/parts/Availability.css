@@ -1,6 +1,10 @@
 .survey-availability {
 	padding: var(--side-padding, 1rem);
-	background-image: linear-gradient(rgba(243, 82, 82, 0.2) 0%, rgba(243, 82, 82, 0.05) 10%, rgba(243, 82, 82, 0) 100%);
+	background-image: linear-gradient(
+		rgba(243, 82, 82, 0.2) 0%,
+		rgba(243, 82, 82, 0.05) 10%,
+		rgba(243, 82, 82, 0) 100%
+	);
 	background-color: white;
 	border-bottom: 1px solid var(--border-grey-light);
 	display: flex;

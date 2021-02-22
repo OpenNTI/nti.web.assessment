@@ -5,12 +5,8 @@ const Context = React.createContext();
 
 QuestionSetSubmittedContext.useContext = () => React.useContext(Context);
 QuestionSetSubmittedContext.propTypes = {
-	children: PropTypes.any
+	children: PropTypes.any,
 };
-export default function QuestionSetSubmittedContext ({children}) {
-	return (
-		<Context.Provider value={{}}>
-			{children}
-		</Context.Provider>
-	);
+export default function QuestionSetSubmittedContext({ children }) {
+	return <Context.Provider value={{}}>{children}</Context.Provider>;
 }

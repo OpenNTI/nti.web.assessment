@@ -1,11 +1,11 @@
 import React from 'react';
-import {Stores} from '@nti/lib-store';
-import {wait} from '@nti/lib-commons';
-import {Hooks} from '@nti/web-commons';
+import { Stores } from '@nti/lib-store';
+import { wait } from '@nti/lib-commons';
+import { Hooks } from '@nti/web-commons';
 
-const {useForceUpdate} = Hooks;
+const { useForceUpdate } = Hooks;
 
-function isPreflightStructural (resp) {
+function isPreflightStructural(resp) {
 	return false;
 }
 
@@ -30,13 +30,15 @@ export default class QuestionSetEditorState extends Stores.BoundStore {
 	static OnQuestionChange = OnQuestionChange;
 	static OnQuestionError = OnQuestionError;
 
-	static useNewQuestionStore (id) {
-		if (!id) { throw new Error('useNewQuestionStore must be given an id'); }
+	static useNewQuestionStore(id) {
+		if (!id) {
+			throw new Error('useNewQuestionStore must be given an id');
+		}
 
 		const questionSet = this.useMonitor([
 			CreateQuestion,
 			RegisterQuestionStore,
-			OnQuestionError
+			OnQuestionError,
 		]);
 
 		const forceUpdate = useForceUpdate();
@@ -44,7 +46,7 @@ export default class QuestionSetEditorState extends Stores.BoundStore {
 		const isPending = React.useRef();
 		const error = React.useRef();
 
-		const createQuestion = async (data) => {
+		const createQuestion = async data => {
 			try {
 				isPending.current = true;
 				error.current = null;
@@ -69,10 +71,14 @@ export default class QuestionSetEditorState extends Stores.BoundStore {
 
 			isNew: true,
 
-			get error () { return error.current; },
-			get isPending () { return isPending.current; },
+			get error() {
+				return error.current;
+			},
+			get isPending() {
+				return isPending.current;
+			},
 
-			createQuestion
+			createQuestion,
 		};
 
 		React.useEffect(
@@ -83,8 +89,10 @@ export default class QuestionSetEditorState extends Stores.BoundStore {
 		return newQuestionStore;
 	}
 
-	static useQuestionStore (id) {
-		if (!id) { throw new Error('useQuestionStore must be given an id'); }
+	static useQuestionStore(id) {
+		if (!id) {
+			throw new Error('useQuestionStore must be given an id');
+		}
 
 		const questionSet = this.useMonitor([
 			NoSolutions,
@@ -95,7 +103,7 @@ export default class QuestionSetEditorState extends Stores.BoundStore {
 			OnQuestionChange,
 			OnQuestionError,
 			RegisterQuestionStore,
-			'questionMap'
+			'questionMap',
 		]);
 
 		const question = questionSet[GetQuestion](id);
@@ -108,8 +116,8 @@ export default class QuestionSetEditorState extends Stores.BoundStore {
 		const error = React.useRef();
 		const index = React.useRef();
 
-		const setUpdates = (u) => (updates.current = u);
-		const setError = (e) => (error.current = e, forceUpdate());
+		const setUpdates = u => (updates.current = u);
+		const setError = e => ((error.current = e), forceUpdate());
 
 		const clearError = () => {
 			if (error.current) {
@@ -119,7 +127,9 @@ export default class QuestionSetEditorState extends Stores.BoundStore {
 		};
 
 		const validate = () => {
-			if (validation.current) { return; }
+			if (validation.current) {
+				return;
+			}
 
 			const doValidate = async () => {
 				isPending.current = true;
@@ -128,7 +138,11 @@ export default class QuestionSetEditorState extends Stores.BoundStore {
 					await wait(300);
 					const resp = await question.preflight(updates.current);
 
-					questionSet[OnQuestionChange](id, updates.current, isPreflightStructural(resp));
+					questionSet[OnQuestionChange](
+						id,
+						updates.current,
+						isPreflightStructural(resp)
+					);
 				} catch (e) {
 					setError(e);
 					questionSet[OnQuestionError](id);
@@ -141,12 +155,8 @@ export default class QuestionSetEditorState extends Stores.BoundStore {
 			validation.current = doValidate();
 		};
 
-		const setIndex = (newIndex) => index.current = newIndex;
-		const onChange = (changes) => (
-			setUpdates(changes),
-			validate()
-		);
-
+		const setIndex = newIndex => (index.current = newIndex);
+		const onChange = changes => (setUpdates(changes), validate());
 
 		const questionStore = {
 			id,
@@ -156,15 +166,23 @@ export default class QuestionSetEditorState extends Stores.BoundStore {
 			canReorder: questionSet[CanReorderQuestions],
 			canRemove: questionSet[CanRemoveQuestions],
 
-			get updates () { return updates.current; },
-			get error () { return error.current; },
-			get isPending () { return isPending.current; },
-			get index () { return index.current; },
+			get updates() {
+				return updates.current;
+			},
+			get error() {
+				return error.current;
+			},
+			get isPending() {
+				return isPending.current;
+			},
+			get index() {
+				return index.current;
+			},
 
 			setIndex,
 
 			clearError,
-			onChange
+			onChange,
 		};
 
 		React.useEffect(
@@ -178,42 +196,52 @@ export default class QuestionSetEditorState extends Stores.BoundStore {
 	#questionStores = {};
 	#newQuestions = {};
 
-	cleanup () {
+	cleanup() {
 		this.cleanupListener?.();
 	}
 
-	load () {
+	load() {
 		if (
 			this.binding.questionSet === this.get('questionsSet') &&
-			this.binding.questionSet.questions === this.get('questionSet').questions &&
+			this.binding.questionSet.questions ===
+				this.get('questionSet').questions &&
 			this.binding.noSolutions === this.get(NoSolutions) &&
 			this.binding.canAddQuestion === this.get(CanAddQuestion) &&
-			this.binding.canReorderQuestions === this.get(CanReorderQuestions) &&
+			this.binding.canReorderQuestions ===
+				this.get(CanReorderQuestions) &&
 			this.binding.canRemoveQuestions === this.get(CanRemoveQuestions)
-		) { return; }
-
+		) {
+			return;
+		}
 
 		const setup = () => {
-			const {questions} = this.binding.questionSet ?? {};
+			const { questions } = this.binding.questionSet ?? {};
 
 			this.setImmediate({
 				questionSet: this.binding.questionSet ?? [],
-				questionMap: (questions ?? []).reduce((acc, question) => ({...acc, [question.getID()]: question}), {}),
+				questionMap: (questions ?? []).reduce(
+					(acc, question) => ({
+						...acc,
+						[question.getID()]: question,
+					}),
+					{}
+				),
 				[NoSolutions]: this.binding.noSolutions,
 				[CanAddQuestion]: this.binding.canAddQuestion,
 				[CanReorderQuestions]: this.binding.canReorderQuestions,
-				[CanRemoveQuestions]: this.binding.canRemoveQuestions
+				[CanRemoveQuestions]: this.binding.canRemoveQuestions,
 			});
 		};
 
 		setup();
 
 		this.cleanupListener?.();
-		this.cleanupListener = this.binding.questionSet.subscribeToChange(setup);
-
+		this.cleanupListener = this.binding.questionSet.subscribeToChange(
+			setup
+		);
 	}
 
-	async [CreateQuestion] (data) {
+	async [CreateQuestion](data) {
 		const question = await this.binding.createQuestion(data);
 
 		this.#newQuestions[question.getID()] = question;
@@ -221,40 +249,47 @@ export default class QuestionSetEditorState extends Stores.BoundStore {
 		return question;
 	}
 
-	[GetQuestion] (id) {
+	[GetQuestion](id) {
 		const map = this.get('questionMap') ?? {};
 
 		return map[id] || this.#newQuestions[id];
 	}
 
-	#internalQuestionChange () {
-		const stores = Object
-			.entries(this.#questionStores ?? {})
-			.sort(([,a], [,b]) => a.index - b.index);
+	#internalQuestionChange() {
+		const stores = Object.entries(this.#questionStores ?? {}).sort(
+			([, a], [, b]) => a.index - b.index
+		);
 
-		const change = stores.reduce((acc, store) => {
-			const [id, state] = store;
+		const change = stores.reduce(
+			(acc, store) => {
+				const [id, state] = store;
 
-			if (state.error) {
-				acc.errors.push(state.error);
-			}
+				if (state.error) {
+					acc.errors.push(state.error);
+				}
 
-			acc.updates.push({
-				NTIID: id,
-				...(state.isNew ? ({isNew: true}) : {}),
-				...(state.updates ?? {})
-			});
+				acc.updates.push({
+					NTIID: id,
+					...(state.isNew ? { isNew: true } : {}),
+					...(state.updates ?? {}),
+				});
 
-			return acc;
-		}, {errors: [], updates: []});
+				return acc;
+			},
+			{ errors: [], updates: [] }
+		);
 
 		this.binding?.onQuestionsChange?.(change);
 	}
 
-	[OnQuestionChange] () { this.#internalQuestionChange(); }
-	[OnQuestionError] () { this.#internalQuestionChange(); }
+	[OnQuestionChange]() {
+		this.#internalQuestionChange();
+	}
+	[OnQuestionError]() {
+		this.#internalQuestionChange();
+	}
 
-	[RegisterQuestionStore] (id, store) {
+	[RegisterQuestionStore](id, store) {
 		const isAdded = !this.#questionStores[id] && store;
 		const isRemoved = this.#questionStores[id] && !store;
 

@@ -1,34 +1,41 @@
 import React from 'react';
 import classnames from 'classnames/bind';
-import {scoped} from '@nti/lib-locale';
-import {Editor} from '@nti/web-reading';
-import {Text, Form, Task, Errors} from '@nti/web-commons';
+import { scoped } from '@nti/lib-locale';
+import { Editor } from '@nti/web-reading';
+import { Text, Form, Task, Errors } from '@nti/web-commons';
 
 import Store from '../../Store';
 
 import Styles from './ResultVisibility.css';
 
 const cx = classnames.bind(Styles);
-const t = scoped('nti-assessments.survey.editor.parts.controls.ResultVisibility', {
-	label: 'Response Visibility',
-	save: 'Save',
-	instructorsOnly: {
-		label: 'Instructors Only',
-		description: 'Students will not be able to see the results of the survey.'
-	},
-	always: {
-		label: 'Always',
-		description: 'Students will be able to see results before submitting the survey.'
-	},
-	afterClose: {
-		label: 'After Due Date',
-		description: 'Students will only be able to see results after the survey has closed.'
-	},
-	afterSubmission: {
-		label: 'After Submission',
-		description: 'Students will be able to see results after submitting the survey.'
+const t = scoped(
+	'nti-assessments.survey.editor.parts.controls.ResultVisibility',
+	{
+		label: 'Response Visibility',
+		save: 'Save',
+		instructorsOnly: {
+			label: 'Instructors Only',
+			description:
+				'Students will not be able to see the results of the survey.',
+		},
+		always: {
+			label: 'Always',
+			description:
+				'Students will be able to see results before submitting the survey.',
+		},
+		afterClose: {
+			label: 'After Due Date',
+			description:
+				'Students will only be able to see results after the survey has closed.',
+		},
+		afterSubmission: {
+			label: 'After Submission',
+			description:
+				'Students will be able to see results after submitting the survey.',
+		},
 	}
-});
+);
 
 const Instructors = 'never';
 const Always = 'always';
@@ -39,13 +46,11 @@ const Values = {
 	[Instructors]: t('instructorsOnly.label'),
 	[Always]: t('always.label'),
 	[AfterClose]: t('afterClose.label'),
-	[AfterSubmission]: t('afterSubmission.label')
+	[AfterSubmission]: t('afterSubmission.label'),
 };
 
-export default function ResultVisibility () {
-	const {
-		[Store.Survey]: survey
-	} = Store.useMonitor([Store.Survey]);
+export default function ResultVisibility() {
+	const { [Store.Survey]: survey } = Store.useMonitor([Store.Survey]);
 
 	const controlRef = React.useRef(null);
 
@@ -55,7 +60,7 @@ export default function ResultVisibility () {
 
 	React.useEffect(() => setDisclosure(survey.disclosure), [survey]);
 
-	const maybeSetDisclosure = (e) => {
+	const maybeSetDisclosure = e => {
 		if (e.target.checked) {
 			setError(null);
 			setDisclosure(e.target.value);
@@ -72,7 +77,7 @@ export default function ResultVisibility () {
 	const onSubmit = async () => {
 		try {
 			setSaving(true);
-			await survey.save({disclosure});
+			await survey.save({ disclosure });
 			controlRef.current?.dismiss();
 		} catch (e) {
 			setError(e);
@@ -80,7 +85,6 @@ export default function ResultVisibility () {
 			setSaving(false);
 		}
 	};
-
 
 	return (
 		<Editor.Header.Controls.Control
@@ -90,8 +94,11 @@ export default function ResultVisibility () {
 			onDismiss={onDismiss}
 			error={error}
 		>
-			<Form className={cx('results-visibility-form', {saving})} onSubmit={onSubmit}>
-				<Errors.Message error={error}/>
+			<Form
+				className={cx('results-visibility-form', { saving })}
+				onSubmit={onSubmit}
+			>
+				<Errors.Message error={error} />
 				<Form.Input.Radio
 					name="results-visibility"
 					value={Instructors}

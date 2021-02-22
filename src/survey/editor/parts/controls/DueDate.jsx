@@ -1,8 +1,15 @@
 import React from 'react';
 import classnames from 'classnames/bind';
-import {scoped} from '@nti/lib-locale';
-import {Editor} from '@nti/web-reading';
-import {Text, DayTimePicker, DateTime, Errors, Task, Form} from '@nti/web-commons';
+import { scoped } from '@nti/lib-locale';
+import { Editor } from '@nti/web-reading';
+import {
+	Text,
+	DayTimePicker,
+	DateTime,
+	Errors,
+	Task,
+	Form,
+} from '@nti/web-commons';
 
 import Store from '../../Store';
 
@@ -12,19 +19,21 @@ const cx = classnames.bind(Styles);
 const t = scoped('nti-assessments.survey.editor.parts.controls.DueDate', {
 	label: 'Due Date',
 	save: 'Save',
-	placeholder: 'No Due Date'
+	placeholder: 'No Due Date',
 });
 
 const isSurveyDueDate = (date, survey) => {
 	const dueDate = survey.getAvailableForSubmissionEnding?.();
 
-	if (!date && !dueDate) { return true; }
+	if (!date && !dueDate) {
+		return true;
+	}
 
 	return dueDate === date;
 };
 
-export default function DueDate () {
-	const {[Store.Survey]: survey} = Store.useMonitor([Store.Survey]);
+export default function DueDate() {
+	const { [Store.Survey]: survey } = Store.useMonitor([Store.Survey]);
 
 	const controlRef = React.useRef(null);
 
@@ -40,14 +49,14 @@ export default function DueDate () {
 		setChecked(dueDate != null);
 	}, [survey]);
 
-	const onCheckChanged = (e) => {
+	const onCheckChanged = e => {
 		const newChecked = e.target.checked;
 
 		setDate(newChecked ? date : null);
 		setChecked(newChecked);
 	};
 
-	const onDateChanged = (newDate) => {
+	const onDateChanged = newDate => {
 		setDate(newDate);
 		setChecked(true);
 	};
@@ -64,23 +73,36 @@ export default function DueDate () {
 		}
 	};
 
-
 	return (
 		<Editor.Header.Controls.Control
 			ref={controlRef}
 			label={t('label')}
 			value={
-				date !== null ?
-					(<DateTime date={date} format={DateTime.DATE_PADDED} />) :
-					<Text.Base className="placeholder">{t('placeholder')}</Text.Base>
+				date !== null ? (
+					<DateTime date={date} format={DateTime.DATE_PADDED} />
+				) : (
+					<Text.Base className="placeholder">
+						{t('placeholder')}
+					</Text.Base>
+				)
 			}
 			error={error}
 			disabled={!survey?.canSetDueDate()}
 		>
 			<Form onSubmit={onSubmit} className={cx('due-date-form')}>
 				<Errors.Message error={error} />
-				<Form.Input.Checkbox className={cx('has-due-date')} label={t('label')} checked={checked} onChange={onCheckChanged} noError />
-				<DayTimePicker value={date} onChange={onDateChanged} disableDays={null} />
+				<Form.Input.Checkbox
+					className={cx('has-due-date')}
+					label={t('label')}
+					checked={checked}
+					onChange={onCheckChanged}
+					noError
+				/>
+				<DayTimePicker
+					value={date}
+					onChange={onDateChanged}
+					disableDays={null}
+				/>
 				<Task.Button
 					className={cx('save-button')}
 					as={Form.SubmitButton}

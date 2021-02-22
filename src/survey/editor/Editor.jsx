@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Editor} from '@nti/web-reading';
+import { Editor } from '@nti/web-reading';
 
-import {Editor as QuestionSetEditor} from '../../question-set';
+import { Editor as QuestionSetEditor } from '../../question-set';
 
 import Store from './Store';
 import Availability from './parts/Availability';
@@ -10,28 +10,23 @@ import Controls from './parts/controls';
 import Mask from './parts/Mask';
 import SaveButton from './parts/SaveButton';
 
-
 const CustomBlocks = [
 	...QuestionSetEditor.QuestionBlocks,
 	Editor.CustomBlocks.CourseFigure,
 	Editor.CustomBlocks.VideoRef,
 	Editor.CustomBlocks.Callout,
 	Editor.CustomBlocks.Iframe,
-	Editor.CustomBlocks.Code
+	Editor.CustomBlocks.Code,
 ];
 
-
 SurveyEditor.propTypes = {
-	container: PropTypes.oneOfType([
-		PropTypes.array,
-		PropTypes.object
-	]),
+	container: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
 	survey: PropTypes.shape({
 		title: PropTypes.string,
 		contents: PropTypes.string,
 		questions: PropTypes.array,
 		createPoll: PropTypes.func,
-		save: PropTypes.func
+		save: PropTypes.func,
 	}),
 
 	breadcrumb: PropTypes.any,
@@ -40,7 +35,12 @@ SurveyEditor.propTypes = {
 	navigateToPublished: PropTypes.func,
 	onDelete: PropTypes.func,
 };
-function SurveyEditor ({survey: surveyProp, container, breadcrumb, pageSource}) {
+function SurveyEditor({
+	survey: surveyProp,
+	container,
+	breadcrumb,
+	pageSource,
+}) {
 	const {
 		[Store.Survey]: survey,
 		[Store.Error]: error,
@@ -49,7 +49,7 @@ function SurveyEditor ({survey: surveyProp, container, breadcrumb, pageSource}) 
 		[Store.CreatePoll]: createPoll,
 		[Store.CanAddPoll]: canAddPoll,
 		[Store.CanReorderPolls]: canReorderPolls,
-		[Store.CanRemovePolls]: canRemovePolls
+		[Store.CanRemovePolls]: canRemovePolls,
 	} = Store.useMonitor([
 		Store.Survey,
 		Store.Saving,
@@ -58,38 +58,37 @@ function SurveyEditor ({survey: surveyProp, container, breadcrumb, pageSource}) 
 		Store.CreatePoll,
 		Store.CanAddPoll,
 		Store.CanReorderPolls,
-		Store.CanRemovePolls
+		Store.CanRemovePolls,
 	]);
-
 
 	const titleProp = Store.useProperty('title');
 	const descriptionProp = Store.useProperty('description');
 	const contentsProp = Store.useProperty('contents');
 	const questionsProp = Store.useProperty('questions');
 
-	const allErrors = ([
+	const allErrors = [
 		error?.field ? null : error,
 		titleProp.error,
 		contentsProp.error,
-		questionsProp.error
-	]).flat().filter(Boolean);
+		questionsProp.error,
+	]
+		.flat()
+		.filter(Boolean);
 
-	const onQuestionsChange = ({errors, updates}) => {
+	const onQuestionsChange = ({ errors, updates }) => {
 		questionsProp.onChange(updates);
 		if (errors?.length) {
 			questionsProp.setError(errors);
 		}
 	};
 
-	const mask = deleting ? (<Mask deleting />) : null;
+	const mask = deleting ? <Mask deleting /> : null;
 
 	return (
 		<QuestionSetEditor
 			questionSet={survey}
-
 			createQuestion={createPoll}
 			onQuestionsChange={onQuestionsChange}
-
 			noSolutions
 			canAddQuestion={canAddPoll}
 			canReorderQuestions={canReorderPolls}
@@ -105,12 +104,15 @@ function SurveyEditor ({survey: surveyProp, container, breadcrumb, pageSource}) 
 					<Editor.Content.Description {...descriptionProp} />
 					<Editor.Content.Body
 						customBlocks={CustomBlocks}
-						customBlockProps={{container}}
+						customBlockProps={{ container }}
 						content={contentsProp.value}
 						onChange={contentsProp.onChange}
 					/>
 				</Editor.Content>
-				<Editor.Sidebar customBlocks={CustomBlocks} customBlockProps={{container}}/>
+				<Editor.Sidebar
+					customBlocks={CustomBlocks}
+					customBlockProps={{ container }}
+				/>
 				<Editor.ControlBar
 					errors={allErrors}
 					saveButton={<SaveButton />}
@@ -122,12 +124,12 @@ function SurveyEditor ({survey: surveyProp, container, breadcrumb, pageSource}) 
 }
 
 export default Store.WrapCmp(SurveyEditor, {
-	deriveBindingFromProps: (props) => ({
+	deriveBindingFromProps: props => ({
 		survey: props.survey,
 		container: props.container,
 
 		navigateToPublished: props.navigateToPublished,
-		onDelete: props.onDelete
+		onDelete: props.onDelete,
 	}),
-	deriveStoreKeyFromProps: (props) => props.survey?.getID()
+	deriveStoreKeyFromProps: props => props.survey?.getID(),
 });

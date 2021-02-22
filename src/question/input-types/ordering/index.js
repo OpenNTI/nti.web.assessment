@@ -1,11 +1,11 @@
-import {scoped} from '@nti/lib-locale';
+import { scoped } from '@nti/lib-locale';
 
-import {ContentPurposes} from '../../Constants';
+import { ContentPurposes } from '../../Constants';
 
-import {isOrderingPart, Data} from './utils';
+import { isOrderingPart, Data } from './utils';
 
 const t = scoped('nti-assesment.question.input-types.ordering.index', {
-	label: 'Order'
+	label: 'Order',
 });
 
 export { default as Icon } from './assets/ordering.svg';

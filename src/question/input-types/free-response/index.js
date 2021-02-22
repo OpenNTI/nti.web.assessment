@@ -1,9 +1,9 @@
-import {scoped} from '@nti/lib-locale';
+import { scoped } from '@nti/lib-locale';
 
-import {isFreeResponsePart, Data} from './utils';
+import { isFreeResponsePart, Data } from './utils';
 
 const t = scoped('nti-assessment.question.input-types.free-response.index', {
-	label: 'Answer'
+	label: 'Answer',
 });
 
 export { default as Icon } from './assets/shortanswer.svg';

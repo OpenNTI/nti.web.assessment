@@ -7,7 +7,7 @@ import {
 	ModeledContent,
 	MultipleAnswer,
 	MultipleChoice,
-	Ordering
+	Ordering,
 } from '../input-types';
 
 const Types = {
@@ -15,63 +15,71 @@ const Types = {
 	'Modeled Content': ModeledContent,
 	'Multiple Answer': MultipleAnswer,
 	'Multiple Choice': MultipleChoice,
-	'Ordering': Ordering
+	Ordering: Ordering,
 };
 
-
-const getInitialQuestionForType = (type) => ({
+const getInitialQuestionForType = type => ({
 	content: '',
-	parts: [
-		Types[type ?? 'Multiple Choice'].generateBlankPart?.()
-	]
+	parts: [Types[type ?? 'Multiple Choice'].generateBlankPart?.()],
 });
 
 export default {
 	title: 'Questions/Question Editor',
 	component: Editor,
 	argTypes: {
-		onChange: {action: 'changed'},
+		onChange: { action: 'changed' },
 		type: {
-			control:{
+			control: {
 				type: 'select',
-				options: Object.keys(Types)
-			}
+				options: Object.keys(Types),
+			},
 		},
 		index: {
 			control: {
 				type: 'number',
 				min: 0,
-				step: 1
-			}
-		}
-	}
+				step: 1,
+			},
+		},
+	},
 };
 
-function SolutionsCmp ({onChange, type, index}) {
+function SolutionsCmp({ onChange, type, index }) {
 	const [question, setQuestion] = React.useState(null);
 
 	React.useEffect(() => setQuestion(getInitialQuestionForType(type)), [type]);
 
-	if (!question) { return null; }
+	if (!question) {
+		return null;
+	}
 
-	return (<Editor question={question} index={index}  />);
+	return <Editor question={question} index={index} />;
 }
 
-function NoSolutionsCmp ({onChange, type, index}) {
+function NoSolutionsCmp({ onChange, type, index }) {
 	const [question, setQuestion] = React.useState(null);
 
 	React.useEffect(() => setQuestion(getInitialQuestionForType(type)), [type]);
 
-	if (!question) { return null; }
+	if (!question) {
+		return null;
+	}
 
-	return (<Editor question={question} index={index} onChange={q => (onChange(q), setQuestion(q))} noSolutions />);
+	return (
+		<Editor
+			question={question}
+			index={index}
+			onChange={q => (onChange(q), setQuestion(q))}
+			noSolutions
+		/>
+	);
 }
 
-export const Solutions = (props) => (<SolutionsCmp {...props} />) ;
-export const NoSolutions = (props) => (<NoSolutionsCmp {...props} />);
+export const Solutions = props => <SolutionsCmp {...props} />;
+export const NoSolutions = props => <NoSolutionsCmp {...props} />;
 
 SolutionsCmp.propTypes = NoSolutionsCmp.propTypes = {
 	onChange: PropTypes.func,
 	type: PropTypes.string,
-	index: PropTypes.number
+	index: PropTypes.number,
 };

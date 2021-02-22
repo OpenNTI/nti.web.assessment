@@ -1,24 +1,30 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, {
+	useCallback,
+	useEffect,
+	useMemo,
+	useRef,
+	useState,
+} from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames/bind';
-import {Array as arr, Events} from '@nti/lib-commons';
-import {scoped} from '@nti/lib-locale';
-import {DnD, Icons, Text, Hooks} from '@nti/web-commons';
+import { Array as arr, Events } from '@nti/lib-commons';
+import { scoped } from '@nti/lib-locale';
+import { DnD, Icons, Text, Hooks } from '@nti/web-commons';
 
 import Choice from '../common/choices-editor/Choice';
 
 import Styles from './Editor.css';
-import {Data} from './utils';
+import { Data } from './utils';
 
-const {getKeyCode} = Events;
+const { getKeyCode } = Events;
 
 const cx = classnames.bind(Styles);
 const t = scoped('nti-assessment.question.input-types.ordering.Editor', {
-	addLabel: 'Add a Row'
+	addLabel: 'Add a Row',
 });
 
 const getChoices = (part, error) => {
-	const {labels, values, solution} = part;
+	const { labels, values, solution } = part;
 	const labelChoices = [];
 	const valueChoices = [];
 
@@ -30,22 +36,30 @@ const getChoices = (part, error) => {
 
 		labelChoices.push({
 			label,
-			error: error?.field === 'labels' && (error?.index ?? []).indexOf(i) >= 0 ? error : null
+			error:
+				error?.field === 'labels' &&
+				(error?.index ?? []).indexOf(i) >= 0
+					? error
+					: null,
 		});
 
 		valueChoices.push({
 			label: value,
-			error: error?.field === 'values' && (error?.index ?? []).indexOf(i) >= 0 ? error : null
+			error:
+				error?.field === 'values' &&
+				(error?.index ?? []).indexOf(i) >= 0
+					? error
+					: null,
 		});
 	}
 
 	return {
 		labels: labelChoices,
-		values: valueChoices
+		values: valueChoices,
 	};
 };
 
-const updatePart = ({labels, values}, part) => {
+const updatePart = ({ labels, values }, part) => {
 	return Data.updatePart(
 		part,
 		labels.map(l => l.label),
@@ -65,20 +79,20 @@ OrderingEditor.propTypes = {
 
 	canAddOption: PropTypes.bool,
 	canRemoveOption: PropTypes.bool,
-	canReorderOption: PropTypes.bool
+	canReorderOption: PropTypes.bool,
 };
-export default function OrderingEditor ({
+export default function OrderingEditor({
 	onChange: onChangeProp,
 	part,
 	error,
 
 	canAddOption,
 	canReorderOption,
-	canRemoveOption
+	canRemoveOption,
 }) {
 	const forceUpdate = Hooks.useForceUpdate();
 
-	const {labels, values} = useMemo(() => getChoices(part), [part]);
+	const { labels, values } = useMemo(() => getChoices(part), [part]);
 	const [labelOrder, setLabelOrder] = useState();
 	const [valueOrder, setValueOrder] = useState();
 
@@ -89,107 +103,167 @@ export default function OrderingEditor ({
 	const canReorder = canReorderOption;
 	const noSolutions = !Data.hasSolutions(part);
 
-	useEffect(() => (
-		setLabelOrder(labels.map((l, index) => index)),
-		setValueOrder(values.map((v, index) => index))
-	), [part]);
-
-	const onChange = useCallback((newLabels, newValues) => (
-		onChangeProp?.(
-			updatePart({labels: newLabels, values: newValues}, part)
-		)
-	), [onChangeProp, part]);
-
-	const onLabelOrderChange = useCallback((original, updated) => setLabelOrder(arr.move(labelOrder, original, updated)), [labelOrder]);
-	const onValueOrderChange = useCallback((original, updated) => setValueOrder(arr.move(valueOrder, original, updated)), [valueOrder]);
-
-	const onLabelOrderCommit = useCallback(() => (
-		onChange(
-			labelOrder.map(i => labels[i]),
-			values
-		)
-	), [onChange, labelOrder, labels, values]);
-
-	const onValueOrderCommit = useCallback(() => (
-		onChange(
-			labels,
-			valueOrder.map(i => values[i])
-		)
-	), [onChange, labels, valueOrder, values]);
-
-	const onLabelChange = useCallback((index, label) => onChange(
-		[...labels.slice(0, index), label, ...labels.slice(index + 1)],
-		values
-	), [labels, values, onChange]);
-
-	const onValueChange = useCallback((index, value) => onChange(
-		labels,
-		[...values.slice(0, index), value, ...values.slice(index + 1)]
-	), [labels, values, onChange]);
-
-	const removeRow = useCallback((index) => (
-		onChange(
-			[...labels.slice(0, index), ...labels.slice(index + 1)],
-			[...values.slice(0, index), ...values.slice(index + 1)]
+	useEffect(
+		() => (
+			setLabelOrder(labels.map((l, index) => index)),
+			setValueOrder(values.map((v, index) => index))
 		),
-		focusRef.current = {column: 'label', index: Math.max(index - 1, 0)}
-	), [labels, values, onChange]);
+		[part]
+	);
 
-	const addRowAfter = useCallback((index) => (
-		onChange(
-			[...labels.slice(0, index + 1), {label: ''}, ...labels.slice(index + 1)],
-			[...values.slice(0, index + 1), {label: ''}, ...values.slice(index + 1)]
+	const onChange = useCallback(
+		(newLabels, newValues) =>
+			onChangeProp?.(
+				updatePart({ labels: newLabels, values: newValues }, part)
+			),
+		[onChangeProp, part]
+	);
+
+	const onLabelOrderChange = useCallback(
+		(original, updated) =>
+			setLabelOrder(arr.move(labelOrder, original, updated)),
+		[labelOrder]
+	);
+	const onValueOrderChange = useCallback(
+		(original, updated) =>
+			setValueOrder(arr.move(valueOrder, original, updated)),
+		[valueOrder]
+	);
+
+	const onLabelOrderCommit = useCallback(
+		() =>
+			onChange(
+				labelOrder.map(i => labels[i]),
+				values
+			),
+		[onChange, labelOrder, labels, values]
+	);
+
+	const onValueOrderCommit = useCallback(
+		() =>
+			onChange(
+				labels,
+				valueOrder.map(i => values[i])
+			),
+		[onChange, labels, valueOrder, values]
+	);
+
+	const onLabelChange = useCallback(
+		(index, label) =>
+			onChange(
+				[...labels.slice(0, index), label, ...labels.slice(index + 1)],
+				values
+			),
+		[labels, values, onChange]
+	);
+
+	const onValueChange = useCallback(
+		(index, value) =>
+			onChange(labels, [
+				...values.slice(0, index),
+				value,
+				...values.slice(index + 1),
+			]),
+		[labels, values, onChange]
+	);
+
+	const removeRow = useCallback(
+		index => (
+			onChange(
+				[...labels.slice(0, index), ...labels.slice(index + 1)],
+				[...values.slice(0, index), ...values.slice(index + 1)]
+			),
+			(focusRef.current = {
+				column: 'label',
+				index: Math.max(index - 1, 0),
+			})
 		),
-		focusRef.current = {column: 'label', index: index + 1}
-	), [onChange, labels, values]);
+		[labels, values, onChange]
+	);
 
-	const setFocus = useCallback((F) => {
-		focusRef.current = F;
-		forceUpdate();
-	}, [focusRef]);
+	const addRowAfter = useCallback(
+		index => (
+			onChange(
+				[
+					...labels.slice(0, index + 1),
+					{ label: '' },
+					...labels.slice(index + 1),
+				],
+				[
+					...values.slice(0, index + 1),
+					{ label: '' },
+					...values.slice(index + 1),
+				]
+			),
+			(focusRef.current = { column: 'label', index: index + 1 })
+		),
+		[onChange, labels, values]
+	);
 
-	const renderLabel = useCallback((index, itemProps) => {
-		return (
-			<Label
-				key={index}
-				index={index}
-				itemProps={itemProps}
+	const setFocus = useCallback(
+		F => {
+			focusRef.current = F;
+			forceUpdate();
+		},
+		[focusRef]
+	);
 
-				autoFocus={focusRef.current?.column === 'label' && focusRef.current?.index === index}
-				setFocus={setFocus}
+	const renderLabel = useCallback(
+		(index, itemProps) => {
+			return (
+				<Label
+					key={index}
+					index={index}
+					itemProps={itemProps}
+					autoFocus={
+						focusRef.current?.column === 'label' &&
+						focusRef.current?.index === index
+					}
+					setFocus={setFocus}
+					labels={labels}
+					canReorder={canReorder}
+					addRowAfter={addRowAfter}
+					onChange={onLabelChange}
+				/>
+			);
+		},
+		[addRowAfter, onLabelChange, setFocus, canReorder, labels]
+	);
 
-				labels={labels}
-
-				canReorder={canReorder}
-				addRowAfter={addRowAfter}
-				onChange={onLabelChange}
-			/>
-		);
-	}, [addRowAfter, onLabelChange, setFocus, canReorder, labels]);
-
-	const renderValue = useCallback((index, itemProps) => {
-		return (
-			<Value
-				key={index}
-				index={index}
-				itemProps={itemProps}
-				totalRows={totalRows}
-
-				autoFocus={focusRef.current?.column === 'value' && focusRef.current?.index === index}
-				setFocus={setFocus}
-
-				values={values}
-
-				canReorder={canReorder}
-				addRowAfter={addRowAfter}
-				onChange={onValueChange}
-				onRemove={canRemove ? removeRow : undefined}
-			/>
-		);
-	}, [addRowAfter, onValueChange, removeRow, canRemove, canReorder, totalRows, values]);
+	const renderValue = useCallback(
+		(index, itemProps) => {
+			return (
+				<Value
+					key={index}
+					index={index}
+					itemProps={itemProps}
+					totalRows={totalRows}
+					autoFocus={
+						focusRef.current?.column === 'value' &&
+						focusRef.current?.index === index
+					}
+					setFocus={setFocus}
+					values={values}
+					canReorder={canReorder}
+					addRowAfter={addRowAfter}
+					onChange={onValueChange}
+					onRemove={canRemove ? removeRow : undefined}
+				/>
+			);
+		},
+		[
+			addRowAfter,
+			onValueChange,
+			removeRow,
+			canRemove,
+			canReorder,
+			totalRows,
+			values,
+		]
+	);
 
 	return (
-		<div className={cx('ordering-editor', {'no-solutions': noSolutions})}>
+		<div className={cx('ordering-editor', { 'no-solutions': noSolutions })}>
 			{labelOrder && (
 				<DnD.Sortable
 					customHandle
@@ -213,15 +287,19 @@ export default function OrderingEditor ({
 				/>
 			)}
 			{canAddOption && (
-				<button className={cx('add-row')} onClick={() => addRowAfter(totalRows - 1)}>
+				<button
+					className={cx('add-row')}
+					onClick={() => addRowAfter(totalRows - 1)}
+				>
 					<Icons.Plus className={cx('icon')} />
-					<Text.Base className={cx('label')}>{t('addLabel')}</Text.Base>
+					<Text.Base className={cx('label')}>
+						{t('addLabel')}
+					</Text.Base>
 				</button>
 			)}
 		</div>
 	);
 }
-
 
 Label.propTypes = {
 	index: PropTypes.number,
@@ -234,32 +312,52 @@ Label.propTypes = {
 	onChange: PropTypes.func,
 };
 
-function Label ({index, itemProps, labels, autoFocus, canReorder, setFocus, addRowAfter, onChange: onLabelChange}) {
+function Label({
+	index,
+	itemProps,
+	labels,
+	autoFocus,
+	canReorder,
+	setFocus,
+	addRowAfter,
+	onChange: onLabelChange,
+}) {
 	const label = labels[index];
 
-	const binds = useMemo(() => ({
-		[getKeyCode.ENTER]: () => {
-			addRowAfter(index);
-			return true;
-		},
-		[getKeyCode.TAB]: () => {
-			setFocus({column: 'value', index});
-			return true;
-		},
-		[getKeyCode.SHIFT_TAB]: () => {
-			if (index > 0) {
-				setFocus({column: 'value', index: index - 1});
+	const binds = useMemo(
+		() => ({
+			[getKeyCode.ENTER]: () => {
+				addRowAfter(index);
 				return true;
-			}
+			},
+			[getKeyCode.TAB]: () => {
+				setFocus({ column: 'value', index });
+				return true;
+			},
+			[getKeyCode.SHIFT_TAB]: () => {
+				if (index > 0) {
+					setFocus({ column: 'value', index: index - 1 });
+					return true;
+				}
 
-			return false;
-		}
-	}), [setFocus, addRowAfter, index]);
+				return false;
+			},
+		}),
+		[setFocus, addRowAfter, index]
+	);
 
-	const change = useMemo(() => onLabelChange?.bind(null, index), [onLabelChange, index]);
-	const addRow = useMemo(() => addRowAfter?.bind(null, index), [addRowAfter, index]);
+	const change = useMemo(() => onLabelChange?.bind(null, index), [
+		onLabelChange,
+		index,
+	]);
+	const addRow = useMemo(() => addRowAfter?.bind(null, index), [
+		addRowAfter,
+		index,
+	]);
 
-	if (!label) { return null; }
+	if (!label) {
+		return null;
+	}
 
 	return (
 		<DnD.Item
@@ -271,22 +369,16 @@ function Label ({index, itemProps, labels, autoFocus, canReorder, setFocus, addR
 				className={cx('ordering-choice-editor')}
 				choice={label}
 				index={index}
-
 				autoFocus={autoFocus}
-
 				draggable={canReorder}
-
 				hideSolutions
-
 				addChoiceAfter={addRow}
 				onChange={change}
-
 				customKeyBindings={binds}
 			/>
 		</DnD.Item>
 	);
 }
-
 
 Value.propTypes = {
 	index: PropTypes.number,
@@ -302,7 +394,7 @@ Value.propTypes = {
 	totalRows: PropTypes.number,
 };
 
-function Value ({
+function Value({
 	index,
 	itemProps,
 	values,
@@ -317,32 +409,53 @@ function Value ({
 }) {
 	const value = values[index];
 
-	const binds = useMemo(() => ({
-		[getKeyCode.ENTER]: () => {
-			addRowAfter(index);
-			return true;
-		},
-		[getKeyCode.TAB]: () => {
-			if (index < totalRows - 1) {
-				setFocus({column: 'label', index: index + 1});
+	const binds = useMemo(
+		() => ({
+			[getKeyCode.ENTER]: () => {
+				addRowAfter(index);
 				return true;
-			}
+			},
+			[getKeyCode.TAB]: () => {
+				if (index < totalRows - 1) {
+					setFocus({ column: 'label', index: index + 1 });
+					return true;
+				}
 
-			return false;
-		},
-		[getKeyCode.SHIFT_TAB]: () => {
-			setFocus({column: 'label', index});
-			return true;
-		}
-	}), [setFocus, addRowAfter, index, totalRows]);
+				return false;
+			},
+			[getKeyCode.SHIFT_TAB]: () => {
+				setFocus({ column: 'label', index });
+				return true;
+			},
+		}),
+		[setFocus, addRowAfter, index, totalRows]
+	);
 
-	const choice = useMemo(() => ({label: value?.label, isSolution: !noSolutions, error: value?.error}), [value, noSolutions]);
+	const choice = useMemo(
+		() => ({
+			label: value?.label,
+			isSolution: !noSolutions,
+			error: value?.error,
+		}),
+		[value, noSolutions]
+	);
 
-	const change = useMemo(() => onValueChange?.bind(null, index), [onValueChange, index]);
-	const remove = useMemo(() => onRemove?.bind(null, index), [onRemove, index]);
-	const addRow = useMemo(() => addRowAfter?.bind(null, index), [addRowAfter, index]);
+	const change = useMemo(() => onValueChange?.bind(null, index), [
+		onValueChange,
+		index,
+	]);
+	const remove = useMemo(() => onRemove?.bind(null, index), [
+		onRemove,
+		index,
+	]);
+	const addRow = useMemo(() => addRowAfter?.bind(null, index), [
+		addRowAfter,
+		index,
+	]);
 
-	if (!value) { return null; }
+	if (!value) {
+		return null;
+	}
 
 	return (
 		<DnD.Item
@@ -354,20 +467,14 @@ function Value ({
 				className={cx('ordering-choice-editor')}
 				choice={choice}
 				index={index}
-
 				autoFocus={autoFocus}
-
 				draggable={canReorder}
-
 				hideSolutions
-
 				addChoiceAfter={addRow}
 				onChange={change}
 				onRemove={remove}
-
 				customKeyBindings={binds}
 			/>
 		</DnD.Item>
 	);
-
 }

@@ -1,35 +1,36 @@
-import {scoped} from '@nti/lib-locale';
+import { scoped } from '@nti/lib-locale';
 
 import isMultipleChoicePart from './is-multiple-choice-part';
 
-const {noSolutionsMimeType, preferredMimeType} = isMultipleChoicePart;
+const { noSolutionsMimeType, preferredMimeType } = isMultipleChoicePart;
 
 const t = scoped('nti-assessment.question.input-types.multiple-choice', {
 	blankPart: {
-		'choice': 'Choice 1'
-	}
+		choice: 'Choice 1',
+	},
 });
 
-const SolutionMimeType = 'application/vnd.nextthought.assessment.multiplechoicesolution';
+const SolutionMimeType =
+	'application/vnd.nextthought.assessment.multiplechoicesolution';
 const SolutionClass = 'MultipleChoiceSolution';
 
-function generateSolution (value) {
+function generateSolution(value) {
 	return {
 		Class: SolutionClass,
 		MimeType: SolutionMimeType,
-		value
+		value,
 	};
 }
 
 export const hasSolutions = part => !part.isNonGradable;
 
-export function updatePart (part, choices, solution) {
+export function updatePart(part, choices, solution) {
 	const data = {
 		MimeType: hasSolutions(part) ? part.MimeType : noSolutionsMimeType,
 		content: part.content ?? '',
 		hints: part.hints ?? [],
 		isNonGradable: part.isNonGradable,
-		choices
+		choices,
 	};
 
 	if (hasSolutions(part)) {
@@ -39,11 +40,11 @@ export function updatePart (part, choices, solution) {
 	return data;
 }
 
-export function generateBlankPart ({noSolutions}) {
+export function generateBlankPart({ noSolutions }) {
 	return updatePart(
 		{
 			MimeType: noSolutions ? noSolutionsMimeType : preferredMimeType,
-			isNonGradable: noSolutions
+			isNonGradable: noSolutions,
 		},
 		[t('blankPart.choice')],
 		0

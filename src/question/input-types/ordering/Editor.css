@@ -13,7 +13,8 @@
 	grid-column: 1;
 
 	& li + li .ordering-choice-editor:focus-within {
-		box-shadow: inset -1px 0 0 0 var(--border-grey), 0 -1px 0 0 var(--border-grey);
+		box-shadow: inset -1px 0 0 0 var(--border-grey),
+			0 -1px 0 0 var(--border-grey);
 	}
 
 	& li .ordering-choice-editor {
@@ -25,7 +26,11 @@
 	}
 }
 
-.ordering-editor.no-solutions .ordering-values li + li .ordering-choice-editor:focus-within {
+.ordering-editor.no-solutions
+	.ordering-values
+	li
+	+ li
+	.ordering-choice-editor:focus-within {
 	box-shadow: 0 -1px 0 0 var(--border-grey);
 }
 

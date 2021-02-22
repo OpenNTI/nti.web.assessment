@@ -11,7 +11,7 @@ QuestionSetEditor.propTypes = {
 	onError: PropTypes.func,
 
 	questionSet: PropTypes.shape({
-		questions: PropTypes.array
+		questions: PropTypes.array,
 	}),
 
 	noSolutions: PropTypes.bool,
@@ -19,16 +19,14 @@ QuestionSetEditor.propTypes = {
 	canReorderQuestions: PropTypes.bool,
 	canRemoveQuestions: PropTypes.bool,
 
-	children: PropTypes.any
+	children: PropTypes.any,
 };
-function QuestionSetEditor ({
-	children
-}) {
+function QuestionSetEditor({ children }) {
 	return children;
 }
 
 export default Store.WrapCmp(QuestionSetEditor, {
-	deriveBindingFromProps: (props) => ({
+	deriveBindingFromProps: props => ({
 		createQuestion: props.createQuestion,
 		onQuestionsChange: props.onQuestionsChange,
 		onError: props.onError,
@@ -38,6 +36,6 @@ export default Store.WrapCmp(QuestionSetEditor, {
 		noSolutions: props.noSolutions,
 		canAddQuestion: props.canAddQuestion,
 		canReorderQuestions: props.canReorderQuestions,
-		canRemoveQuestions: props.canRemoveQuestions
-	})
+		canRemoveQuestions: props.canRemoveQuestions,
+	}),
 });

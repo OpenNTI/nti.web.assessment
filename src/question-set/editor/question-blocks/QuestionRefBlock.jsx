@@ -1,41 +1,47 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames/bind';
-import {BLOCKS, getAtomicBlockData, Plugins} from '@nti/web-editor';
+import { BLOCKS, getAtomicBlockData, Plugins } from '@nti/web-editor';
 
-import {Editor} from '../../../question';
+import { Editor } from '../../../question';
 import Store from '../Store';
-import {PollRef, QuestionRef} from '../Constants';
+import { PollRef, QuestionRef } from '../Constants';
 
 import Styles from './Styles.css';
 import Controls from './Controls';
 
 const cx = classnames.bind(Styles);
 
-const {CustomBlock} = Plugins.CustomBlocks;
+const { CustomBlock } = Plugins.CustomBlocks;
 
 const Handles = {
 	[QuestionRef]: true,
-	[PollRef]: true
+	[PollRef]: true,
 };
 
 const StoreChangeDelay = 300;
 
 QuestionRefBlock.className = cx('block-wrapper');
-QuestionRefBlock.handlesBlock = (block, editorState) => block.getType() === BLOCKS.ATOMIC && Handles[getAtomicBlockData(block, editorState)?.name];
+QuestionRefBlock.handlesBlock = (block, editorState) =>
+	block.getType() === BLOCKS.ATOMIC &&
+	Handles[getAtomicBlockData(block, editorState)?.name];
 QuestionRefBlock.propTypes = {
 	block: PropTypes.object,
 	blockProps: PropTypes.shape({
 		indexOfType: PropTypes.number,
 		editorState: PropTypes.object,
 		setBlockProps: PropTypes.func,
-		setBlockDataImmediately: PropTypes.func
-	})
+		setBlockDataImmediately: PropTypes.func,
+	}),
 };
-export default function QuestionRefBlock ({block, blockProps}) {
-	const {indexOfType:index, editorState, setBlockDataImmediately} = blockProps;
+export default function QuestionRefBlock({ block, blockProps }) {
+	const {
+		indexOfType: index,
+		editorState,
+		setBlockDataImmediately,
+	} = blockProps;
 	const data = getAtomicBlockData(block, editorState) ?? {};
-	const {arguments:id, updates} = data;
+	const { arguments: id, updates } = data;
 
 	const {
 		question,
@@ -44,10 +50,10 @@ export default function QuestionRefBlock ({block, blockProps}) {
 		error,
 		clearError,
 		onChange: questionStoreChange,
-		setIndex: questionStoreSetIndex
+		setIndex: questionStoreSetIndex,
 	} = Store.useQuestionStore(id);
 
-	const onChange = (newQuestion) => {
+	const onChange = newQuestion => {
 		const newUpdates = {};
 
 		if (newQuestion.content !== question.content) {
@@ -59,11 +65,13 @@ export default function QuestionRefBlock ({block, blockProps}) {
 		}
 
 		clearError();
-		setBlockDataImmediately({updates: newUpdates});
+		setBlockDataImmediately({ updates: newUpdates });
 	};
 
 	React.useEffect(() => {
-		if (!updates) { return; }
+		if (!updates) {
+			return;
+		}
 
 		const timeout = setTimeout(
 			() => questionStoreChange(updates),
@@ -96,10 +104,10 @@ export default function QuestionRefBlock ({block, blockProps}) {
 			{question && (
 				<Editor
 					key={id}
-					index={index != null ? (index + 1) : null}
+					index={index != null ? index + 1 : null}
 					question={{
 						content: updates?.content ?? question.content,
-						parts: updates?.parts ?? question.parts
+						parts: updates?.parts ?? question.parts,
 					}}
 					error={error}
 					onChange={onChange}
@@ -109,7 +117,14 @@ export default function QuestionRefBlock ({block, blockProps}) {
 					canReorderPartOption={question.hasLink('MovePartOption')}
 				/>
 			)}
-			{question && (<Controls block={block} blockProps={blockProps} canReorder={canReorder} canRemove={canRemove} />)}
+			{question && (
+				<Controls
+					block={block}
+					blockProps={blockProps}
+					canReorder={canReorder}
+					canRemove={canRemove}
+				/>
+			)}
 		</CustomBlock>
 	);
 }

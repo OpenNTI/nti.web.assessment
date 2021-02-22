@@ -4,7 +4,7 @@ import Editor from '../Editor';
 
 export default {
 	title: 'Questions/Input Types/File Upload/Editor',
-	component: Editor
+	component: Editor,
 };
 
-export const Basic = () => (<Editor />);
+export const Basic = () => <Editor />;

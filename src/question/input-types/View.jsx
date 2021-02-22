@@ -1,15 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {getViewFor} from './Registry';
+import { getViewFor } from './Registry';
 
 InputTypeEditor.propTypes = {
-	part: PropTypes.object
+	part: PropTypes.object,
 };
-export default function InputTypeEditor ({part, ...otherProps}) {
+export default function InputTypeEditor({ part, ...otherProps }) {
 	const ViewCmp = getViewFor(part);
 
-	return (
-		<ViewCmp {...otherProps} />
-	);
+	return <ViewCmp {...otherProps} />;
 }

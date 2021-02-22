@@ -1,11 +1,11 @@
-import {scoped} from '@nti/lib-locale';
+import { scoped } from '@nti/lib-locale';
 
-import {ContentPurposes} from '../../Constants';
+import { ContentPurposes } from '../../Constants';
 
-import {isModeledContentPart, Data} from './utils';
+import { isModeledContentPart, Data } from './utils';
 
 const t = scoped('nti-assessment.question.input-types.modeled-content.index', {
-	label: 'Essay'
+	label: 'Essay',
 });
 
 export { default as Icon } from './assets/essay.svg';

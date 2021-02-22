@@ -4,7 +4,7 @@ import Input from '../Input';
 
 export default {
 	title: 'Questions/Input Types/Multiple Answer/Input',
-	component: Input
+	component: Input,
 };
 
-export const Basic = () => (<Input />);
+export const Basic = () => <Input />;

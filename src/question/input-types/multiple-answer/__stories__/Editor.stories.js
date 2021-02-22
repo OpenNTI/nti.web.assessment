@@ -2,26 +2,26 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Editor from '../Editor';
-import {Data} from '../utils';
+import { Data } from '../utils';
 
 const getInitialPart = () => ({
 	...Data.generateBlankPart(),
-	NTIID: 'test-ntiid'
+	NTIID: 'test-ntiid',
 });
 
 export default {
 	title: 'Questions/Input Types/Multiple Answer/Editor',
 	component: Editor,
 	argTypes: {
-		onChange: {action: 'changed'},
-		noSolutions: {control: {type: 'boolean'}},
-		canAddOption: {control: {type: 'boolean'}},
-		canRemoveOption: {control: {type: 'boolean'}},
-		canReorderOption: {control: {type: 'boolean'}}
-	}
+		onChange: { action: 'changed' },
+		noSolutions: { control: { type: 'boolean' } },
+		canAddOption: { control: { type: 'boolean' } },
+		canRemoveOption: { control: { type: 'boolean' } },
+		canReorderOption: { control: { type: 'boolean' } },
+	},
 };
 
-export const Base = ({onChange, ...props}) => {
+export const Base = ({ onChange, ...props }) => {
 	const [part, setPart] = React.useState(getInitialPart);
 
 	return (
@@ -34,5 +34,5 @@ export const Base = ({onChange, ...props}) => {
 };
 
 Base.propTypes = {
-	onChange: PropTypes.func
+	onChange: PropTypes.func,
 };

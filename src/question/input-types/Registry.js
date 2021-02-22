@@ -18,13 +18,12 @@ export const Types = [
 	ModeledContent,
 	MultipleAnswer,
 	MultipleChoice,
-	Ordering
+	Ordering,
 ];
 
+const findType = part => Types.find(t => t.canHandlePart(part));
 
-const findType = part => Types.find((t) => t.canHandlePart(part));
+export const getEditorFor = part => findType(part)?.Editor;
+export const getViewFor = part => findType(part)?.View;
 
-export const getEditorFor = (part) => findType(part)?.Editor;
-export const getViewFor = (part) => findType(part)?.View;
-
-export const getContentPurposeFor = (part) => findType(part)?.ContentPurpose;
+export const getContentPurposeFor = part => findType(part)?.ContentPurpose;

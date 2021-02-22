@@ -1,9 +1,9 @@
-import {scoped} from '@nti/lib-locale';
+import { scoped } from '@nti/lib-locale';
 
-import {isMultipleChoicePart, Data} from './utils';
+import { isMultipleChoicePart, Data } from './utils';
 
 const t = scoped('nti-assessment.question.input-types.multiple-choice.index', {
-	label: 'Single'
+	label: 'Single',
 });
 
 export { default as Icon } from './assets/multiplechoice.svg';

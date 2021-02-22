@@ -1,9 +1,9 @@
 import React from 'react';
-import {Stores} from '@nti/lib-store';
-import {Hooks, Errors} from '@nti/web-commons';
-import {wait} from '@nti/lib-commons';
+import { Stores } from '@nti/lib-store';
+import { Hooks, Errors } from '@nti/web-commons';
+import { wait } from '@nti/lib-commons';
 
-const {useForceUpdate} = Hooks;
+const { useForceUpdate } = Hooks;
 
 const Saving = 'saving';
 const Deleting = 'deleting';
@@ -37,50 +37,65 @@ const AutoSaveDelay = 3000;
 const EqualityChecks = {
 	default: (updated, original) => updated === original,
 	questions: (updated = [], original = []) => {
-		if (updated.length !== original.length) { return false; }
+		if (updated.length !== original.length) {
+			return false;
+		}
 
 		return updated.every((poll, index) => {
 			const keys = Object.keys(poll);
 
-			if (keys.length > 1 || keys[0] !== 'NTIID') { return false;}
+			if (keys.length > 1 || keys[0] !== 'NTIID') {
+				return false;
+			}
 
 			return poll.NTIID === original[index].NTIID;
 		});
-	}
+	},
 };
 
 const ValidityChecks = {
 	default: () => true,
-	questions: (questions) => (questions ?? []).every(q => !q.isNew),
-	contents: (contents) => contents.indexOf('.. new-question') === -1//eww should probably do this better
+	questions: questions => (questions ?? []).every(q => !q.isNew),
+	contents: contents => contents.indexOf('.. new-question') === -1, //eww should probably do this better
 };
 
 const MinWaitsBefore = {
-	Delete: 3000
+	Delete: 3000,
 };
 
 const ErrorMaps = [
-	(e) => {
-		if (e.code !== 'InvalidValue' || e.field !== 'contents') { return e; }
+	e => {
+		if (e.code !== 'InvalidValue' || e.field !== 'contents') {
+			return e;
+		}
 
 		const message = Errors.Messages.getMessage(e);
 
 		if (
 			message.indexOf('Error in "sidebar" directive:') >= 0 ||
-			message.indexOf('Content block expected for the "sidebar" directive;') >= 0
+			message.indexOf(
+				'Content block expected for the "sidebar" directive;'
+			) >= 0
 		) {
-			return Errors.Messages.mapMessage(e, 'Call Outs must have a title and body');
+			return Errors.Messages.mapMessage(
+				e,
+				'Call Outs must have a title and body'
+			);
 		}
 
-		if (message.indexOf('Content block expected for the "code-block" directive') >= 0) {
+		if (
+			message.indexOf(
+				'Content block expected for the "code-block" directive'
+			) >= 0
+		) {
 			return Errors.Messages.mapMessage(e, 'Code cannot be empty');
 		}
 
 		return e;
-	}
+	},
 ];
 
-const mapError = (e) => ErrorMaps.reduce((acc, map) => map(acc), e);
+const mapError = e => ErrorMaps.reduce((acc, map) => map(acc), e);
 
 export default class SurveyEditorStore extends Stores.BoundStore {
 	static Saving = Saving;
@@ -105,12 +120,12 @@ export default class SurveyEditorStore extends Stores.BoundStore {
 
 	static CreatePoll = CreatePoll;
 
-	static useProperty (name) {
+	static useProperty(name) {
 		const store = this.useMonitor([
 			Survey,
 			RegisterProperty,
 			OnPropertyChange,
-			OnPropertyError
+			OnPropertyError,
 		]);
 
 		const forceUpdate = useForceUpdate();
@@ -120,8 +135,10 @@ export default class SurveyEditorStore extends Stores.BoundStore {
 		const errorRef = React.useRef(null);
 
 		const property = {
-			get value () { return valueRef.current; },
-			onChange (newValue) {
+			get value() {
+				return valueRef.current;
+			},
+			onChange(newValue) {
 				pendingChanges.current.push(newValue);
 
 				valueRef.current = newValue;
@@ -130,58 +147,77 @@ export default class SurveyEditorStore extends Stores.BoundStore {
 				store[OnPropertyChange]();
 			},
 
-			get error () { return errorRef.current; },
-			setError (error) {
+			get error() {
+				return errorRef.current;
+			},
+			setError(error) {
 				errorRef.current = error;
 				forceUpdate();
 				store[OnPropertyError]();
-			}
+			},
 		};
 
 		React.useEffect(() => {
 			const updatedValue = store[Survey]?.[name];
 
 			if (pendingChanges.current.includes(updatedValue)) {
-				pendingChanges.current = pendingChanges.current.filter(v => v !== updatedValue);
+				pendingChanges.current = pendingChanges.current.filter(
+					v => v !== updatedValue
+				);
 			} else {
 				valueRef.current = store[Survey]?.[name];
 				errorRef.current = null;
 				forceUpdate();
 			}
-
 		}, [store[Survey]]);
 
-		React.useEffect(
-			() => store[RegisterProperty](name, property),
-			[name]
-		);
+		React.useEffect(() => store[RegisterProperty](name, property), [name]);
 
 		return property;
 	}
 
 	#properties = {};
 
-	bindingDidUpdate (prev) {
+	bindingDidUpdate(prev) {
 		return prev.survey !== this.binding.survey;
 	}
 
-	get [Survey] () { return this.binding.survey; }
-	get [Containers] () { return Array.isArray(this.binding.container) ? this.binding.container.reverse() : [this.binding.container]; }
-	get [NavigateToPublished] () { return this.binding.navigateToPublished; }
+	get [Survey]() {
+		return this.binding.survey;
+	}
+	get [Containers]() {
+		return Array.isArray(this.binding.container)
+			? this.binding.container.reverse()
+			: [this.binding.container];
+	}
+	get [NavigateToPublished]() {
+		return this.binding.navigateToPublished;
+	}
 
-
-	get [IsAvailable] () { return this[Survey]?.isAvailable(); }
-	get [IsPublished] () { return this[Survey]?.isPublished(); }
-	get [CanAddPoll] () { return this[Survey]?.hasLink('InsertPoll'); }
-	get [CanReorderPolls] () { return this[Survey]?.hasLink('MovePoll'); }
-	get [CanRemovePolls] () { return this[Survey]?.hasLink('RemovePoll'); }
-	get [CanReset] () { return this[Survey]?.hasLink('Reset'); }
-	get [HasPublishingLinks] () {
+	get [IsAvailable]() {
+		return this[Survey]?.isAvailable();
+	}
+	get [IsPublished]() {
+		return this[Survey]?.isPublished();
+	}
+	get [CanAddPoll]() {
+		return this[Survey]?.hasLink('InsertPoll');
+	}
+	get [CanReorderPolls]() {
+		return this[Survey]?.hasLink('MovePoll');
+	}
+	get [CanRemovePolls]() {
+		return this[Survey]?.hasLink('RemovePoll');
+	}
+	get [CanReset]() {
+		return this[Survey]?.hasLink('Reset');
+	}
+	get [HasPublishingLinks]() {
 		const survey = this[Survey];
 
 		return survey?.hasLink('publish') || survey?.hasLink('unpublish');
 	}
-	get [PublishLocked] () {
+	get [PublishLocked]() {
 		const survey = this[Survey];
 
 		// The survey is published locked
@@ -189,41 +225,43 @@ export default class SurveyEditorStore extends Stores.BoundStore {
 		// Publish Links (present when no submissions, hidden for submissions)
 		// Date Edit Start (present when no submissions, hidden for submissions)
 
-		const publishable = survey && (
-			(!this[CanReset] && this[HasPublishingLinks]) ||
-			(!this[CanReset] && survey.hasLink('date-edit-start'))
-		);
+		const publishable =
+			survey &&
+			((!this[CanReset] && this[HasPublishingLinks]) ||
+				(!this[CanReset] && survey.hasLink('date-edit-start')));
 
 		return !publishable;
 	}
 
-	cleanup () {
+	cleanup() {
 		this.cleanupListener?.();
 	}
 
-	load () {
+	load() {
 		this.cleanupListener?.();
 
 		this.emitChange([Survey, Containers, CanReset]);
 
-		this.cleanupListener = this[Survey]?.subscribeToChange(
-			() => this.emitChange([
+		this.cleanupListener = this[Survey]?.subscribeToChange(() =>
+			this.emitChange([
 				Survey,
 				IsAvailable,
 				CanReset,
 				CanAddPoll,
 				CanReorderPolls,
 				CanRemovePolls,
-				PublishLocked
+				PublishLocked,
 			])
 		);
 	}
 
 	#inflightPollCreation = null;
 
-	[CreatePoll] (data) {
+	[CreatePoll](data) {
 		const createPoll = () => {
-			if (this[Survey]?.createPoll) { return this[Survey].createPoll(data); }
+			if (this[Survey]?.createPoll) {
+				return this[Survey].createPoll(data);
+			}
 
 			for (let c of this[Containers]) {
 				if (c.createPoll) {
@@ -239,39 +277,40 @@ export default class SurveyEditorStore extends Stores.BoundStore {
 		this.#inflightPollCreation = inflight.then(createPoll, createPoll);
 
 		return this.#inflightPollCreation;
-
 	}
 
-	#hasErrors () {
-		if (this.get([ErrorField])) { return true; }
+	#hasErrors() {
+		if (this.get([ErrorField])) {
+			return true;
+		}
 
 		const properties = Object.entries(this.#properties);
 
 		return properties.some(([name, prop]) => Boolean(prop.error));
 	}
 
-	#setError (error) {
+	#setError(error) {
 		const property = this.#properties[error?.field];
 
 		if (property?.setError) {
 			property.setError(error);
 		} else {
-			this.set({[ErrorField]: error});
+			this.set({ [ErrorField]: error });
 		}
 	}
 
-	#clearGlobalError () {
+	#clearGlobalError() {
 		if (this.get(ErrorField)) {
-			this.set({[ErrorField]: null});
+			this.set({ [ErrorField]: null });
 		}
 	}
 
-	#getPayload () {
+	#getPayload() {
 		const survey = this[Survey];
 
-		const {payload, hasData} = Object.entries(this.#properties)
-			.reduce((acc, prop) => {
-				const [name, {value}] = prop;
+		const { payload, hasData } = Object.entries(this.#properties).reduce(
+			(acc, prop) => {
+				const [name, { value }] = prop;
 				const original = survey[name];
 
 				const checker = EqualityChecks[name] ?? EqualityChecks.default;
@@ -282,39 +321,43 @@ export default class SurveyEditorStore extends Stores.BoundStore {
 				}
 
 				return acc;
-			}, {payload: {}, hasData: false});
+			},
+			{ payload: {}, hasData: false }
+		);
 
 		return hasData ? payload : null;
 	}
 
-	#shouldAutoSave () {
+	#shouldAutoSave() {
 		return !this[IsPublished] && !this.#hasErrors();
 	}
 
-	#isValid () {
-		return Object.entries(this.#properties)
-			.every(([name, prop]) => {
-				const validityCheck = ValidityChecks[name] ?? ValidityChecks.default;
+	#isValid() {
+		return Object.entries(this.#properties).every(([name, prop]) => {
+			const validityCheck =
+				ValidityChecks[name] ?? ValidityChecks.default;
 
-				return validityCheck(prop.value);
-			});
+			return validityCheck(prop.value);
+		});
 	}
 
-	#hasChanges () {
+	#hasChanges() {
 		const survey = this[Survey];
 
-		return Object.entries(this.#properties)
-			.some(([name, prop]) => {
-				const equalityCheck = EqualityChecks[name] ?? EqualityChecks.default;
+		return Object.entries(this.#properties).some(([name, prop]) => {
+			const equalityCheck =
+				EqualityChecks[name] ?? EqualityChecks.default;
 
-				return !equalityCheck(prop.value, survey[name]);
-			});
+			return !equalityCheck(prop.value, survey[name]);
+		});
 	}
 
 	#autoSaveTimeout = null;
 
-	#autoSave () {
-		if (this.#autoSaveTimeout) { return; }
+	#autoSave() {
+		if (this.#autoSaveTimeout) {
+			return;
+		}
 
 		this.#autoSaveTimeout = setTimeout(() => {
 			this.#autoSaveTimeout = null;
@@ -323,22 +366,25 @@ export default class SurveyEditorStore extends Stores.BoundStore {
 			const isValid = this.#isValid();
 			const hasChanges = this.#hasChanges();
 
-			if (!hasChanges || !isValid) { return; }
+			if (!hasChanges || !isValid) {
+				return;
+			}
 
 			if (shouldAutoSave) {
 				this[SaveChanges](true);
 			} else {
 				this.set({
-					[HasChanges]: true
+					[HasChanges]: true,
 				});
 			}
 		}, AutoSaveDelay);
 	}
 
-	async [SaveChanges] (hideErrors) {
+	async [SaveChanges](hideErrors) {
 		if (this.#hasErrors()) {
 			this.set({
-				[ErrorField]: this.get(ErrorField) ?? this.#properties.contents?.error
+				[ErrorField]:
+					this.get(ErrorField) ?? this.#properties.contents?.error,
 			});
 
 			throw new Error('Must resolve errors');
@@ -348,19 +394,21 @@ export default class SurveyEditorStore extends Stores.BoundStore {
 		const payload = this.#getPayload();
 
 		//If there's nothing to save we're good
-		if (!payload) { return; }
+		if (!payload) {
+			return;
+		}
 
 		try {
-			this.set({[Saving]: true});
+			this.set({ [Saving]: true });
 
 			await survey.save(payload);
 
 			this.set({
-				[HasChanges]: false
+				[HasChanges]: false,
 			});
 		} catch (e) {
 			const err = mapError(e);
-			const {field} = err;
+			const { field } = err;
 			const property = this.#properties[field];
 
 			if (property) {
@@ -368,42 +416,42 @@ export default class SurveyEditorStore extends Stores.BoundStore {
 			}
 
 			if (!hideErrors && (!err.field || err.field === 'contents')) {
-				this.set({[ErrorField]: err});
+				this.set({ [ErrorField]: err });
 			}
 
 			throw err;
 		} finally {
-			this.set({[Saving]: false});
+			this.set({ [Saving]: false });
 		}
 	}
 
-	async [Delete] () {
+	async [Delete]() {
 		const survey = this[Survey];
 		const minWait = wait(MinWaitsBefore.Delete);
 
-		this.setImmediate({[Deleting]: true});
+		this.setImmediate({ [Deleting]: true });
 
 		try {
 			await survey.delete();
 			await minWait;
 
-			this.set({[Deleted]: true});
+			this.set({ [Deleted]: true });
 			this.binding.onDelete?.();
 		} catch (e) {
 			this.#setError(e);
 		} finally {
-			this.set({[Deleting]: false});
+			this.set({ [Deleting]: false });
 		}
 	}
 
-	[OnPropertyChange] () {
+	[OnPropertyChange]() {
 		this.#autoSave();
 		this.#clearGlobalError();
 	}
 
-	[OnPropertyError] () {}
+	[OnPropertyError]() {}
 
-	[RegisterProperty] (name, property) {
+	[RegisterProperty](name, property) {
 		this.#properties[name] = property;
 
 		return () => {

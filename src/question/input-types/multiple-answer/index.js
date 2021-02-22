@@ -1,9 +1,9 @@
-import {scoped} from '@nti/lib-locale';
+import { scoped } from '@nti/lib-locale';
 
-import {isMultipleAnswerPart, Data} from './utils';
+import { isMultipleAnswerPart, Data } from './utils';
 
 const t = scoped('nti-assessment.question.input-types.multiple-answer.index', {
-	label: 'Multi'
+	label: 'Multi',
 });
 
 export { default as Icon } from './assets/checkboxes.svg';
