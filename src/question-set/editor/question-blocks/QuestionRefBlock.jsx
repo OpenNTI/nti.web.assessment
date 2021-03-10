@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames/bind';
+
 import { BLOCKS, getAtomicBlockData, Plugins } from '@nti/web-editor';
 
 import { Editor } from '../../../question';

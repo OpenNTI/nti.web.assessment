@@ -8,6 +8,7 @@ import React, {
 } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames/bind';
+
 import { Events } from '@nti/lib-commons';
 import { Editor, Plugins, Parsers, BLOCKS, STYLES } from '@nti/web-editor';
 import { Errors, DnD, Icons, Radio, Checkbox } from '@nti/web-commons';

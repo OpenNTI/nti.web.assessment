@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames/bind';
+
 import { scoped } from '@nti/lib-locale';
 import { Editor, Plugins, Parsers, BLOCKS, STYLES } from '@nti/web-editor';
 import { Errors } from '@nti/web-commons';

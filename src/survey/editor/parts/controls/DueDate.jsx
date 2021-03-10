@@ -1,5 +1,6 @@
 import React from 'react';
 import classnames from 'classnames/bind';
+
 import { scoped } from '@nti/lib-locale';
 import { Editor } from '@nti/web-reading';
 import {

@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+
 import { Editor } from '@nti/web-reading';
 
 import { Editor as QuestionSetEditor } from '../../question-set';

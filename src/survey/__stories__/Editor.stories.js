@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+
 import { Page } from '@nti/web-commons';
 
 import Editor from '../editor';
