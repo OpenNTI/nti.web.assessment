@@ -1,5 +1,4 @@
 import React from 'react';
-import classnames from 'classnames/bind';
 
 import { scoped } from '@nti/lib-locale';
 import { Editor } from '@nti/web-reading';
@@ -14,9 +13,8 @@ import {
 
 import Store from '../../Store';
 
-import Styles from './DueDate.css';
+import styles from './DueDate.css';
 
-const cx = classnames.bind(Styles);
 const t = scoped('nti-assessments.survey.editor.parts.controls.DueDate', {
 	label: 'Due Date',
 	save: 'Save',
@@ -90,10 +88,10 @@ export default function DueDate() {
 			error={error}
 			disabled={!survey?.canSetDueDate()}
 		>
-			<Form onSubmit={onSubmit} className={cx('due-date-form')}>
+			<Form onSubmit={onSubmit} className={styles.dueDateForm}>
 				<Errors.Message error={error} />
 				<Form.Input.Checkbox
-					className={cx('has-due-date')}
+					className={styles.hasDueDate}
 					label={t('label')}
 					checked={checked}
 					onChange={onCheckChanged}
@@ -105,7 +103,7 @@ export default function DueDate() {
 					disableDays={null}
 				/>
 				<Task.Button
-					className={cx('save-button')}
+					className={styles.saveButton}
 					as={Form.SubmitButton}
 					running={saving}
 					disabled={isSurveyDueDate(date, survey)}
