@@ -9,8 +9,8 @@ import {
 	Text,
 	Errors,
 	Loading,
-	Button,
 } from '@nti/web-commons';
+import { Button } from '@nti/web-core';
 
 import Store from '../Store';
 
@@ -21,8 +21,7 @@ const cx = classnames.bind(Styles);
 const t = scoped('nti-assessment.survey.editor.parts.ResetButton', {
 	label: 'Students have started your survey.',
 	editorLabel: 'Students have started this survey.',
-	text:
-		'Resetting or deleting this survey will result in erasing students work and submissions. You cannot undo this action.',
+	text: 'Resetting or deleting this survey will result in erasing students work and submissions. You cannot undo this action.',
 	editorText:
 		'This instructor must reset this survey before a publish change can occur.',
 	error: 'Could not reset the survey at this time. Please try again later.',

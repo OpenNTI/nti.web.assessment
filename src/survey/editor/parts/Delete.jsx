@@ -2,7 +2,8 @@ import React from 'react';
 import classnames from 'classnames/bind';
 
 import { scoped } from '@nti/lib-locale';
-import { Prompt, Button, Icons, Text } from '@nti/web-commons';
+import { Prompt, Icons, Text } from '@nti/web-commons';
+import { Button } from "@nti/web-core";
 
 import Store from '../Store';
 
