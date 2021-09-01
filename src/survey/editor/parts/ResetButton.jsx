@@ -1,5 +1,5 @@
 import React from 'react';
-import classnames from 'classnames/bind';
+import cx from 'classnames';
 
 import { scoped } from '@nti/lib-locale';
 import {
@@ -14,10 +14,8 @@ import { Button } from '@nti/web-core';
 
 import Store from '../Store';
 
-import Styles from './ResetButton.css';
 import Delete from './Delete';
 
-const cx = classnames.bind(Styles);
 const t = scoped('nti-assessment.survey.editor.parts.ResetButton', {
 	label: 'Students have started your survey.',
 	editorLabel: 'Students have started this survey.',
@@ -32,6 +30,59 @@ const t = scoped('nti-assessment.survey.editor.parts.ResetButton', {
 const InstructorRels = ['reset', 'publish', 'unpublish'];
 const isNonInstructor = s => InstructorRels.every(rel => s.hasLink(rel));
 
+//#region 🎨
+
+const Trigger = styled(PublishTrigger)`
+	&.disabled {
+		pointer-events: none;
+		opacity: 0.3;
+	}
+`;
+
+const Menu = styled(Flyout.Triggered)`
+	:global(.flyout-inner) {
+		border-radius: 0.25rem;
+		padding: 1rem;
+		width: 310px;
+	}
+`;
+
+const ErrorMessage = styled(Errors.Message)`
+	font-size: 0.75rem;
+	line-height: 1.3;
+	margin: 0.25rem 1.25rem 0.75rem 0;
+`;
+
+const Label = styled(Text.Base)`
+	display: block;
+	font-size: 0.875rem;
+	color: var(--primary-grey);
+	margin: 0 1.25rem 0.25rem 0;
+`;
+
+const Message = styled(Text.Base)`
+	display: block;
+	font-size: 0.75rem;
+	line-height: 1.3;
+	color: var(--secondary-grey);
+	margin: 0 1.25rem 1.2rem 0;
+
+	&.slim {
+		margin-bottom: 0;
+	}
+`;
+
+const ResetButton = styled(Button)`
+	&& {
+		color: white;
+		text-align: center;
+		background-color: var(--primary-red);
+		margin-bottom: 0.625rem;
+	}
+`;
+
+//#endregion
+
 export default function SurveyResetButton() {
 	const {
 		[Store.Survey]: survey,
@@ -39,13 +90,7 @@ export default function SurveyResetButton() {
 		[Store.SaveChanges]: afterReset,
 		[Store.HasChanges]: hasChanges,
 		[Store.CanReset]: canReset,
-	} = Store.useMonitor([
-		Store.Survey,
-		Store.Saving,
-		Store.SaveChanges,
-		Store.HasChanges,
-		Store.CanReset,
-	]);
+	} = Store.useValue();
 
 	const flyoutRef = React.useRef();
 
@@ -60,9 +105,12 @@ export default function SurveyResetButton() {
 	});
 
 	const trigger = (
-		<div className={cx('survey-reset-trigger', { disabled })}>
-			<PublishTrigger value={value} hasChanges={hasChanges} />
-		</div>
+		<Trigger
+			className="survey-reset-trigger"
+			value={value}
+			hasChanges={hasChanges}
+			disabled={!!disabled}
+		/>
 	);
 
 	const nonInstructor = isNonInstructor(survey);
@@ -77,7 +125,7 @@ export default function SurveyResetButton() {
 
 			afterReset();
 		} catch (e) {
-			setError(t('reset-error'));
+			setError(e);
 		} finally {
 			setBusy(false);
 		}
@@ -96,28 +144,26 @@ export default function SurveyResetButton() {
 	};
 
 	return (
-		<Flyout.Triggered
+		<Menu
 			ref={flyoutRef}
-			className={cx('reset-survey-flyout', {
-				'can-delete': Delete.canDelete(survey),
-			})}
+			className="reset-survey-flyout"
 			trigger={trigger}
 			arrow
 			verticalAlign={Flyout.ALIGNMENTS.TOP}
 			horizontalAlign={Flyout.ALIGNMENTS.RIGHT}
 			onDismiss={() => setError(null)}
 		>
-			<Text.Base className={cx('label')}>{label}</Text.Base>
-			<Text.Base className={cx('text')}>{text}</Text.Base>
+			<Label>{label}</Label>
+			<Message slim={Delete.canDelete(survey)}>{text}</Message>
 			{!busy && <Delete />}
-			{error && <Errors.Message className={error} error={t('error')} />}
+			{error && <ErrorMessage error={t('error')} />}
 			<Loading.Placeholder
 				loading={busy}
 				delay={0}
 				fallback={<Loading.Spinner />}
 			>
 				{canReset && (
-					<Button
+					<ResetButton
 						plain
 						className={cx('flyout-fullwidth-btn', 'publish-reset', {
 							error,
@@ -125,7 +171,7 @@ export default function SurveyResetButton() {
 						onClick={onReset}
 					>
 						{t('reset')}
-					</Button>
+					</ResetButton>
 				)}
 				<Button
 					plain
@@ -137,6 +183,6 @@ export default function SurveyResetButton() {
 					{t('saveChanges')}
 				</Button>
 			</Loading.Placeholder>
-		</Flyout.Triggered>
+		</Menu>
 	);
 }
