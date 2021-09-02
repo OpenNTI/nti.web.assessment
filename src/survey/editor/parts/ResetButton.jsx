@@ -72,8 +72,16 @@ const Message = styled(Text.Base)`
 	}
 `;
 
+// The flyout-fullwidth-btn is defined as `.aligned .flyout-fullwidth-btn {}`
+// in a global style sass file... so its specificity is higher than
+// `.reset-button`. So we employ the multiple `&` trick to raise our local
+// specificity :|
+//
+// Two `&&` was enough to match it, but in production builds that rule gets
+// defined AFTER this local one, so when specificity is equal order matters...
+//  this will go away once all style is css module and not SASS.
 const ResetButton = styled(Button)`
-	&& {
+	&&& {
 		color: white;
 		text-align: center;
 		background-color: var(--primary-red);
