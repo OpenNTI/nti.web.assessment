@@ -122,17 +122,17 @@ export default class SurveyEditorStore extends Stores.BoundStore {
 	static CreatePoll = CreatePoll;
 
 	static useProperty(name) {
-		const store = this.useMonitor([
-			Survey,
-			RegisterProperty,
-			OnPropertyChange,
-			OnPropertyError,
-		]);
+		const {
+			[Survey]: survey,
+			[RegisterProperty]: registerProperty,
+			[OnPropertyChange]: onPropertyChange,
+			[OnPropertyError]: onPropertyError,
+		} = this.useValue();
 
 		const forceUpdate = useForceUpdate();
 		const pendingChanges = React.useRef([]);
 
-		const valueRef = React.useRef(store[Survey]?.[name]);
+		const valueRef = React.useRef(survey?.[name]);
 		const errorRef = React.useRef(null);
 
 		const property = {
@@ -145,7 +145,7 @@ export default class SurveyEditorStore extends Stores.BoundStore {
 				valueRef.current = newValue;
 				errorRef.current = null;
 				forceUpdate();
-				store[OnPropertyChange]();
+				onPropertyChange();
 			},
 
 			get error() {
@@ -154,25 +154,25 @@ export default class SurveyEditorStore extends Stores.BoundStore {
 			setError(error) {
 				errorRef.current = error;
 				forceUpdate();
-				store[OnPropertyError]();
+				onPropertyError();
 			},
 		};
 
 		React.useEffect(() => {
-			const updatedValue = store[Survey]?.[name];
+			const updatedValue = survey?.[name];
 
 			if (pendingChanges.current.includes(updatedValue)) {
 				pendingChanges.current = pendingChanges.current.filter(
 					v => v !== updatedValue
 				);
 			} else {
-				valueRef.current = store[Survey]?.[name];
+				valueRef.current = survey?.[name];
 				errorRef.current = null;
 				forceUpdate();
 			}
-		}, [store[Survey]]);
+		}, [survey]);
 
-		React.useEffect(() => store[RegisterProperty](name, property), [name]);
+		React.useEffect(() => registerProperty(name, property), [name]);
 
 		return property;
 	}

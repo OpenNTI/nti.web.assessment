@@ -32,7 +32,7 @@ const isSurveyDueDate = (date, survey) => {
 };
 
 export default function DueDate() {
-	const { [Store.Survey]: survey } = Store.useMonitor([Store.Survey]);
+	const { [Store.Survey]: survey } = Store.useValue();
 
 	const controlRef = React.useRef(null);
 

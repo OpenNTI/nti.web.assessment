@@ -51,16 +51,7 @@ function SurveyEditor({
 		[Store.CanAddPoll]: canAddPoll,
 		[Store.CanReorderPolls]: canReorderPolls,
 		[Store.CanRemovePolls]: canRemovePolls,
-	} = Store.useMonitor([
-		Store.Survey,
-		Store.Saving,
-		Store.Deleting,
-		Store.Error,
-		Store.CreatePoll,
-		Store.CanAddPoll,
-		Store.CanReorderPolls,
-		Store.CanRemovePolls,
-	]);
+	} = Store.useValue();
 
 	const titleProp = Store.useProperty('title');
 	const descriptionProp = Store.useProperty('description');

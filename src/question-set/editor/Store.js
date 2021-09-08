@@ -36,11 +36,11 @@ export default class QuestionSetEditorState extends Stores.BoundStore {
 			throw new Error('useNewQuestionStore must be given an id');
 		}
 
-		const questionSet = this.useMonitor([
-			CreateQuestion,
-			RegisterQuestionStore,
-			OnQuestionError,
-		]);
+		const {
+			[CreateQuestion]: _createQuestion,
+			[RegisterQuestionStore]: registerQuestionStore,
+			[OnQuestionError]: onQuestionError,
+		} = this.useValue();
 
 		const forceUpdate = useForceUpdate();
 
@@ -52,14 +52,14 @@ export default class QuestionSetEditorState extends Stores.BoundStore {
 				isPending.current = true;
 				error.current = null;
 
-				const question = await questionSet[CreateQuestion](data);
+				const question = await _createQuestion(data);
 
 				return question;
 			} catch (e) {
 				error.current = e;
 				forceUpdate();
 
-				questionSet[OnQuestionError](id, e);
+				onQuestionError(id, e);
 
 				return null;
 			} finally {
@@ -83,7 +83,7 @@ export default class QuestionSetEditorState extends Stores.BoundStore {
 		};
 
 		React.useEffect(
-			() => questionSet[RegisterQuestionStore](id, newQuestionStore),
+			() => registerQuestionStore(id, newQuestionStore),
 			[id]
 		);
 
@@ -95,19 +95,20 @@ export default class QuestionSetEditorState extends Stores.BoundStore {
 			throw new Error('useQuestionStore must be given an id');
 		}
 
-		const questionSet = this.useMonitor([
-			NoSolutions,
-			CanReorderQuestions,
-			CanRemoveQuestions,
+		const {
+			[NoSolutions]: noSolutions,
+			[CanReorderQuestions]: canReorderQuestions,
+			[CanRemoveQuestions]: canRemoveQuestions,
 
-			GetQuestion,
-			OnQuestionChange,
-			OnQuestionError,
-			RegisterQuestionStore,
-			'questionMap',
-		]);
+			[GetQuestion]: getQuestion,
+			[OnQuestionChange]: onQuestionChange,
+			[OnQuestionError]: onQuestionError,
+			[RegisterQuestionStore]: registerQuestionStore,
+			// eslint-disable-next-line no-unused-vars
+			questionMap,
+		} = this.useValue();
 
-		const question = questionSet[GetQuestion](id);
+		const question = getQuestion(id);
 
 		const forceUpdate = useForceUpdate();
 
@@ -123,7 +124,7 @@ export default class QuestionSetEditorState extends Stores.BoundStore {
 		const clearError = () => {
 			if (error.current) {
 				setError(null);
-				questionSet[OnQuestionError](id);
+				onQuestionError(id);
 			}
 		};
 
@@ -139,14 +140,14 @@ export default class QuestionSetEditorState extends Stores.BoundStore {
 					await wait(300);
 					const resp = await question.preflight(updates.current);
 
-					questionSet[OnQuestionChange](
+					onQuestionChange(
 						id,
 						updates.current,
 						isPreflightStructural(resp)
 					);
 				} catch (e) {
 					setError(e);
-					questionSet[OnQuestionError](id);
+					onQuestionError(id);
 				} finally {
 					isPending.current = false;
 					validation.current = null;
@@ -163,9 +164,9 @@ export default class QuestionSetEditorState extends Stores.BoundStore {
 			id,
 			question,
 
-			noSolutions: questionSet[NoSolutions],
-			canReorder: questionSet[CanReorderQuestions],
-			canRemove: questionSet[CanRemoveQuestions],
+			noSolutions: noSolutions,
+			canReorder: canReorderQuestions,
+			canRemove: canRemoveQuestions,
 
 			get updates() {
 				return updates.current;
@@ -186,10 +187,7 @@ export default class QuestionSetEditorState extends Stores.BoundStore {
 			onChange,
 		};
 
-		React.useEffect(
-			() => questionSet[RegisterQuestionStore](id, questionStore),
-			[id]
-		);
+		React.useEffect(() => registerQuestionStore(id, questionStore), [id]);
 
 		return questionStore;
 	}
@@ -237,9 +235,8 @@ export default class QuestionSetEditorState extends Stores.BoundStore {
 		setup();
 
 		this.cleanupListener?.();
-		this.cleanupListener = this.binding.questionSet.subscribeToChange(
-			setup
-		);
+		this.cleanupListener =
+			this.binding.questionSet.subscribeToChange(setup);
 	}
 
 	async [CreateQuestion](data) {

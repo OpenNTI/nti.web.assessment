@@ -49,11 +49,7 @@ export default function QuestionButton({ type }) {
 		[Store.CanAddQuestion]: canAddQuestion,
 		[Store.NoSolutions]: noSolutions,
 		[Store.GetQuestion]: getQuestion,
-	} = Store.useMonitor([
-		Store.CanAddQuestion,
-		Store.NoSolutions,
-		Store.GetQuestion,
-	]);
+	} = Store.useValue();
 
 	const isBlock = (block, editorState) => {
 		const part = getPartForBlock(block, editorState, getQuestion);

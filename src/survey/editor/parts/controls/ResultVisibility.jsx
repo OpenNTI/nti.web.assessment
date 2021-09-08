@@ -51,7 +51,7 @@ const Values = {
 };
 
 export default function ResultVisibility() {
-	const { [Store.Survey]: survey } = Store.useMonitor([Store.Survey]);
+	const { [Store.Survey]: survey } = Store.useValue();
 
 	const controlRef = React.useRef(null);
 

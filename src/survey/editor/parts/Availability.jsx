@@ -3,7 +3,7 @@ import classnames from 'classnames/bind';
 
 import { scoped } from '@nti/lib-locale';
 import { Text, Prompt, Errors, Loading } from '@nti/web-commons';
-import { Button } from "@nti/web-core";
+import { Button } from '@nti/web-core';
 
 import Store from '../Store';
 
@@ -22,10 +22,8 @@ const t = scoped('nti-assessment.survey.editor.parts.Availability', {
 });
 
 export default function SurveyAvailability() {
-	const {
-		[Store.IsAvailable]: isAvailable,
-		[Store.Survey]: survey,
-	} = Store.useMonitor([Store.IsAvailable, Store.Survey]);
+	const { [Store.IsAvailable]: isAvailable, [Store.Survey]: survey } =
+		Store.useValue();
 
 	const [busy, setBusy] = React.useState(false);
 	const [error, setError] = React.useState(null);
