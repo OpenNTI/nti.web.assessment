@@ -2,9 +2,7 @@ import React from 'react';
 
 import { Stores } from '@nti/lib-store';
 import { wait } from '@nti/lib-commons';
-import { Hooks } from '@nti/web-commons';
-
-const { useForceUpdate } = Hooks;
+import { useForceUpdate } from '@nti/web-core';
 
 function isPreflightStructural(resp) {
 	return false;

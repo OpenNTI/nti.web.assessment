@@ -10,7 +10,8 @@ import classnames from 'classnames/bind';
 
 import { Array as arr, Events } from '@nti/lib-commons';
 import { scoped } from '@nti/lib-locale';
-import { DnD, Icons, Text, Hooks } from '@nti/web-commons';
+import { DnD, Icons, Text } from '@nti/web-commons';
+import { useForceUpdate } from '@nti/web-core';
 
 import Choice from '../common/choices-editor/Choice';
 
@@ -91,7 +92,7 @@ export default function OrderingEditor({
 	canReorderOption,
 	canRemoveOption,
 }) {
-	const forceUpdate = Hooks.useForceUpdate();
+	const forceUpdate = useForceUpdate();
 
 	const { labels, values } = useMemo(() => getChoices(part), [part]);
 	const [labelOrder, setLabelOrder] = useState();
@@ -347,14 +348,14 @@ function Label({
 		[setFocus, addRowAfter, index]
 	);
 
-	const change = useMemo(() => onLabelChange?.bind(null, index), [
-		onLabelChange,
-		index,
-	]);
-	const addRow = useMemo(() => addRowAfter?.bind(null, index), [
-		addRowAfter,
-		index,
-	]);
+	const change = useMemo(
+		() => onLabelChange?.bind(null, index),
+		[onLabelChange, index]
+	);
+	const addRow = useMemo(
+		() => addRowAfter?.bind(null, index),
+		[addRowAfter, index]
+	);
 
 	if (!label) {
 		return null;
@@ -441,18 +442,18 @@ function Value({
 		[value, noSolutions]
 	);
 
-	const change = useMemo(() => onValueChange?.bind(null, index), [
-		onValueChange,
-		index,
-	]);
-	const remove = useMemo(() => onRemove?.bind(null, index), [
-		onRemove,
-		index,
-	]);
-	const addRow = useMemo(() => addRowAfter?.bind(null, index), [
-		addRowAfter,
-		index,
-	]);
+	const change = useMemo(
+		() => onValueChange?.bind(null, index),
+		[onValueChange, index]
+	);
+	const remove = useMemo(
+		() => onRemove?.bind(null, index),
+		[onRemove, index]
+	);
+	const addRow = useMemo(
+		() => addRowAfter?.bind(null, index),
+		[addRowAfter, index]
+	);
 
 	if (!value) {
 		return null;

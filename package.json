@@ -31,6 +31,7 @@
     "@nti/lib-locale": "NextThought/nti.lib.locale",
     "@nti/lib-store": "NextThought/nti.lib.store",
     "@nti/web-commons": "NextThought/nti.web.commons",
+    "@nti/web-core": "NextThought/nti.web.core",
     "@nti/web-editor": "NextThought/nti.web.editor",
     "@nti/web-reading": "NextThought/nti.web.reading"
   },

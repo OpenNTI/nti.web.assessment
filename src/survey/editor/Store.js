@@ -1,10 +1,9 @@
 import React from 'react';
 
 import { Stores } from '@nti/lib-store';
-import { Hooks, Errors } from '@nti/web-commons';
 import { wait } from '@nti/lib-commons';
-
-const { useForceUpdate } = Hooks;
+import { Errors } from '@nti/web-commons';
+import { useForceUpdate } from '@nti/web-core';
 
 const Saving = 'saving';
 const Deleting = 'deleting';
