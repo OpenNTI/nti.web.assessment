@@ -1,4 +1,4 @@
-import React from 'react';
+import { useEffect, useState, useRef } from 'react';
 import classnames from 'classnames/bind';
 
 import { scoped } from '@nti/lib-locale';
@@ -53,13 +53,13 @@ const Values = {
 export default function ResultVisibility() {
 	const { [Store.Survey]: survey } = Store.useValue();
 
-	const controlRef = React.useRef(null);
+	const controlRef = useRef(null);
 
-	const [disclosure, setDisclosure] = React.useState(null);
-	const [saving, setSaving] = React.useState(false);
-	const [error, setError] = React.useState(null);
+	const [disclosure, setDisclosure] = useState(null);
+	const [saving, setSaving] = useState(false);
+	const [error, setError] = useState(null);
 
-	React.useEffect(() => setDisclosure(survey.disclosure), [survey]);
+	useEffect(() => setDisclosure(survey.disclosure), [survey]);
 
 	const maybeSetDisclosure = e => {
 		if (e.target.checked) {

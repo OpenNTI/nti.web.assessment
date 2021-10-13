@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 
 import { Publish, Constants, Errors } from '@nti/web-commons';
@@ -35,7 +35,7 @@ export default function SurveyPublishButton() {
 		[Store.NavigateToPublished]: navigateToPublished,
 	} = Store.useValue();
 
-	const [error, setError] = React.useState(null);
+	const [error, setError] = useState(null);
 	const value = Publish.evaluatePublishStateFor({
 		isPublished: () =>
 			survey &&

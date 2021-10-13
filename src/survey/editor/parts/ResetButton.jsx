@@ -1,4 +1,4 @@
-import React from 'react';
+import { useRef, useState } from 'react';
 import cx from 'classnames';
 
 import { scoped } from '@nti/lib-locale';
@@ -100,10 +100,10 @@ export default function SurveyResetButton() {
 		[Store.CanReset]: canReset,
 	} = Store.useValue();
 
-	const flyoutRef = React.useRef();
+	const flyoutRef = useRef();
 
-	const [busy, setBusy] = React.useState(false);
-	const [error, setError] = React.useState(null);
+	const [busy, setBusy] = useState(false);
+	const [error, setError] = useState(null);
 	const value = Publish.evaluatePublishStateFor({
 		isPublished: () =>
 			survey &&

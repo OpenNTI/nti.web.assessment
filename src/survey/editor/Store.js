@@ -1,4 +1,4 @@
-import React from 'react';
+import { useEffect, useRef } from 'react';
 
 import { Stores } from '@nti/lib-store';
 import { wait } from '@nti/lib-commons';
@@ -129,10 +129,10 @@ export default class SurveyEditorStore extends Stores.BoundStore {
 		} = this.useValue();
 
 		const forceUpdate = useForceUpdate();
-		const pendingChanges = React.useRef([]);
+		const pendingChanges = useRef([]);
 
-		const valueRef = React.useRef(survey?.[name]);
-		const errorRef = React.useRef(null);
+		const valueRef = useRef(survey?.[name]);
+		const errorRef = useRef(null);
 
 		const property = {
 			get value() {
@@ -157,7 +157,7 @@ export default class SurveyEditorStore extends Stores.BoundStore {
 			},
 		};
 
-		React.useEffect(() => {
+		useEffect(() => {
 			const updatedValue = survey?.[name];
 
 			if (pendingChanges.current.includes(updatedValue)) {
@@ -171,7 +171,7 @@ export default class SurveyEditorStore extends Stores.BoundStore {
 			}
 		}, [survey]);
 
-		React.useEffect(() => registerProperty(name, property), [name]);
+		useEffect(() => registerProperty(name, property), [name]);
 
 		return property;
 	}

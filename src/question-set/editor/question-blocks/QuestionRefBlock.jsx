@@ -1,4 +1,4 @@
-import React from 'react';
+import { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames/bind';
 
@@ -69,7 +69,7 @@ export default function QuestionRefBlock({ block, blockProps }) {
 		setBlockDataImmediately({ updates: newUpdates });
 	};
 
-	React.useEffect(() => {
+	useEffect(() => {
 		if (!updates) {
 			return;
 		}
@@ -84,7 +84,7 @@ export default function QuestionRefBlock({ block, blockProps }) {
 		};
 	}, [updates]);
 
-	React.useEffect(() => {
+	useEffect(() => {
 		questionStoreSetIndex(index);
 	}, [index]);
 

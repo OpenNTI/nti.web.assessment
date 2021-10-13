@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import Editor from '../Editor';
@@ -45,9 +45,9 @@ export default {
 };
 
 function SolutionsCmp({ onChange, type, index }) {
-	const [question, setQuestion] = React.useState(null);
+	const [question, setQuestion] = useState(null);
 
-	React.useEffect(() => setQuestion(getInitialQuestionForType(type)), [type]);
+	useEffect(() => setQuestion(getInitialQuestionForType(type)), [type]);
 
 	if (!question) {
 		return null;
@@ -57,9 +57,9 @@ function SolutionsCmp({ onChange, type, index }) {
 }
 
 function NoSolutionsCmp({ onChange, type, index }) {
-	const [question, setQuestion] = React.useState(null);
+	const [question, setQuestion] = useState(null);
 
-	React.useEffect(() => setQuestion(getInitialQuestionForType(type)), [type]);
+	useEffect(() => setQuestion(getInitialQuestionForType(type)), [type]);
 
 	if (!question) {
 		return null;

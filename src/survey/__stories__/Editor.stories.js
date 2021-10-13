@@ -1,4 +1,4 @@
-import React from 'react';
+import { useRef } from 'react';
 import PropTypes from 'prop-types';
 
 import { Page } from '@nti/web-commons';
@@ -112,10 +112,10 @@ export default {
 };
 
 export const Base = props => {
-	const delayRef = React.useRef();
-	const creationRef = React.useRef();
-	const preflightRef = React.useRef();
-	const saveRef = React.useRef();
+	const delayRef = useRef();
+	const creationRef = useRef();
+	const preflightRef = useRef();
+	const saveRef = useRef();
 
 	delayRef.current = props.artificalDelay;
 	creationRef.current = props.errorOnPollCreation;

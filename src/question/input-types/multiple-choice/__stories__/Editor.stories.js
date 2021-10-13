@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 
 import Editor from '../Editor';
@@ -22,7 +22,7 @@ export default {
 };
 
 export const Basic = ({ onChange, ...props }) => {
-	const [part, setPart] = React.useState(getInitialPart);
+	const [part, setPart] = useState(getInitialPart);
 
 	return (
 		<Editor

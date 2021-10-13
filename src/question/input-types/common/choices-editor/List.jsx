@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import { useCallback, useEffect, useReducer, useRef } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames/bind';
 
@@ -78,12 +78,13 @@ export default function ChoiceList({
 	canReorder,
 	canRemove,
 }) {
-	const focused = React.useRef();
-	const [{ order }, dispatch] = React.useReducer(orderReducer, initialOrder);
+	const focused = useRef();
+	const [{ order }, dispatch] = useReducer(orderReducer, initialOrder);
 
-	React.useEffect(() => dispatch({ type: Actions.reset, choices }), [
-		getChoicesHash(choices),
-	]);
+	useEffect(
+		() => dispatch({ type: Actions.reset, choices }),
+		[getChoicesHash(choices)]
+	);
 
 	const onOrderChange = (original, updated) =>
 		dispatch({ type: Actions.change, original, updated });

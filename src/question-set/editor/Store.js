@@ -1,4 +1,4 @@
-import React from 'react';
+import { useEffect, useRef } from 'react';
 
 import { Stores } from '@nti/lib-store';
 import { wait } from '@nti/lib-commons';
@@ -42,8 +42,8 @@ export default class QuestionSetEditorState extends Stores.BoundStore {
 
 		const forceUpdate = useForceUpdate();
 
-		const isPending = React.useRef();
-		const error = React.useRef();
+		const isPending = useRef();
+		const error = useRef();
 
 		const createQuestion = async data => {
 			try {
@@ -80,10 +80,7 @@ export default class QuestionSetEditorState extends Stores.BoundStore {
 			createQuestion,
 		};
 
-		React.useEffect(
-			() => registerQuestionStore(id, newQuestionStore),
-			[id]
-		);
+		useEffect(() => registerQuestionStore(id, newQuestionStore), [id]);
 
 		return newQuestionStore;
 	}
@@ -110,11 +107,11 @@ export default class QuestionSetEditorState extends Stores.BoundStore {
 
 		const forceUpdate = useForceUpdate();
 
-		const validation = React.useRef();
-		const isPending = React.useRef();
-		const updates = React.useRef();
-		const error = React.useRef();
-		const index = React.useRef();
+		const validation = useRef();
+		const isPending = useRef();
+		const updates = useRef();
+		const error = useRef();
+		const index = useRef();
 
 		const setUpdates = u => (updates.current = u);
 		const setError = e => ((error.current = e), forceUpdate());
@@ -185,7 +182,7 @@ export default class QuestionSetEditorState extends Stores.BoundStore {
 			onChange,
 		};
 
-		React.useEffect(() => registerQuestionStore(id, questionStore), [id]);
+		useEffect(() => registerQuestionStore(id, questionStore), [id]);
 
 		return questionStore;
 	}

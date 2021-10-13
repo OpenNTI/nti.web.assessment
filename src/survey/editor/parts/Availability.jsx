@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState } from 'react';
 import classnames from 'classnames/bind';
 
 import { scoped } from '@nti/lib-locale';
@@ -25,8 +25,8 @@ export default function SurveyAvailability() {
 	const { [Store.IsAvailable]: isAvailable, [Store.Survey]: survey } =
 		Store.useValue();
 
-	const [busy, setBusy] = React.useState(false);
-	const [error, setError] = React.useState(null);
+	const [busy, setBusy] = useState(false);
+	const [error, setError] = useState(null);
 
 	const canResetAndUnpublish =
 		survey.hasLink('Reset') || survey.canUnpublish();

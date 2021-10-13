@@ -1,4 +1,4 @@
-import React from 'react';
+import { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames/bind';
 
@@ -35,7 +35,7 @@ export default function NewQuestionBlock({ block, blockProps }) {
 	const newQuestionStore = Store.useNewQuestionStore(block.getKey());
 	const { indexOfType: index } = blockProps;
 
-	React.useEffect(() => {
+	useEffect(() => {
 		const minWait = wait(MinLoad);
 		let unmounted = false;
 

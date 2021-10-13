@@ -1,4 +1,4 @@
-import React from 'react';
+import { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames/bind';
 
@@ -62,13 +62,13 @@ export default function ContentEditor({
 	error,
 	errorLabel,
 }) {
-	const [editorState, setEditorState] = React.useState(null);
-	const [plugins] = React.useState(getPlugins);
+	const [editorState, setEditorState] = useState(null);
+	const [plugins] = useState(getPlugins);
 	const settingUp = !editorState || !plugins;
 
-	const contentRef = React.useRef(Initial);
+	const contentRef = useRef(Initial);
 
-	React.useEffect(() => {
+	useEffect(() => {
 		if (contentRef.current === Initial || content !== contentRef.current) {
 			setEditorState(toDraftState(content));
 		}

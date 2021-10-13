@@ -1,4 +1,4 @@
-import React from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { scoped } from '@nti/lib-locale';
 import { Editor } from '@nti/web-reading';
@@ -34,14 +34,14 @@ const isSurveyDueDate = (date, survey) => {
 export default function DueDate() {
 	const { [Store.Survey]: survey } = Store.useValue();
 
-	const controlRef = React.useRef(null);
+	const controlRef = useRef(null);
 
-	const [date, setDate] = React.useState(null);
-	const [checked, setChecked] = React.useState(false);
-	const [saving, setSaving] = React.useState(false);
-	const [error, setError] = React.useState(null);
+	const [date, setDate] = useState(null);
+	const [checked, setChecked] = useState(false);
+	const [saving, setSaving] = useState(false);
+	const [error, setError] = useState(null);
 
-	React.useEffect(() => {
+	useEffect(() => {
 		const dueDate = survey.getAvailableForSubmissionEnding?.();
 
 		setDate(dueDate);

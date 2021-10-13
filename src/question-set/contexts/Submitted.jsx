@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 
 const Context = React.createContext();
 
-QuestionSetSubmittedContext.useContext = () => React.useContext(Context);
+QuestionSetSubmittedContext.useContext = () => useContext(Context);
 QuestionSetSubmittedContext.propTypes = {
 	children: PropTypes.any,
 };
