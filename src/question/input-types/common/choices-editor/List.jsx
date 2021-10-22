@@ -2,7 +2,8 @@ import { useCallback, useEffect, useReducer, useRef } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames/bind';
 
-import { DnD, Icons, Text } from '@nti/web-commons';
+import { DnD, Text } from '@nti/web-commons';
+import { Icons } from '@nti/web-core';
 import { Array as arr } from '@nti/lib-commons';
 
 import Styles from './Styles.css';

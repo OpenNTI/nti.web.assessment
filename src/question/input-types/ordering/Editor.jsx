@@ -1,17 +1,11 @@
-import {
-	useCallback,
-	useEffect,
-	useMemo,
-	useRef,
-	useState,
-} from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames/bind';
 
 import { Array as arr, Events } from '@nti/lib-commons';
 import { scoped } from '@nti/lib-locale';
-import { DnD, Icons, Text } from '@nti/web-commons';
-import { useForceUpdate } from '@nti/web-core';
+import { DnD, Text } from '@nti/web-commons';
+import { Icons, useForceUpdate } from '@nti/web-core';
 
 import Choice from '../common/choices-editor/Choice';
 

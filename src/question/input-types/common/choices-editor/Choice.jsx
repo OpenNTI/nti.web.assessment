@@ -11,7 +11,8 @@ import classnames from 'classnames/bind';
 
 import { Events } from '@nti/lib-commons';
 import { Editor, Plugins, Parsers, BLOCKS, STYLES } from '@nti/web-editor';
-import { Errors, DnD, Icons, Radio, Checkbox } from '@nti/web-commons';
+import { Errors, DnD, Radio, Checkbox } from '@nti/web-commons';
+import { Icons } from '@nti/web-core';
 
 import Styles from './Styles.css';
 
@@ -98,10 +99,10 @@ export default function Choice({
 
 	const contentRef = useRef(Initial);
 
-	const remove = useMemo(() => onRemove?.bind(null, index), [
-		onRemove,
-		index,
-	]);
+	const remove = useMemo(
+		() => onRemove?.bind(null, index),
+		[onRemove, index]
+	);
 
 	useEffect(() => {
 		if (autoFocus && !settingUp) {

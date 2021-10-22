@@ -1,7 +1,6 @@
-
 import { scoped } from '@nti/lib-locale';
-import { Prompt, Icons, Text } from '@nti/web-commons';
-import { Button as ButtonImpl } from '@nti/web-core';
+import { Prompt, Text } from '@nti/web-commons';
+import { Button as ButtonImpl, Icons } from '@nti/web-core';
 
 import Store from '../Store';
 
