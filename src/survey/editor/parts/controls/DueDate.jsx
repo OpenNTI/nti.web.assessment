@@ -13,7 +13,11 @@ import {
 
 import Store from '../../Store';
 
-import styles from './DueDate.css';
+const SaveButton = styled(Task.Button)`
+	width: 100%;
+	border: none;
+	margin-top: 0.625rem;
+`;
 
 const t = scoped('nti-assessments.survey.editor.parts.controls.DueDate', {
 	label: 'Due Date',
@@ -88,29 +92,43 @@ export default function DueDate() {
 			error={error}
 			disabled={!survey?.canSetDueDate()}
 		>
-			<Form onSubmit={onSubmit} className={styles.dueDateForm}>
+			<Form
+				onSubmit={onSubmit}
+				css={css`
+					padding: 0.625rem 1rem 1rem;
+				`}
+			>
 				<Errors.Message error={error} />
 				<Form.Input.Checkbox
-					className={styles.hasDueDate}
 					label={t('label')}
 					checked={checked}
 					onChange={onCheckChanged}
 					noError
+					css={css`
+						font-size: 0.875rem;
+					`}
 				/>
 				<DayTimePicker
 					value={date}
 					onChange={onDateChanged}
 					disableDays={null}
+					css={css`
+						margin: 0;
+
+						& :global(.DayPicker) {
+							width: 200px;
+							margin: 0 auto;
+						}
+					`}
 				/>
-				<Task.Button
-					className={styles.saveButton}
+				<SaveButton
 					as={Form.SubmitButton}
 					running={saving}
 					disabled={isSurveyDueDate(date, survey)}
 					rounded
 				>
 					{t('save')}
-				</Task.Button>
+				</SaveButton>
 			</Form>
 		</Editor.Header.Controls.Control>
 	);

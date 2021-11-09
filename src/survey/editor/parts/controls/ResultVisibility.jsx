@@ -1,15 +1,11 @@
 import { useEffect, useState, useRef } from 'react';
-import classnames from 'classnames/bind';
 
 import { scoped } from '@nti/lib-locale';
 import { Editor } from '@nti/web-reading';
-import { Text, Form, Task, Errors } from '@nti/web-commons';
+import { Text, Form as _Form, Task, Errors } from '@nti/web-commons';
 
 import Store from '../../Store';
 
-import Styles from './ResultVisibility.css';
-
-const cx = classnames.bind(Styles);
 const t = scoped(
 	'nti-assessments.survey.editor.parts.controls.ResultVisibility',
 	{
@@ -37,6 +33,39 @@ const t = scoped(
 		},
 	}
 );
+
+const Radio = styled(_Form.Input.Radio)`
+	margin-bottom: 1rem;
+	display: block;
+
+	& :global(.label) {
+		font-weight: 600;
+		color: var(--primary-grey);
+	}
+
+	& :global(.sub) {
+		color: var(--secondary-grey);
+	}
+`;
+
+const SaveButton = styled(Task.Button)`
+	border: none;
+	width: 100%;
+`;
+
+const Form = styled(_Form)`
+	width: 300px;
+	padding: 1rem;
+	font-size: 0.875rem;
+
+	&.saving {
+		${Radio},
+		${SaveButton} {
+			opacity: 70%;
+			pointer-events: none;
+		}
+	}
+`;
 
 const Instructors = 'never';
 const Always = 'always';
@@ -95,12 +124,9 @@ export default function ResultVisibility() {
 			onDismiss={onDismiss}
 			error={error}
 		>
-			<Form
-				className={cx('results-visibility-form', { saving })}
-				onSubmit={onSubmit}
-			>
+			<Form onSubmit={onSubmit} saving={saving}>
 				<Errors.Message error={error} />
-				<Form.Input.Radio
+				<Radio
 					name="results-visibility"
 					value={Instructors}
 					label={t('instructorsOnly.label')}
@@ -109,8 +135,8 @@ export default function ResultVisibility() {
 					noError
 				>
 					<Text.Base>{t('instructorsOnly.description')}</Text.Base>
-				</Form.Input.Radio>
-				<Form.Input.Radio
+				</Radio>
+				<Radio
 					name="results-visibility"
 					value={Always}
 					label={t('always.label')}
@@ -119,8 +145,8 @@ export default function ResultVisibility() {
 					noError
 				>
 					<Text.Base>{t('always.description')}</Text.Base>
-				</Form.Input.Radio>
-				<Form.Input.Radio
+				</Radio>
+				<Radio
 					name="results-visibility"
 					value={AfterSubmission}
 					label={t('afterSubmission.label')}
@@ -129,8 +155,8 @@ export default function ResultVisibility() {
 					noError
 				>
 					<Text.Base>{t('afterSubmission.description')}</Text.Base>
-				</Form.Input.Radio>
-				<Form.Input.Radio
+				</Radio>
+				<Radio
 					name="results-visibility"
 					value={AfterClose}
 					label={t('afterClose.label')}
@@ -139,16 +165,15 @@ export default function ResultVisibility() {
 					noError
 				>
 					<Text.Base>{t('afterClose.description')}</Text.Base>
-				</Form.Input.Radio>
-				<Task.Button
-					className={cx('save-button')}
+				</Radio>
+				<SaveButton
 					as={Form.SubmitButton}
 					disabled={disclosure === survey.disclosure}
 					running={saving}
 					rounded
 				>
 					<Text.Base>{t('save')}</Text.Base>
-				</Task.Button>
+				</SaveButton>
 			</Form>
 		</Editor.Header.Controls.Control>
 	);
