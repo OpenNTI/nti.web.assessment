@@ -12,7 +12,7 @@ const Abort = Symbol('abort');
 const PublishControls = styled(Publish)`
 	&.disabled {
 		pointer-events: none;
-		opacity: 0.3;
+		opacity: 30%;
 	}
 `;
 
@@ -28,10 +28,10 @@ SurveyPublishButton.propTypes = {
 };
 export default function SurveyPublishButton() {
 	const {
-		[Store.Survey]: survey,
-		[Store.Saving]: disabled,
+		survey,
+		saving: disabled,
 		[Store.SaveChanges]: beforePublish,
-		[Store.HasChanges]: hasChanges,
+		hasChanges,
 		[Store.NavigateToPublished]: navigateToPublished,
 	} = Store.useValue();
 

@@ -42,9 +42,9 @@ function SurveyEditor({
 	pageSource,
 }) {
 	const {
-		[Store.Survey]: survey,
-		[Store.Error]: error,
-		[Store.Saving]: saving,
+		survey,
+		error,
+		saving,
 		[Store.Deleting]: deleting,
 		[Store.CreatePoll]: createPoll,
 		[Store.CanAddPoll]: canAddPoll,

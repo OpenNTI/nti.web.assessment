@@ -35,7 +35,7 @@ const isNonInstructor = s => InstructorRels.every(rel => s.hasLink(rel));
 const Trigger = styled(PublishTrigger)`
 	&.disabled {
 		pointer-events: none;
-		opacity: 0.3;
+		opacity: 30%;
 	}
 `;
 
@@ -93,10 +93,10 @@ const ResetButton = styled(Button)`
 
 export default function SurveyResetButton() {
 	const {
-		[Store.Survey]: survey,
-		[Store.Saving]: disabled,
+		survey,
+		saving: disabled,
 		[Store.SaveChanges]: afterReset,
-		[Store.HasChanges]: hasChanges,
+		hasChanges,
 		[Store.CanReset]: canReset,
 	} = Store.useValue();
 

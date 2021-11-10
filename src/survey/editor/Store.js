@@ -5,12 +5,8 @@ import { wait } from '@nti/lib-commons';
 import { Errors } from '@nti/web-commons';
 import { useForceUpdate } from '@nti/web-core';
 
-const Saving = 'saving';
-const Deleting = 'deleting';
-const ErrorField = 'error-field';
-const HasChanges = 'HasChanges';
+/** @typedef {import('@nti/lib-interfaces').Models.assessment.survey.Survey} SurveyModel */
 
-const Survey = 'SurveyProp';
 const Containers = 'ContainersProp';
 const SaveChanges = 'SaveChanges';
 const Delete = 'Delete';
@@ -98,12 +94,10 @@ const ErrorMaps = [
 const mapError = e => ErrorMaps.reduce((acc, map) => map(acc), e);
 
 export default class SurveyEditorStore extends Stores.BoundStore {
-	static Saving = Saving;
-	static Deleting = Deleting;
-	static Error = ErrorField;
-	static HasChanges = HasChanges;
+	static Saving = 'saving';
+	static Deleting = 'deleting';
 
-	static Survey = Survey;
+	static Survey = 'survey';
 	static Containers = Containers;
 	static SaveChanges = SaveChanges;
 	static Delete = Delete;
@@ -122,7 +116,7 @@ export default class SurveyEditorStore extends Stores.BoundStore {
 
 	static useProperty(name) {
 		const {
-			[Survey]: survey,
+			survey,
 			[RegisterProperty]: registerProperty,
 			[OnPropertyChange]: onPropertyChange,
 			[OnPropertyError]: onPropertyError,
@@ -182,9 +176,11 @@ export default class SurveyEditorStore extends Stores.BoundStore {
 		return prev.survey !== this.binding.survey;
 	}
 
-	get [Survey]() {
+	/** @type {SurveyModel} */
+	get survey() {
 		return this.binding.survey;
 	}
+
 	get [Containers]() {
 		return Array.isArray(this.binding.container)
 			? this.binding.container.reverse()
@@ -195,30 +191,30 @@ export default class SurveyEditorStore extends Stores.BoundStore {
 	}
 
 	get [IsAvailable]() {
-		return this[Survey]?.isAvailable();
+		return this.survey?.isAvailable();
 	}
 	get [IsPublished]() {
-		return this[Survey]?.isPublished();
+		return this.survey?.isPublished();
 	}
 	get [CanAddPoll]() {
-		return this[Survey]?.hasLink('InsertPoll');
+		return this.survey?.hasLink('InsertPoll');
 	}
 	get [CanReorderPolls]() {
-		return this[Survey]?.hasLink('MovePoll');
+		return this.survey?.hasLink('MovePoll');
 	}
 	get [CanRemovePolls]() {
-		return this[Survey]?.hasLink('RemovePoll');
+		return this.survey?.hasLink('RemovePoll');
 	}
 	get [CanReset]() {
-		return this[Survey]?.hasLink('Reset');
+		return this.survey?.hasLink('Reset');
 	}
 	get [HasPublishingLinks]() {
-		const survey = this[Survey];
+		const survey = this.survey;
 
 		return survey?.hasLink('publish') || survey?.hasLink('unpublish');
 	}
 	get [PublishLocked]() {
-		const survey = this[Survey];
+		const survey = this.survey;
 
 		// The survey is published locked
 		// Reset (present when submissions, hidden no submissions && non-instructors)
@@ -240,11 +236,11 @@ export default class SurveyEditorStore extends Stores.BoundStore {
 	load() {
 		this.cleanupListener?.();
 
-		this.emitChange([Survey, Containers, CanReset]);
+		this.emitChange(['survey', Containers, CanReset]);
 
-		this.cleanupListener = this[Survey]?.subscribeToChange(() =>
+		this.cleanupListener = this.survey?.subscribeToChange(() =>
 			this.emitChange([
-				Survey,
+				'survey',
 				IsAvailable,
 				CanReset,
 				CanAddPoll,
@@ -259,8 +255,8 @@ export default class SurveyEditorStore extends Stores.BoundStore {
 
 	[CreatePoll](data) {
 		const createPoll = () => {
-			if (this[Survey]?.createPoll) {
-				return this[Survey].createPoll(data);
+			if (this.survey?.createPoll) {
+				return this.survey.createPoll(data);
 			}
 
 			for (let c of this[Containers]) {
@@ -280,7 +276,7 @@ export default class SurveyEditorStore extends Stores.BoundStore {
 	}
 
 	#hasErrors() {
-		if (this.get([ErrorField])) {
+		if (this.get('error')) {
 			return true;
 		}
 
@@ -295,18 +291,18 @@ export default class SurveyEditorStore extends Stores.BoundStore {
 		if (property?.setError) {
 			property.setError(error);
 		} else {
-			this.set({ [ErrorField]: error });
+			this.set({ error });
 		}
 	}
 
 	#clearGlobalError() {
-		if (this.get(ErrorField)) {
-			this.set({ [ErrorField]: null });
+		if (this.get('error')) {
+			this.set({ error: null });
 		}
 	}
 
 	#getPayload() {
-		const survey = this[Survey];
+		const survey = this.survey;
 
 		const { payload, hasData } = Object.entries(this.#properties).reduce(
 			(acc, prop) => {
@@ -342,7 +338,7 @@ export default class SurveyEditorStore extends Stores.BoundStore {
 	}
 
 	#hasChanges() {
-		const survey = this[Survey];
+		const survey = this.survey;
 
 		return Object.entries(this.#properties).some(([name, prop]) => {
 			const equalityCheck =
@@ -374,7 +370,7 @@ export default class SurveyEditorStore extends Stores.BoundStore {
 				this[SaveChanges](true);
 			} else {
 				this.set({
-					[HasChanges]: true,
+					hasChanges: true,
 				});
 			}
 		}, AutoSaveDelay);
@@ -383,14 +379,13 @@ export default class SurveyEditorStore extends Stores.BoundStore {
 	async [SaveChanges](hideErrors) {
 		if (this.#hasErrors()) {
 			this.set({
-				[ErrorField]:
-					this.get(ErrorField) ?? this.#properties.contents?.error,
+				error: this.get('error') ?? this.#properties.contents?.error,
 			});
 
 			throw new Error('Must resolve errors');
 		}
 
-		const survey = this[Survey];
+		const survey = this.survey;
 		const payload = this.#getPayload();
 
 		//If there's nothing to save we're good
@@ -399,12 +394,12 @@ export default class SurveyEditorStore extends Stores.BoundStore {
 		}
 
 		try {
-			this.set({ [Saving]: true });
+			this.set({ saving: true });
 
 			await survey.save(payload);
 
 			this.set({
-				[HasChanges]: false,
+				hasChanges: false,
 			});
 		} catch (e) {
 			const err = mapError(e);
@@ -416,20 +411,20 @@ export default class SurveyEditorStore extends Stores.BoundStore {
 			}
 
 			if (!hideErrors && (!err.field || err.field === 'contents')) {
-				this.set({ [ErrorField]: err });
+				this.set({ error: err });
 			}
 
 			throw err;
 		} finally {
-			this.set({ [Saving]: false });
+			this.set({ saving: false });
 		}
 	}
 
 	async [Delete]() {
-		const survey = this[Survey];
+		const survey = this.survey;
 		const minWait = wait(MinWaitsBefore.Delete);
 
-		this.setImmediate({ [Deleting]: true });
+		this.setImmediate({ deleting: true });
 
 		try {
 			await survey.delete();
@@ -440,7 +435,7 @@ export default class SurveyEditorStore extends Stores.BoundStore {
 		} catch (e) {
 			this.#setError(e);
 		} finally {
-			this.set({ [Deleting]: false });
+			this.set({ deleting: false });
 		}
 	}
 
